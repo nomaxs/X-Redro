@@ -21,7 +21,7 @@ async function requireAuth() {
   try {
     return await account.get();
   } catch {
-    window.location.href = "/login.html";
+    window.location.href = "login.html";
   }
 }
 
