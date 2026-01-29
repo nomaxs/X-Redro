@@ -11,7 +11,7 @@ async function confirmVerification() {
   try {
     // ✅ VERIFY EMAIL (CORRECT SIGNATURE)
     alert("before verification");
-    await account.updateVerification(secret);
+    await account.updateVerification(userId, secret);
     alert("after verification");
 
     // ✅ GET USER
