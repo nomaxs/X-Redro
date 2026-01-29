@@ -38,20 +38,19 @@ async function login() {
   }
 
   try {
-    
     // clear old sessions
     //await account.deleteSessions();
     // If session exists, remove it
     try {
       await account.deleteSessions();
     } catch (e) {}
-    
+
     // create new session
     await account.createEmailSession(email, password);
 
     const user = await account.get();
-
-    window.location.href = "dashboard.html";
+    
+    window.location.href = "/dashboard.html";
 
   } catch (err) {
     console.error("LOGIN ERROR:", err.message);
