@@ -87,7 +87,7 @@ async function signup() {
     );
 
     alert("Verification email sent. Please check your inbox.");
-    window.location.href = "/verify-info.html";
+    window.location.href = "verify.html";
 
   } catch (err) {
     alert(err.message);
