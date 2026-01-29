@@ -18,7 +18,7 @@ async function requireAuth() {
   try {
     return await account.get();
   } catch {
-    window.location.href = "/login.html";
+    window.location.href = "login.html";
   }
 }
 
@@ -91,7 +91,7 @@ function buySubscription(days) {
 
 async function logout() {
   await account.deleteSession("current");
-  window.location.href = "/login.html";
+  window.location.href = "login.html";
 }
 
 function openDeleteModal() {
@@ -104,7 +104,7 @@ function closeDeleteModal() {
 
 async function deleteAccount() {
   await account.delete();
-  window.location.href = "/signup.html";
+  window.location.href = "signup.html";
 }
 
 function openPasswordModal() {
