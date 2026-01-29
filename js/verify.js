@@ -12,18 +12,19 @@ const SUBS = "subscriptions";
 
 async function confirmVerification() {
   const params = new URLSearchParams(window.location.search);
+  const userId = params.get("userId");
   const secret = params.get("secret");
 
-  if (!secret) {
+  if (!userId || !secret) {
     alert("Invalid or expired verification link");
     return;
   }
 
   try {
-    // ✅ VERIFY EMAIL
-    await account.updateVerification(secret);
+    // ✅ VERIFY EMAIL (CORRECT SIGNATURE)
+    await account.updateVerification(userId, secret);
 
-    // ✅ GET VERIFIED USER
+    // ✅ GET USER
     const user = await account.get();
 
     if (!user.emailVerification) {
@@ -31,11 +32,11 @@ async function confirmVerification() {
       return;
     }
 
-    // ✅ CREATE USER DATA
+    // ✅ CREATE USER DATA (ONCE)
     await createInitialUserData(user);
 
-    // ✅ GO TO DASHBOARD
-    window.location.href = "dashboard.html";
+    // ✅ REDIRECT
+    window.location.replace("dashboard.html");
 
   } catch (err) {
     console.error(err);
