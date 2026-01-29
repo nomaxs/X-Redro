@@ -18,7 +18,7 @@ async function requireAuth() {
   try {
     return await account.get();
   } catch {
-    window.location.href = "/login.html";
+    window.location.href = "/X-Redro/login.html";
   }
 }
 
@@ -91,7 +91,7 @@ function buySubscription(days) {
 
 async function logout() {
   await account.deleteSession("current");
-  window.location.href = "/login.html";
+  window.location.href = "X-Redro/login.html";
 }
 
 function openDeleteModal() {
