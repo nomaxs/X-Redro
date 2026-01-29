@@ -91,7 +91,7 @@ function buySubscription(days) {
 
 async function logout() {
   await account.deleteSession("current");
-  window.location.href = "X-Redro/login.html";
+  window.location.href = "login.html";
 }
 
 function openDeleteModal() {
