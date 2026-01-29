@@ -9,31 +9,35 @@ async function confirmVerification() {
   }
 
   try {
-    // ✅ VERIFY EMAIL (CORRECT SIGNATURE)
-    alert("before verification");
-    await account.updateVerification(userId, secret);
-    alert("after verification");
+    alert("Before verification");
 
-    // ✅ GET USER
+    // ✅ Verify email (NO session required)
+    await account.updateVerification(userId, secret);
+
+    alert("Email verified");
+
+    // ✅ Create session AFTER verification
+    // Appwrite allows login now
     const user = await account.get();
 
-    if (!user.emailVerification) {
-      alert("Email verification failed");
+    // ⚠️ If no session yet, force login
+    if (!user) {
+      alert("Please log in again");
+      window.location.href = "login.html";
       return;
     }
 
-    // ✅ CREATE USER DATA (ONCE)
+    // ✅ Create user data
     await createInitialUserData(user);
 
-    // ✅ REDIRECT
+    // ✅ Redirect
     window.location.replace("dashboard.html");
 
   } catch (err) {
     console.error(err);
-    alert("Verification failed or expired");
+    alert(err.message || "Verification failed");
   }
 }
-
 async function createInitialUserData(user) {
   // Prevent duplicates
   try {
