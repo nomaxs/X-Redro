@@ -58,6 +58,12 @@ async function login() {
   }
 }
 
+function getUsernameFromEmail(email) {
+  return email.split("@")[0]
+    .replace(/[^a-zA-Z0-9._]/g, "")
+    .toLowerCase();
+}
+
 /* SIGNUP + AUTO SETUP */
 async function signup() {
   try {
@@ -68,6 +74,8 @@ async function signup() {
     
     const email = signupEmail.value.trim();
     const password = signupPassword.value.trim();
+
+    const username = getUsernameFromEmail(email);
     
     if (!email || !password) {
       alert("All fields are required");
@@ -82,7 +90,8 @@ async function signup() {
     await account.create(
       Appwrite.ID.unique(),
       email,
-      password
+      password,
+      username
     );
 
     await account.createEmailSession(email, password);
@@ -124,8 +133,8 @@ async function handleGoogleLogin() {
     username: user.name || "User",
     theme: "light",
     accountStatus: "active",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    $createdAt: new Date().toISOString(),
+    $updatedAt: new Date().toISOString()
   });
 
   // DEFAULT FORM
@@ -135,8 +144,8 @@ async function handleGoogleLogin() {
     subtitle: "Welcome to Redro, place your order",
     fields: [],
     isActive: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    $createdAt: new Date().toISOString(),
+    $updatedAt: new Date().toISOString()
   });
 
   // TRIAL SUBSCRIPTION
@@ -150,8 +159,8 @@ async function handleGoogleLogin() {
     startsAt: new Date().toISOString(),
     expiresAt: expiry.toISOString(),
     status: "active",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    $createdAt: new Date().toISOString(),
+    $updatedAt: new Date().toISOString()
   });  
 }
 
