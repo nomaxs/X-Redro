@@ -61,6 +61,11 @@ async function login() {
 /* SIGNUP + AUTO SETUP */
 async function signup() {
   try {
+
+    try {
+      await account.deleteSessions();
+    } catch (e) {}
+    
     const email = signupEmail.value.trim();
     const password = signupPassword.value.trim();
     
