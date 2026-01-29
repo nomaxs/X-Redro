@@ -9,12 +9,8 @@ async function confirmVerification() {
   }
 
   try {
-    alert("Before verification");
-
     // ✅ Verify email (NO session required)
     await account.updateVerification(userId, secret);
-
-    alert("Email verified");
 
     // ✅ Create session AFTER verification
     // Appwrite allows login now
@@ -35,8 +31,7 @@ async function confirmVerification() {
 
   } catch (err) {
     console.error(err);
-    alert(err.message || "Verification failed");
-    alert(err.message);
+    alert("Verification failed");
   }
 }
 async function createInitialUserData(user) {
