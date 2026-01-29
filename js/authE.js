@@ -80,7 +80,7 @@ async function signup() {
       password
     );
 
-    await account.createEmailPasswordSession(email, password);
+    await account.createEmailSession(email, password);
 
     await account.createVerification(
       `${location.origin}/verify.html`
