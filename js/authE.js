@@ -160,7 +160,7 @@ async function sendReset() {
   const email = document.getElementById("resetEmail").value.trim();
 
   if (!email) {
-    alert("Please enter your email");
+    alert("Please enter your email"); 
     return;
   }
 
