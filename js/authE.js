@@ -116,6 +116,53 @@ function googleLogin() {
     `${location.origin}/X-Redro//login.html`  
   );  
 }    
+
+async function handleGoogleLogin() {  
+  const user = await account.get();  
+  
+  // check if user profile exists  
+  try {  
+    await databases.getDocument(DB_ID, USERS, user.$id);  
+    return;  
+  } catch {}  
+  
+  // USER PROFILE  
+  await databases.createDocument(DB_ID, USERS, user.$id, {  
+    userId: user.$id,  
+    email: user.email,  
+    username: user.name || "User",  
+    theme: "light",  
+    accountStatus: "active",  
+    $createdAt: new Date().toISOString(),  
+    $updatedAt: new Date().toISOString()  
+  });  
+  
+  // DEFAULT FORM  
+  await databases.createDocument(DB_ID, FORMS, user.$id, {  
+    userId: user.$id,  
+    title: "My Business Name",  
+    subtitle: "Welcome to Redro, place your order",  
+    fields: [],  
+    isActive: true,  
+    $createdAt: new Date().toISOString(),  
+    $updatedAt: new Date().toISOString()  
+  });  
+  
+  // TRIAL SUBSCRIPTION  
+  const expiry = new Date();  
+  expiry.setDate(expiry.getDate() + 7);  
+  
+  await databases.createDocument(DB_ID, SUBS, Appwrite.ID.unique(), {  
+    userId: user.$id,  
+    plan: "trial",  
+    durationDay: 7,  
+    startsAt: new Date().toISOString(),  
+    expiresAt: expiry.toISOString(),  
+    status: "active",  
+    $createdAt: new Date().toISOString(),  
+    $updatedAt: new Date().toISOString()  
+  });    
+}
   
 function openResetModal() {  
   document.getElementById("resetModal").classList.remove("hidden");  
