@@ -91,7 +91,7 @@ async function signup() {
       `${location.origin}/X-Redro/verify.html`
     );
     
-    window.location.href = "verify.html";
+    window.location.href = "verifyInfo.html";
 
   } catch (err) {
     alert(err.message);
@@ -114,40 +114,46 @@ async function handleGoogleLogin() {
   // check if user profile exists
   try {
     await databases.getDocument(DB_ID, USERS, user.$id);
-  } catch {
-    // create profile
-    await databases.createDocument(DB_ID, USERS, user.$id, {
-      userId: user.$id,
-      email: user.email,
-      username: user.name || "User",
-      theme: "light",
-      plan: "trial",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    });
+    return;
+  } catch {}
 
-    // create form
-    await databases.createDocument(DB_ID, FORMS, user.$id, {
-      userId: user.$id,
-      title: "My Order Form",
-      subtitle: "Place your order",
-      fields: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    });
+  // USER PROFILE
+  await databases.createDocument(DB_ID, USERS, user.$id, {
+    userId: user.$id,
+    email: user.email,
+    username: user.name || "User",
+    theme: "light",
+    accountStatus: "active",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  });
 
-    // create trial
-    const expiry = new Date();
-    expiry.setDate(expiry.getDate() + 7);
+  // DEFAULT FORM
+  await databases.createDocument(DB_ID, FORMS, user.$id, {
+    userId: user.$id,
+    title: "My Business Name",
+    subtitle: "Welcome to Redro, place your order",
+    fields: [],
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  });
 
-    await databases.createDocument(DB_ID, SUBS, Appwrite.ID.unique(), {
-      userId: user.$id,
-      plan: "trial",
-      startsAt: new Date().toISOString(),
-      expiresAt: expiry.toISOString(),
-      active: true
-    });
-  }
+  // TRIAL SUBSCRIPTION
+  const expiry = new Date();
+  expiry.setDate(expiry.getDate() + 7);
+
+  await databases.createDocument(DB_ID, SUBS, Appwrite.ID.unique(), {
+    userId: user.$id,
+    plan: "trial",
+    durationDay: 7,
+    startsAt: new Date().toISOString(),
+    expiresAt: expiry.toISOString(),
+    status: "active",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  });  
+}
 }
 
 
