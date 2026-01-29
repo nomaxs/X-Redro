@@ -19,5 +19,5 @@ async function confirmReset() {
 
   await account.updateRecovery(userId, secret, password);
   alert("Password updated");
-  window.location.href = "/login.html";
+  window.location.href = "login.html";
 }
