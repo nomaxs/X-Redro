@@ -103,8 +103,8 @@ async function signup() {
 function googleLogin() {
   account.createOAuth2Session(
     'google',
-    `${location.origin}/dashboard.html`,
-    `${location.origin}/login.html`
+    `${location.origin}/X-Redro/dashboard.html`,
+    `${location.origin}/X-Redro//login.html`
   );
 }
 
