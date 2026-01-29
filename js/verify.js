@@ -36,6 +36,7 @@ async function confirmVerification() {
   } catch (err) {
     console.error(err);
     alert(err.message || "Verification failed");
+    alert(err.message);
   }
 }
 async function createInitialUserData(user) {
