@@ -90,8 +90,7 @@ async function signup() {
     await account.createVerification(
       `${location.origin}/verify.html`
     );
-
-    alert("Verification email sent. Please check your inbox.");
+    
     window.location.href = "verify.html";
 
   } catch (err) {
