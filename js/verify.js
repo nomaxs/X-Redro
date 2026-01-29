@@ -65,7 +65,7 @@ async function createInitialUserData(user) {
   await databases.createDocument(DB_ID, FORMS, user.$id, {
     userId: user.$id,
     title: "My Business Name",
-    subtitle: "Welcome to Redro, place your order",
+    subtitle: "Welcome to X-Redro, place your order",
     fields: [],
     isActive: true,
     createdAt: new Date().toISOString(),
