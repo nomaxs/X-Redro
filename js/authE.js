@@ -50,7 +50,7 @@ async function login() {
 
     const user = await account.get();
 
-    window.location.href = "/dashboard.html";
+    window.location.href = "dashboard.html";
 
   } catch (err) {
     console.error("LOGIN ERROR:", err.message);
