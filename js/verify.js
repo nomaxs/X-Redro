@@ -9,11 +9,13 @@ const DB_ID = "695c4fce0039f513dc83";
 const USERS = "695c501b001d24549b03";
 const FORMS = "form";
 const SUBS = "subscriptions";
+alert("works");
 
 async function confirmVerification() {
   const params = new URLSearchParams(window.location.search);
   const userId = params.get("userId");
   const secret = params.get("secret");
+  alert(userId);
 
   if (!userId || !secret) {
     alert("Invalid or expired verification link");
