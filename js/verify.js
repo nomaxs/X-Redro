@@ -22,7 +22,9 @@ async function confirmVerification() {
 
   try {
     // ✅ VERIFY EMAIL (CORRECT SIGNATURE)
+    alert("Before verification");
     await account.updateVerification(userId, secret);
+    alert("VERIFIED");
 
     // ✅ GET USER
     const user = await account.get();
