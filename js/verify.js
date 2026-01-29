@@ -1,4 +1,3 @@
-alert("work");
 async function confirmVerification() {
   const params = new URLSearchParams(window.location.search);
   const userId = params.get("userId");
@@ -11,7 +10,9 @@ async function confirmVerification() {
 
   try {
     // ✅ VERIFY EMAIL (CORRECT SIGNATURE)
-    await account.updateVerification(userId, secret);
+    alert("before verification");
+    await account.updateVerification(secret);
+    alert("after verification");
 
     // ✅ GET USER
     const user = await account.get();
