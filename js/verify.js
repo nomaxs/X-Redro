@@ -1,21 +1,7 @@
-const client = new Appwrite.Client()
-  .setEndpoint('https://nyc.cloud.appwrite.io/v1')
-  .setProject('695981480033c7a4eb0d');
-
-const account = new Appwrite.Account(client);
-const databases = new Appwrite.Databases(client);
-
-const DB_ID = "695c4fce0039f513dc83";
-const USERS = "695c501b001d24549b03";
-const FORMS = "form";
-const SUBS = "subscriptions";
-alert("works");
-
 async function confirmVerification() {
   const params = new URLSearchParams(window.location.search);
   const userId = params.get("userId");
   const secret = params.get("secret");
-  alert(userId);
 
   if (!userId || !secret) {
     alert("Invalid or expired verification link");
@@ -24,9 +10,7 @@ async function confirmVerification() {
 
   try {
     // ✅ VERIFY EMAIL (CORRECT SIGNATURE)
-    alert("Before verification");
     await account.updateVerification(userId, secret);
-    alert("VERIFIED");
 
     // ✅ GET USER
     const user = await account.get();
