@@ -38,6 +38,14 @@ async function login() {
   }
 
   try {
+    
+    // clear old sessions
+    //await account.deleteSessions();
+    // If session exists, remove it
+    try {
+      await account.deleteSessions();
+    } catch (e) {}
+    
     // create new session
     await account.createEmailSession(email, password);
 
@@ -61,6 +69,10 @@ function getUsernameFromEmail(email) {
 async function signup() {
   try {
     
+    try {
+      await account.deleteSessions();
+    } catch (e) {}
+     
     const email = signupEmail.value.trim();
     const password = signupPassword.value.trim();
 
