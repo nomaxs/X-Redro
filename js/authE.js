@@ -154,8 +154,6 @@ async function handleGoogleLogin() {
     updatedAt: new Date().toISOString()
   });  
 }
-}
-
 
 function openResetModal() {
   document.getElementById("resetModal").classList.remove("hidden");
