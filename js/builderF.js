@@ -119,7 +119,7 @@ async function saveForm() {
 
 function setupFormLink() {
   const input = document.getElementById("formLinkInput");
-  const link = `${window.location.origin}/form.html?fid=${formId}`;
+  const link = `${window.location.origin}/X-Redro/form.html?fid=${formId}`;
   input.value = link;
 }
 
