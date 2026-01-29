@@ -1,4 +1,3 @@
-fix it:  
 const client = new Appwrite.Client()  
   .setEndpoint('https://nyc.cloud.appwrite.io/v1')  
   .setProject('695981480033c7a4eb0d');  
@@ -21,7 +20,7 @@ async function requireAuth() {
   try {  
     return await account.get();  
   } catch {  
-    window.location.href = "/login.html";  
+    window.location.href = "login.html";  
   }  
 }  
   
@@ -34,6 +33,7 @@ async function handleGoogleLogin() {
   
 async function initDashboard() {  
   user = await requireAuth();  
+  handleGoogleLogin();  
   
   res = await databases.listDocuments(DB_ID, USERS, [  
     Query.equal("userId", user.$id)  
@@ -68,44 +68,6 @@ async function initDashboard() {
   updateAttention(pendingCount);  
     
   if (!res.documents.length) return;      
-}  
-  
-async function ensureInitialUserData(user) {  
-  try {  
-    await databases.getDocument(DB_ID, USERS, user.$id);  
-    return; // already exists  
-  } catch {}  
-  
-  // Create profile  
-  await databases.createDocument(DB_ID, USERS, user.$id, {  
-    userId: user.$id,  
-    email: user.email,  
-    username: user.name || getUsernameFromEmail(user.email),  
-    theme: "light",  
-    accountStatus: "active"  
-  });  
-  
-  // Default form  
-  await databases.createDocument(DB_ID, FORMS, user.$id, {  
-    userId: user.$id,  
-    title: "My Business Name",  
-    subtitle: "Welcome to Redro, place your order",  
-    fields: [],  
-    isActive: true  
-  });  
-  
-  // Trial subscription  
-  const expiry = new Date();  
-  expiry.setDate(expiry.getDate() + 7);  
-  
-  await databases.createDocument(DB_ID, SUBS, Appwrite.ID.unique(), {  
-    userId: user.$id,  
-    plan: "trial",  
-    durationDay: 7,  
-    startsAt: new Date().toISOString(),  
-    expiresAt: expiry.toISOString(),  
-    status: "active"  
-  });  
 }  
   
 function parseFormData(raw) {  
@@ -274,6 +236,5 @@ function renderOrders(orders) {
     wrap.appendChild(card);  
   });  
 }  
-
-handleGoogleLogin();
-initDashboard();  
+  
+initDashboard();
