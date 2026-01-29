@@ -110,9 +110,6 @@ async function signup() {
     
 /* GOOGLE */  
 function googleLogin() {  
-  try {  
-      await account.deleteSessions();  
-    } catch (e) {}
   account.createOAuth2Session(  
     'google',  
     `${location.origin}/X-Redro/verify.html`,  
