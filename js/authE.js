@@ -88,7 +88,7 @@ async function signup() {
     await account.createEmailSession(email, password);
 
     await account.createVerification(
-      `${location.origin}/verify.html`
+      `${location.origin}/X-Redro/verify.html`
     );
     
     window.location.href = "verify.html";
