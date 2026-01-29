@@ -18,7 +18,7 @@ async function requireAuth() {
   try {
     return await account.get();
   } catch {
-    window.location.href = "X-Redro/login.html";
+    window.location.href = "login.html";
   }
 }
 
