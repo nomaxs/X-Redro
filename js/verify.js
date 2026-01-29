@@ -52,8 +52,8 @@ async function createInitialUserData(user) {
     username: user.name || "User",
     theme: "light",
     accountStatus: "active",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    $createdAt: new Date().toISOString(),
+    $updatedAt: new Date().toISOString()
   });
 
   // DEFAULT FORM
@@ -63,8 +63,8 @@ async function createInitialUserData(user) {
     subtitle: "Welcome to X-Redro, place your order",
     fields: [],
     isActive: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    $createdAt: new Date().toISOString(),
+    $updatedAt: new Date().toISOString()
   });
 
   // TRIAL SUBSCRIPTION
@@ -78,8 +78,8 @@ async function createInitialUserData(user) {
     startsAt: new Date().toISOString(),
     expiresAt: expiry.toISOString(),
     status: "active",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    $createdAt: new Date().toISOString(),
+    $updatedAt: new Date().toISOString()
   });
 }
 
