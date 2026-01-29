@@ -9,62 +9,70 @@ const DB_ID = "695c4fce0039f513dc83";
 const USERS = "695c501b001d24549b03";
 const FORMS = "form";
 const SUBS = "subscriptions";
-const ORDERS = "orders";
-
 
 async function confirmVerification() {
-  const params = new URLSearchParams(location.search);
-  const userId = params.get("userId");
+  const params = new URLSearchParams(window.location.search);
   const secret = params.get("secret");
 
-  if (!userId || !secret) {
-    alert("Invalid verification link");
+  if (!secret) {
+    alert("Invalid or expired verification link");
     return;
   }
 
   try {
-    await account.updateVerification(userId, secret);
+    // ✅ VERIFY EMAIL
+    await account.updateVerification(secret);
 
+    // ✅ GET VERIFIED USER
     const user = await account.get();
 
-    // CREATE USER DATA NOW
+    if (!user.emailVerification) {
+      alert("Email verification failed");
+      return;
+    }
+
+    // ✅ CREATE USER DATA
     await createInitialUserData(user);
 
+    // ✅ GO TO DASHBOARD
     window.location.href = "dashboard.html";
 
   } catch (err) {
+    console.error(err);
     alert("Verification failed or expired");
   }
 }
 
 async function createInitialUserData(user) {
-  // prevent duplicates
+  // Prevent duplicates
   try {
     await databases.getDocument(DB_ID, USERS, user.$id);
     return;
   } catch {}
 
+  // USER PROFILE
   await databases.createDocument(DB_ID, USERS, user.$id, {
     userId: user.$id,
     email: user.email,
     username: user.name || "User",
     theme: "light",
-    trialUsed: "false",
     accountStatus: "active",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   });
 
+  // DEFAULT FORM
   await databases.createDocument(DB_ID, FORMS, user.$id, {
     userId: user.$id,
     title: "My Business Name",
-    subtitle: "Welcome to X-Redro, place your order",
+    subtitle: "Welcome to Redro, place your order",
     fields: [],
-    isActive: "true"
+    isActive: true,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   });
 
+  // TRIAL SUBSCRIPTION
   const expiry = new Date();
   expiry.setDate(expiry.getDate() + 7);
 
