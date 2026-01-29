@@ -30,7 +30,7 @@ async function confirmVerification() {
     // CREATE USER DATA NOW
     await createInitialUserData(user);
 
-    window.location.href = "/dashboard.html";
+    window.location.href = "dashboard.html";
 
   } catch (err) {
     alert("Verification failed or expired");
