@@ -140,7 +140,7 @@ function updateSystemStatus(ok = true, message = "") {
 }
 
 function copyFormLink() {
-  const link = `${window.location.origin}/form.html?fid=${user.$id}`;
+  const link = `${window.location.origin}/X-Redro/form.html?fid=${user.$id}`;
   navigator.clipboard.writeText(link);
   alert("Form link copied");
 }
