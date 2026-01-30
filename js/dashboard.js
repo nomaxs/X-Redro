@@ -33,7 +33,7 @@ async function handleGoogleLogin() {
 
 async function initDashboard() {
   user = await requireAuth();
-  handleGoogleLogin();
+  //handleGoogleLogin();
 
   res = await databases.listDocuments(DB_ID, USERS, [
     Query.equal("userId", user.$id)
@@ -140,7 +140,7 @@ function updateSystemStatus(ok = true, message = "") {
 }
 
 function copyFormLink() {
-  const link = `${window.location.origin}/form.html?fid=${user.$id}`;
+  const link = `${window.location.origin}/X-Redro/form.html?fid=${user.$id}`;
   navigator.clipboard.writeText(link);
   alert("Form link copied");
 }
