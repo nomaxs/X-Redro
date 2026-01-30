@@ -222,35 +222,6 @@ input:focus {
 }
 
 /* ================================
-   GOOGLE BUTTON
-================================ */
-
-.google-btn {
-  width: 100%;
-  height: 46px;
-  border-radius: var(--radius-btn);
-  border: 1px solid var(--border-default);
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.15s ease, box-shadow 0.15s ease;
-}
-
-.google-btn:hover {
-  background: #fafafa;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
-}
-
-.google-btn img {
-  width: 18px;
-}
-
-/* ================================
    LINKS
 ================================ */
 
