@@ -20,7 +20,8 @@ async function requireAuth() {
   try {
     return await account.get();
   } catch {
-    window.location.href = "login.html";
+    window.location.replace("login.html");
+    return null;
   }
 }
 
@@ -33,6 +34,7 @@ async function handleGoogleLogin() {
 
 async function initDashboard() {
   user = await requireAuth();
+  if (!user) return;
   //handleGoogleLogin();
 
   res = await databases.listDocuments(DB_ID, USERS, [
