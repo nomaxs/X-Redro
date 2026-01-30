@@ -112,7 +112,7 @@ async function signup() {
 function googleLogin() {  
   account.createOAuth2Session(  
     'google',  
-    `${location.origin}/X-Redro/verify.html`,  
+    `${location.origin}/X-Redro/dashboard.html`,  
     `${location.origin}/X-Redro//login.html`  
   );  
 }    
