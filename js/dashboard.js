@@ -25,13 +25,6 @@ async function requireAuth() {
   }
 }
 
-async function handleGoogleLogin() {
-  try {
-    const user = await account.get();
-    await createInitialUserData(user);
-  } catch {}
-}
-
 async function initDashboard() {
   user = await requireAuth();
   if (!user) return;
