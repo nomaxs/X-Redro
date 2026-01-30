@@ -1,55 +1,34 @@
-async function confirmVerification() {    
-  try {    
-    let user;    
-    
-    // --- Check if email/password verification link ---    
-    const params = new URLSearchParams(window.location.search);    
-    const userId = params.get("userId");    
-    const secret = params.get("secret");    
-    
-    if (userId && secret) {    
-      // Email verification flow    
-      await account.updateVerification(userId, secret);    
-      // Get user after verification    
-      user = await account.get();    
-    } else {    
-      // Google OAuth flow or already signed in session    
-      try {    
-        user = await account.get();    
-      } catch {    
-        alert("Please log in first.");    
-        window.location.href = "login.html";    
-        return;    
-      }    
-    }    
-    
-    if (!user) {    
-      alert("Session expired. Please log in again.");    
-      window.location.href = "login.html";    
-      return;    
-    }    
-    
-    // --- Check if user data already exists ---    
-    try {    
-      await databases.getDocument(DB_ID, USERS, user.$id);    
-      // If exists, redirect immediately    
-      window.location.replace("dashboard.html");    
-      return;    
-    } catch {    
-      // Not found → first-time user, create data    
-      await createInitialUserData(user);    
-    }    
-    
-    // --- Redirect after setup ---    
-    window.location.replace("dashboard.html");    
-    
-  } catch (err) {    
-    console.error(err);    
-    alert("Verification or login failed. Please try again.");    
-  }    
-}    
+async function confirmVerification() {
+  const params = new URLSearchParams(location.search);
+  const userId = params.get("userId");
+  const secret = params.get("secret");
+
+  if (!userId || !secret) {
+    alert("Invalid verification link");
+    return;
+  }
+
+  try {
+    await account.updateVerification(userId, secret);
+
+    const user = await account.get();
+
+    // CREATE USER DATA NOW
+    await createInitialUserData(user);
+
+    window.location.href = "dashboard.html";
+
+  } catch (err) {
+    alert("Verification failed or expired");
+  }
+}
     
 async function createInitialUserData(user) {    
+  // prevent duplicates
+  try {
+    await databases.getDocument(DB_ID, USERS, user.$id);
+    return;
+  } catch {}
   // USER PROFILE    
   await databases.createDocument(DB_ID, USERS, user.$id, {    
     userId: user.$id,    
