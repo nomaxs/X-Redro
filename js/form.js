@@ -23,7 +23,7 @@ async function initForm() {
   const fid = params.get("fid");
 
   if (!fid) {
-    showToast("Invalid form link");
+    showToast("Invalid form link", "error");
     return;
   }
 
@@ -43,7 +43,7 @@ async function initForm() {
     renderForm();
   } catch (err) {
     console.error("INIT ERROR:", err);
-    showToast(err.message || "Form not found");
+    showToast(err.message || "Form not found", "error");
   }
 }
 
@@ -263,7 +263,7 @@ function validateFormInputs() {
     const el = document.querySelector(`[data-id="${field.id}"]`);
 
     if (!el || !el.value || !el.value.trim()) {
-      showToast(`Please fill "${field.label || "this field"}"`);
+      showToast(`Please fill "${field.label || "this field"}"`, "warning");
       el?.focus();
       return false;
     }
@@ -282,7 +282,7 @@ async function submitOrder() {
   // ✅ validate products
   const hasProducts = rawFormData.some(f => f.type === "product");
   if (!hasProducts) {
-    showToast("Please select at least one product");
+    showToast("Please select at least one product", "warning");
     return;
   }
 
@@ -304,11 +304,12 @@ async function submitOrder() {
       paymentFileId = uploadedFile.$id; // save the file ID
     } catch (err) {
       console.error("Failed to upload payment proof:", err);
-      showToast("Failed to upload payment proof. Please try again.");
+      showToast("Failed to upload payment proof. Please try again.", "error");
       showToast(
         err.message ||
         err.response?.message ||
-        JSON.stringify(err)
+        JSON.stringify(err),
+        "error"
       );
       return; // stop order if upload fails
     }
@@ -358,7 +359,8 @@ async function submitOrder() {
     showToast(
       err.message ||
       err.response?.message ||
-      JSON.stringify(err)
+      JSON.stringify(err),
+      "error"
     );
   }
 }
