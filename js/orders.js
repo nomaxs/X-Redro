@@ -308,7 +308,7 @@ async function deleteOrder(id) {
 /* ---------- MODAL ---------- */
 function viewImage(fileId) {
   if (!fileId) {
-    showToast("No payment proof uploaded.");
+    showToast("No payment proof uploaded.", "info");
     return;
   }
 
@@ -405,7 +405,7 @@ function normalizeOrdersForExport(orders) {
 function exportOrdersCSV() {
   try {
     if (!allOrders.length) {
-      showToast("No orders to export.");
+      showToast("No orders to export.", "info");
       return;
     }
 
@@ -449,15 +449,15 @@ function exportOrdersCSV() {
     URL.revokeObjectURL(url);
   } catch (err) {
     console.error("CSV export failed:", err);
-    showToast("CSV export failed, try another browser");
+    showToast("CSV export failed, try another browser", "error");
   }
 }
 
 function exportOrdersPDF() {
-  if (!allOrders.length) return showToast("No orders to export.");
+  if (!allOrders.length) return showToast("No orders to export.", "info");
   
   if (allOrders.length > 500) {
-  showToast("Large dataset detected. CSV export recommended for analysis.");
+  showToast("Large dataset detected. CSV export recommended for analysis.", "warning");
 }
 
   const normalized = normalizeOrdersForExport(allOrders);
@@ -517,7 +517,7 @@ function exportOrdersPDF() {
 }
 
 async function deleteAllOrders() {
-  if (!allOrders.length) return showToast("No orders to delete.");
+  if (!allOrders.length) return showToast("No orders to delete.", "info");
   if (!confirm("Are you sure you want to delete ALL orders including their images?")) return;
 
   for (const order of allOrders) {
