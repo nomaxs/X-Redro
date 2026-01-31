@@ -127,7 +127,7 @@ async function sendReset() {
   try {  
     await account.createRecovery(  
       email,  
-      `${location.origin}/reset-password.html`  
+      `${location.origin}/X-Redro/reset-password.html`  
     );  
   
     alert("Password reset link sent");  
@@ -135,4 +135,50 @@ async function sendReset() {
   } catch (err) {  
     alert(err.message || "Failed to send email");  
   }  
-}  
+}
+
+async function resetPassword() {
+  const params = new URLSearchParams(window.location.search);
+
+  const userId = params.get("userId");
+  const secret = params.get("secret");
+
+  const password = document.getElementById("newPassword").value.trim();
+  const confirm = document.getElementById("confirmPassword").value.trim();
+
+  if (!userId || !secret) {
+    alert("Invalid or expired reset link");
+    return;
+  }
+
+  if (!password || !confirm) {
+    alert("All fields are required");
+    return;
+  }
+
+  if (password.length < 8) {
+    alert("Password must be at least 8 characters");
+    return;
+  }
+
+  if (password !== confirm) {
+    alert("Passwords do not match");
+    return;
+  }
+
+  try {
+    await account.updateRecovery(
+      userId,
+      secret,
+      password,
+      confirm
+    );
+
+    alert("Password reset successful. Please login.");
+    window.location.href = "login.html";
+
+  } catch (err) {
+    console.error(err);
+    alert(err.message || "Reset failed");
+  }
+}
