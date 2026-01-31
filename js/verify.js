@@ -45,7 +45,52 @@ async function createInitialUserData(user) {
     userId: user.$id,    
     title: "My Business Name",    
     subtitle: "Welcome to X-Redro, place your order",    
-    fields: [],    
+    fields: [
+      {
+        id: crypto.randomUUID(),
+        type: "text",
+        label: "Full Name",
+        options: [],
+        products: []
+      },
+      {
+        id: crypto.randomUUID(),
+        type: "text",
+        label: "Phone Number",
+        options: [],
+        products: []
+      },
+      {
+        id: crypto.randomUUID(),
+        type: "textarea",
+        label: "Delivery Address or Drop-Off Point",
+        options: [],
+        products: []
+      },
+      {
+        id: crypto.randomUUID(),
+        type: "text",
+        label: "City / State",
+        options: [],
+        products: []
+      },
+      {
+        id: crypto.randomUUID(),
+        type: "textarea",
+        label: "Additional Notes / Requests",
+        options: [],
+        products: []
+      },
+      {
+        id: crypto.randomUUID(),
+        type: "product",
+        label: "Products",
+        options: [],
+        products: [
+          { name: "Sample Product", price: "0", imageId: "", imageUrl: "" }
+        ]
+      }
+    ],
     isActive: true,    
     $createdAt: new Date().toISOString(),    
     $updatedAt: new Date().toISOString()    
