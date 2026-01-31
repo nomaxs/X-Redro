@@ -40,7 +40,7 @@ async function initDashboard() {
   //Theme Application
   profileDocId = res.documents[0].$id;
 
-  const savedTheme = res.documents[0].theme || "light";
+  const savedTheme = res.documents[0].theme;
   alert(savedTheme);
   applyTheme(savedTheme);
   
