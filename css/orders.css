@@ -403,6 +403,34 @@ body {
   box-shadow: var(--shadow-soft);
 }
 
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: var(--card);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  width: 300px;
+  text-align: center;
+}
+
+.modal-content p {
+  font-size: 14px;
+  margin-bottom: var(--space-3);
+}
+
+.modal-content p {
+  font-size: 14px;
+  margin-bottom: var(--space-3);
+}
+
+.modal-content .actions {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
 .hidden {
   display: none;
 }
