@@ -85,6 +85,13 @@
   outline: none;
 }
 
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(58, 143, 0, 0.12);
+}
+
 .form-group textarea {
   min-height: 80px;
   resize: none;
@@ -179,6 +186,19 @@
   font-weight: 600;
 }
 
+.product-qty button:hover {
+  background: #dff1c9;
+}
+
+.product-qty button:active {
+  transform: scale(0.95);
+}
+
+.product-qty button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 /* =========================
    TOTAL BOX FLEXIBLE
 ========================= */
@@ -227,6 +247,15 @@
   border: none;
 }
 
+.upload-proof input:focus + .upload-ui {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.upload-proof:active .upload-ui {
+  transform: scale(0.98);
+}
+
 /* =========================
    SEND BUTTON ADJUSTMENT
 ========================= */
@@ -244,6 +273,19 @@
   margin-top: var(--space-3);
 }
 
+.send-btn:hover {
+  opacity: 0.92;
+}
+
+.send-btn:active {
+  transform: scale(0.97);
+}
+
+.send-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* =========================
    FOOTER
 ========================= */
@@ -258,9 +300,14 @@
 /* =========================
    SCROLLBAR STYLING
 ========================= */
+.product-grid {
+  -webkit-overflow-scrolling: touch;
+}
+
 .product-grid::-webkit-scrollbar {
   height: 6px;
 }
+
 .product-grid::-webkit-scrollbar-thumb {
   background: rgba(0,0,0,0.1);
   border-radius: 3px;
@@ -273,10 +320,6 @@
    MEDIA QUERIES
 ========================= */
 @media (max-width: 768px) {
-  .preview-card {
-    padding: var(--space-3);
-  }
-
   .product-grid {
     gap: var(--space-2);
   }
@@ -314,7 +357,7 @@
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 600px) {
   .preview-card {
     max-width: 700px;
   }
