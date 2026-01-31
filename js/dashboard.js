@@ -41,8 +41,8 @@ async function initDashboard() {
   profileDocId = res.documents[0].$id;
 
   const savedTheme = res.documents[0].theme || "light";
-  applyTheme(savedTheme);
   alert(savedTheme);
+  applyTheme(savedTheme);
   
   //Quick Subscription Check
   const sub = subRes.documents[0];
