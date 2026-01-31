@@ -166,7 +166,7 @@ body {
   cursor: pointer;
 }
 
-.danger {
+.action .button .danger {
   background: #eee;
   color: #000;
 }
