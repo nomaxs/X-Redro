@@ -95,7 +95,7 @@ async function fetchOrders() {
     Query.equal("userId", user.$id)
   ]);
 
-  const businessTitle = formRes.documents?.[0]?.title || "Your Business";
+  businessTitle = formRes.documents?.[0]?.title || "Your Business";
 
   allOrders = odsRes.documents;  
   applyFilter();
