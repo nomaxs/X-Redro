@@ -74,7 +74,7 @@ document.getElementById("updateAccount").onclick = async () => {
     username: nameVal
   });
 
-  showToast("Updated");
+  showToast("Updated", "success");
 };
 
 document.getElementById("userUpdate").onclick = () => {
@@ -108,17 +108,17 @@ async function changePassword() {
   const next = document.getElementById("newPassword").value.trim();
 
   if (!current || !next) {
-    showToast("Please fill all fields");
+    showToast("Please fill all fields", "warning");
     return;
   }
 
   if (next.length < 8) {
-    showToast("New password must be at least 8 characters");
+    showToast("New password must be at least 8 characters", "warning");
     return;
   }
 
   if (current === next) {
-    showToast("New password must be different from current password");
+    showToast("New password must be different from current password", "warning");
     return;
   }
 
@@ -129,14 +129,14 @@ async function changePassword() {
     document.getElementById("newPassword").value = "";
 
     closePasswordModal();
-    showToast("Password updated successfully");
+    showToast("Password updated successfully", "success");
   } catch (err) {
     console.error(err);
 
     if (err.code === 401) {
-      showToast("Current password is incorrect");
+      showToast("Current password is incorrect", "warning");
     } else {
-      showToast(err.message || "Password update failed");
+      showToast(err.message || "Password update failed", "warning");
     }
   }
 }
