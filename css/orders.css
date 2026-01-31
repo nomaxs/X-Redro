@@ -458,3 +458,51 @@ body {
     gap: var(--space-md);
   }
 }
+
+@media (max-width: 600px) {
+  .orders-page {
+    margin: var(--space-lg) auto;
+    padding: 0 var(--space-md) var(--space-lg);
+  }
+   
+  body {
+    font-size: 15px;
+  }
+
+  .summary-item,
+  .order-field {
+    font-size: 14px;
+  }
+
+  .order-date {
+    font-size: 13px;
+  }
+   
+  .order-summary-line {
+    flex-wrap: wrap;
+    white-space: normal;
+    gap: var(--space-xs);
+  }
+
+  .order-date {
+    margin-left: 0;
+    width: 100%;
+  }
+   
+  .order-card {
+    padding: var(--space-md);
+  }
+  .actions button,
+  .filters button {
+    font-size: 14px;
+    padding: 12px 18px;
+  }
+   
+  .nav-inner {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .nav-links {
+    gap: var(--space-md);
+  }
+}
