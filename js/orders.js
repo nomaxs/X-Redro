@@ -353,33 +353,30 @@ document.addEventListener("click", e => {
 });
 
 function normalizeOrdersForExport(orders) {
-  const rows = [];
-
-  orders.forEach(order => {
+  return orders.map(order => {
     const formData = parseFormData(order.formData);
 
-    // 1️⃣ Build clean order details (human readable)
+    const products = [];
     const details = [];
 
     formData.forEach(f => {
       if (f.type === "product" && Array.isArray(f.value)) {
         f.value.forEach(p => {
-          details.push(`${p.name} × ${p.qty}`);
+          products.push(`${p.name} × ${p.qty}`);
         });
       } else if (f.value) {
         details.push(`${f.label}: ${f.value}`);
       }
     });
 
-    rows.push({
-      "Order Details”": details.join(" | "),
-      "Payment Status": order.status,
-      "Total Amount (₦)": order.totalAmount || 0,
+    return {
+      "Order Summary": products.slice(0, 3).join(", "),
+      "Order Details": details.concat(products).join("\n"),
+      "Payment Status": order.status.toUpperCase(),
+      "Total Amount (₦)": `₦${Number(order.totalAmount || 0).toLocaleString()}`,
       "Last Updated": new Date(order.$updatedAt).toLocaleString()
-    });
+    };
   });
-
-  return rows;
 }
 
 function exportOrdersCSV() {
@@ -395,14 +392,15 @@ function exportOrdersCSV() {
     const formatted = normalized.map(row => ({
       ...row,
       "Total Amount (₦)": `₦${Number(row["Total Amount (₦)"]).toLocaleString()}`,
-      "Order Details”": row["Order Details”"].replace(/\s\|\s/g, "\n")
+      "Order Details": row["Order Details"].replace(/\n/g, "\n\n")
     }));
 
     let csvContent = "";
 
     if (window.Papa) {
       csvContent = Papa.unparse(formatted, {
-        quotes: true
+        quotes: true,
+        newline: "\r\n"
       });
     } else {
       const headers = Object.keys(formatted[0]);
