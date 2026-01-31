@@ -516,9 +516,18 @@ function exportOrdersPDF() {
   doc.save(`x_redro_orders_${Date.now()}.pdf`);
 }
 
+function openAllDeleteModal() {
+  document.getElementById("orderDeleteModal").classList.remove("hidden");
+}
+
+function closeAllDeleteModal(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById("orderDeleteModal").classList.add("hidden");
+}
+
 async function deleteAllOrders() {
   if (!allOrders.length) return showToast("No orders to delete.", "info");
-  if (!confirm("Are you sure you want to delete ALL orders including their images?")) return;
+  //if (!confirm("Are you sure you want to delete ALL orders including their images?")) return;
 
   for (const order of allOrders) {
     // Delete payment proof image if exists
