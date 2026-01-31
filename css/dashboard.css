@@ -1,43 +1,45 @@
 /* ===============================
    DASHBOARD – X REDRO
-   Light + Dark Mode (CLEANED)
+   Light + Dark Mode
    =============================== */
 
-/* ---------- THEME VARIABLES ---------- */
+/* ---------- VARIABLES ---------- */
 :root {
-  /* Surfaces */
   --bg: #fafafa;
   --surface: #fafafa;
   --surface-elevated: #ffffff;
   --card: #ffffff;
   --cards: #fefefe;
-  --dark-surface: #141414;
+  
 
-  /* Text */
   --text-primary: #111111;
   --text-secondary: #6b6b6b;
   --text-muted: #9a9a9a;
 
-  /* Brand */
-  --accent: #96d97f;
-
-  /* Borders */
   --border: #e6e6e6;
 
-  /* Radius */
-  --radius-pill: 999px;
-  --radius-md: 14px;
-  --radius-lg: 18px;
+  --accent: #96d97f;
 
-  /* Spacing (single system) */
+  --dark-surface: #141414;
+
+  --radius-lg: 18px;
+  --radius-md: 14px;
+  --radius-pill: 999px;
+
   --space-xs: 6px;
   --space-sm: 10px;
   --space-md: 16px;
   --space-lg: 24px;
   --space-xl: 32px;
   --space-2xl: 40px;
+  
+  --space-1: 6px;
+  --space-2: 10px;
+  --space-3: 14px;
+  --space-4: 20px;
+  --space-5: 32px;
+  
 
-  /* Shadows */
   --shadow-soft: 0 8px 24px rgba(0,0,0,0.05);
   --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
   --shadow-md: 0 4px 8px rgba(0,0,0,0.06);
@@ -58,23 +60,24 @@
   --border: #262626;
 }
 
-/* ---------- BASE RESET ---------- */
+/* ---------- BASE ---------- */
 * {
   box-sizing: border-box;
+  font-family: Inter, system-ui, sans-serif;
 }
 
 body {
   margin: 0;
-  font-family: Inter, system-ui, sans-serif;
   background: var(--bg);
   color: var(--text-primary);
+  font-family: Inter, system-ui, sans-serif;
   line-height: 1.5;
 }
 
 /* ---------- NAV ---------- */
 .nav {
-  background: var(--surface-elevated);
   border-bottom: 1px solid var(--border);
+  background: var(--surface-elevated);
 }
 
 .nav-inner {
@@ -106,7 +109,6 @@ body {
   font-weight: 600;
 }
 
-/* Theme toggle */
 .theme-toggle {
   cursor: pointer;
 }
@@ -115,7 +117,7 @@ body {
   width: 22px;
   height: 22px;
   color: var(--icon-color);
-  transition: transform 0.2s ease, color 0.2s ease;
+  transition: color 0.2s ease;
 }
 
 [data-theme="light"] {
@@ -123,7 +125,7 @@ body {
 }
 
 [data-theme="dark"] {
-  --icon-color: #96d97f;
+  --icon-color: #96d97f; /* premium green sun glow */
 }
 
 .theme-toggle:hover .theme-icon {
@@ -181,62 +183,100 @@ body {
 .subscription button {
   margin-left: auto;
   padding: var(--space-sm) var(--space-lg);
-  border-radius: var(--radius-pill);
+  border-radius: 999px;
   border: none;
-  background: var(--surface-elevated);
   box-shadow: var(--shadow-sm);
+  background: var(--surface-elevated);
   font-size: 13px;
   color: var(--text-primary);
   cursor: pointer;
 }
 
-/* ---------- EXPIRED SUB ---------- */
+/* Exipred Subscription */
 .subscribe {
+  display: inline;
   background: var(--bg);
+  align-items: center;
+  gap: var(--space-md);
   padding: var(--space-xl);
   margin-bottom: var(--space-2xl);
-  text-align: center;
   font-size: 14px;
   color: var(--text-secondary);
-  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
+  text-align: center;
+  border-radius: var(--radius-lg);
 }
+  
+.subscribe button {
+  margin-left: auto;
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: 999px;
+  border: none;
+  box-shadow: var(--shadow-sm);
+  background: var(--surface-elevated);
+  font-size: 13px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
 
 .subscribe h2 {
   font-size: 18px;
-  margin-bottom: var(--space-md);
+  margin: 0 0 var(--space-3);
 }
 
 .subscribe-row {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  gap: var(--space-md);
+  margin-top: var(--space-3);
+  gap: var(--space-2);
 }
 
-.subscribe button {
-  padding: var(--space-sm) var(--space-lg);
-  border-radius: var(--radius-pill);
-  border: none;
-  background: var(--surface-elevated);
-  box-shadow: var(--shadow-sm);
-  font-size: 13px;
-  color: var(--text-primary);
-  cursor: pointer;
+/* ---------- MODAL ---------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: var(--card);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  width: 300px;
+  text-align: center;
+}
+
+/* ---------- LATEST ORDERS ---------- */
+#latestOrders h2 {
+  font-size: 18px;
+  margin-bottom: var(--space-md);
 }
 
 /* ---------- ORDER CARD ---------- */
 .order-card {
   background: var(--surface-elevated);
-  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
+  border: 1px solid var(--border);
   margin-bottom: var(--space-md);
 }
 
+/* Header */
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: var(--space-sm);
 }
 
 .order-name {
@@ -244,16 +284,17 @@ body {
   font-size: 14px;
 }
 
+/* Status pill */
 .status {
   background: var(--text-primary);
   color: var(--surface);
   padding: 6px 12px;
-  font-size: 12px;
   border-radius: var(--radius-pill);
   border: 1px solid var(--border);
+  font-size: 12px;
 }
 
-/* ---------- ORDER META ---------- */
+/* Meta */
 .order-meta {
   display: grid;
   grid-template-columns: 1fr 2fr 120px;
@@ -262,33 +303,103 @@ body {
   color: var(--text-secondary);
 }
 
-/* ---------- SUMMARY ---------- */
+/* ---------- SUMMARY LINE ---------- */
 .order-summary-line {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
   margin-top: var(--space-sm);
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .summary-item {
   font-size: 13px;
   color: var(--text-secondary);
+  flex-shrink: 0;
 }
 
 .order-date {
   margin-left: auto;
   font-size: 12px;
   color: var(--text-muted);
+  flex-shrink: 0;
 }
 
-/* ---------- SYSTEM ---------- */
+/* ---------- META ---------- */
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-sm);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.meta button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--text-secondary);
+}
+
+/* ATTENTION STATUS */
+.attention-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  margin-bottom: var(--space-lg);
+  font-size: 14px;
+}
+
+.attention-status span {
+  font-size: 18px;
+}
+
+/* FORM STATUS */
+.form-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-2xl);
+}
+
+.form-status .label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.form-status strong {
+  font-size: 14px;
+}
+
+.form-status .copybtn {
+  background: var(--text-primary);
+  color: var(--surface);
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  font-size: 12px;
+}
+
+
+/* SYSTEM STATUS */
 .system-status {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  margin-top: var(--space-2xl);
   font-size: 13px;
   color: var(--text-muted);
+  margin-top: var(--space-2xl);
 }
 
 .system-status .dot {
@@ -307,10 +418,39 @@ body {
 
   .order-meta {
     grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+
+  .subscription {
+    flex-wrap: wrap;
   }
 }
 
+/* =================================
+   MOBILE OPTIMIZATION – DASHBOARD
+   ================================= */
+
 @media (max-width: 600px) {
+
+  /* ---------- GLOBAL ---------- */
+  body {
+    font-size: 15px;
+  }
+
+  /* ---------- NAV ---------- */
+  .nav-inner {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .nav-links {
+    gap: var(--space-md);
+  }
+
+  .nav-links a {
+    font-size: 15px;
+  }
+
+  /* ---------- MAIN ---------- */
   .dashboard {
     margin: var(--space-lg) auto;
     padding: 0 var(--space-md);
@@ -318,14 +458,111 @@ body {
 
   .dashboard h1 {
     font-size: 24px;
+    margin-bottom: var(--space-md);
   }
 
+  /* ---------- STATS ---------- */
   .stats {
     grid-template-columns: 1fr;
     padding: var(--space-lg);
   }
 
+  .stats div span {
+    font-size: 28px;
+  }
+
+  .stats div p {
+    font-size: 14px;
+  }
+
+  /* ---------- SUBSCRIPTION ---------- */
+  .subscription {
+    font-size: 15px;
+    gap: var(--space-sm);
+  }
+
+  .subscription button,
+  .subscribe button {
+    font-size: 14px;
+    padding: 12px 18px;
+  }
+
+  .subscribe {
+    padding: var(--space-lg);
+  }
+
+  .subscribe h2 {
+    font-size: 16px;
+  }
+
   .subscribe-row {
     flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-sm);
+  }
+
+  /* ---------- ORDER CARD ---------- */
+  .order-card {
+    padding: var(--space-md);
+  }
+
+  .order-name {
+    font-size: 15px;
+  }
+
+  .status {
+    font-size: 13px;
+    padding: 6px 14px;
+  }
+
+  /* ---------- META GRID ---------- */
+  .order-meta {
+    grid-template-columns: 1fr;
+    font-size: 14px;
+  }
+
+  /* ---------- SUMMARY LINE ---------- */
+  .order-summary-line {
+    flex-wrap: wrap;
+    white-space: normal;
+    gap: var(--space-xs);
+  }
+
+  .summary-item {
+    font-size: 14px;
+  }
+
+  .order-date {
+    width: 100%;
+    margin-left: 0;
+    font-size: 13px;
+  }
+
+  /* ---------- FORM STATUS ---------- */
+  .form-status {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+  }
+
+  .form-status strong {
+    font-size: 15px;
+  }
+
+  .form-status .copybtn {
+    font-size: 13px;
+    padding: 8px 14px;
+  }
+
+  /* ---------- ATTENTION ---------- */
+  .attention-status {
+    font-size: 15px;
+    padding: var(--space-md);
+  }
+
+  /* ---------- SYSTEM STATUS ---------- */
+  .system-status {
+    font-size: 14px;
   }
 }
