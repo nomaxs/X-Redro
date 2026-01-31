@@ -32,7 +32,7 @@
   <section class="orders-header">
     <h1>Orders</h1>
     <div class="actions">
-      <button onclick="deleteAllOrders()">Delete Orders</button>
+      <button onclick="OpenOrderDeleteModal()">Delete Orders</button>
       <button type="button" onclick="exportOrdersCSV()">Export CSV</button>
       <button type="button" onclick="exportOrdersPDF()">Export PDF</button>
     </div>
@@ -58,11 +58,11 @@
 
 <div id="toast-container"></div>
 
-<div id="confirmModal" class="modal hidden" onclick="OrderDeleteModal(event)">
+<div id="confirmModal" class="modal hidden" onclick="closeOrderDeleteModal(event)">
   <div class="modal-content" onclick="event.stopPropagation()">
     <label>Are you sure you want to delete all order?</label>
     <div class="actions">
-      <button class="danger" onclick="OrderDeleteModal()>Cancel</button>
+      <button class="danger" onclick="closeOrderDeleteModal()>Cancel</button>
       <button onclick="deleteAllOrders()">Delete</button>
     </div>
   </div>
