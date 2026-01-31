@@ -16,6 +16,7 @@ const PRODUCT_IMAGES_BUCKET = "696825350032fe17c1eb";
 let profileDocId = null;
 let user;
 let res;
+let businessTitle = "Your Business";
 
 async function requireAuth() {
   try {
@@ -89,6 +90,12 @@ async function fetchOrders() {
       Query.orderDesc("$createdAt")
     ]
   );
+
+  const formRes = await databases.listDocuments(DB_ID, FORMS, [
+    Query.equal("userId", user.$id)
+  ]);
+
+  const businessTitle = formRes.documents?.[0]?.title || "Your Business";
 
   allOrders = odsRes.documents;  
   applyFilter();
@@ -407,7 +414,7 @@ function exportOrdersCSV() {
     // Beautify values
     const formatted = normalized.map(row => ({
       ...row,
-      "Total Amount (₦)": `₦${Number(row["Total Amount (₦)"]).toLocaleString()}`,
+      "Total Amount (₦)": row["Total Amount (₦)"],
       "Order Details": row["Order Details"].replace(/\n/g, "\n\n")
     }));
 
@@ -458,7 +465,7 @@ function exportOrdersPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF("landscape"); // landscape fits more columns
 
-  const businessName = res?.documents?.[0]?.businessName || "Your Business";
+  const businessName = businessTitle;
   const platformName = "X Redro";
 
   // ---------- HEADER ----------
