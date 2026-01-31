@@ -136,6 +136,9 @@ function renderField(field) {
 }
 
 /* ---------------- PRODUCTS ---------------- */
+function formatNaira(amount) {
+  return amount.toLocaleString("en-NG");
+}
 
 function renderProducts(field) {
   let html = `<div class="product-grid">`;
@@ -147,7 +150,7 @@ function renderProducts(field) {
           ${p.imageUrl ? `<img src="${p.imageUrl}">` : ""}
         </div>
         <div class="product-name">${p.name}</div>
-        <div class="product-price">₦${p.price}</div>
+        <div class="product-price">₦${formatNaira(Number(p.price || 0))}</div>
         <div class="product-qty">
           <button onclick="changeQty('${field.id}', ${i}, -1)">-</button>
           <span id="qty-${field.id}-${i}">0</span>
@@ -189,7 +192,7 @@ function updateTotal() {
   });
 
   document.getElementById("itemCount").innerText = items;
-  document.getElementById("totalCost").innerText = `₦${total}`;
+  document.getElementById("totalCost").innerText = `₦${formatNaira(total)}`;
 }
 
 function buildRawFormData() {
