@@ -516,13 +516,13 @@ function exportOrdersPDF() {
   doc.save(`x_redro_orders_${Date.now()}.pdf`);
 }
 
-function openAllDeleteModal() {
-  document.getElementById("orderDeleteModal").classList.remove("hidden");
+function openOrderDeleteModal() {
+  document.getElementById("confirmModal").classList.remove("hidden");
 }
 
-function closeAllDeleteModal(e) {
+function closeOrderDeleteModal(e) {
   if (e && e.target !== e.currentTarget) return;
-  document.getElementById("orderDeleteModal").classList.add("hidden");
+  document.getElementById("confirmModel").classList.add("hidden");
 }
 
 async function deleteAllOrders() {
