@@ -122,7 +122,7 @@ async function saveForm() {
     $updatedAt: new Date().toISOString()
   });
 
-  showToast("Form saved successfully");
+  showToast("Form saved successfully", "success");
 }
 /* ---------------- FORM LINK ---------------- */
 
@@ -136,7 +136,7 @@ function copyFormLink() {
   const input = document.getElementById("formLinkInput");
   input.select();
   document.execCommand("copy");
-  showToast("Form link copied");
+  showToast("Form link copied", "success");
 }
 
 /* ---------------- ADD MENU ---------------- */
