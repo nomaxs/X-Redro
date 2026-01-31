@@ -166,6 +166,11 @@ body {
   cursor: pointer;
 }
 
+.danger {
+  background: #eee;
+  color: #000;
+}
+
 /* ---------- SEARCH ---------- */
 .search {
   width: 100%;
