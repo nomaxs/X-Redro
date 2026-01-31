@@ -42,7 +42,7 @@ async function initDashboard() {
 
   const savedTheme = res.documents[0].theme || "light";
   applyTheme(savedTheme);
-  showToast(savedTheme);
+  alert(savedTheme);
   
   //Quick Subscription Check
   const sub = subRes.documents[0];
