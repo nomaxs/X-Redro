@@ -68,4 +68,7 @@ async function createInitialUserData(user) {
 }    
     
 // Trigger the flow    
-confirmVerification();
+// Trigger verification only if URL has params
+if (location.search.includes("userId") && location.search.includes("secret")) {
+  confirmVerification();
+}
