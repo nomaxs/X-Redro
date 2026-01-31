@@ -353,69 +353,62 @@ document.addEventListener("click", e => {
 });
 
 function normalizeOrdersForExport(orders) {
-  const allFieldLabels = new Set();
+  const rows = [];
 
-  // discover all dynamic field labels used in any order
   orders.forEach(order => {
     const formData = parseFormData(order.formData);
+
+    // 1️⃣ Build clean order details (human readable)
+    const details = [];
+
     formData.forEach(f => {
-      if (f.type !== "product" && f.label) allFieldLabels.add(f.label);
+      if (f.type === "product" && Array.isArray(f.value)) {
+        f.value.forEach(p => {
+          details.push(`${p.name} × ${p.qty}`);
+        });
+      } else if (f.value) {
+        details.push(`${f.label}: ${f.value}`);
+      }
+    });
+
+    rows.push({
+      "Order Details”": details.join(" | "),
+      "Payment Status": order.status,
+      "Total Amount (₦)": order.totalAmount || 0,
+      "Last Updated": new Date(order.$updatedAt).toLocaleString()
     });
   });
 
-  const dynamicFields = Array.from(allFieldLabels);
-
-  const normalized = orders.map(order => {
-    const formData = parseFormData(order.formData);
-
-    const row = {
-      "Order ID": order.$id,
-      "Customer / Title": getCardTitle(order),
-      "Products": getProductSummary(order.formData),
-      "Total (₦)": order.totalAmount || 0,
-      "Status": order.status,
-      "Date": new Date(order.$createdAt).toLocaleString()
-    };
-
-    // map dynamic custom fields
-    dynamicFields.forEach(label => {
-      const field = formData.find(f => f.label === label);
-      row[label] = field ? field.value : "";
-    });
-
-    return row;
-  });
-
-  return { normalized, dynamicFields };
+  return rows;
 }
 
 function exportOrdersCSV() {
   try {
-    if (!allOrders || !allOrders.length) {
+    if (!allOrders.length) {
       alert("No orders to export.");
       return;
     }
 
-    const { normalized } = normalizeOrdersForExport(allOrders);
+    const normalized = normalizeOrdersForExport(allOrders);
 
-    if (!normalized.length) {
-      alert("Orders could not be formatted.");
-      return;
-    }
+    // Beautify values
+    const formatted = normalized.map(row => ({
+      ...row,
+      "Total Amount (₦)": `₦${Number(row["Total Amount (₦)"]).toLocaleString()}`,
+      "Order Details”": row["Order Details”"].replace(/\s\|\s/g, "\n")
+    }));
 
     let csvContent = "";
 
-    // ---- USE PAPAPARSE IF AVAILABLE ----
     if (window.Papa) {
-      csvContent = Papa.unparse(normalized);
-    } 
-    // ---- FALLBACK (NO LIBRARY) ----
-    else {
-      const headers = Object.keys(normalized[0]);
-      const rows = normalized.map(row =>
-        headers.map(h => `"${String(row[h] ?? "").replace(/"/g, '""')}"`).join(",")
+      csvContent = Papa.unparse(formatted, {
+        quotes: true
+      });
+    } else {
+      const headers = Object.keys(formatted[0]);
+      const rows = formatted.map(r =>
+        headers.map(h => `"${String(r[h]).replace(/"/g, '""')}"`).join(",")
       );
-
       csvContent = [headers.join(","), ...rows].join("\n");
     }
 
@@ -424,13 +417,10 @@ function exportOrdersCSV() {
     });
 
     const url = URL.createObjectURL(blob);
-
     const link = document.createElement("a");
+
     link.href = url;
     link.download = `x_redro_orders_${Date.now()}.csv`;
-    link.style.display = "none";
-
-    // 🔴 THIS IS IMPORTANT
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -438,10 +428,9 @@ function exportOrdersCSV() {
     URL.revokeObjectURL(url);
   } catch (err) {
     console.error("CSV export failed:", err);
-    alert("CSV export failed. Check console.");
+    alert("CSV export failed, try another browser");
   }
 }
-
 
 function exportOrdersPDF() {
   if (!allOrders.length) return alert("No orders to export.");
@@ -450,7 +439,7 @@ function exportOrdersPDF() {
   alert("Large dataset detected. CSV export recommended for analysis.");
 }
 
-  const { normalized } = normalizeOrdersForExport(allOrders);
+  const normalized = normalizeOrdersForExport(allOrders);
 
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF("landscape"); // landscape fits more columns
@@ -477,9 +466,9 @@ function exportOrdersPDF() {
     body: normalized,
     startY: 35,
     styles: {
-      fontSize: 8,
-      cellPadding: 3,
-      overflow: "linebreak"
+      fontSize: 9,
+      cellPadding: 4,
+      valign: "top"
     },
     headStyles: {
       fillColor: [15, 15, 15],
