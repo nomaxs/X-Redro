@@ -94,19 +94,6 @@ async function logout() {
   window.location.href = "login.html";
 }
 
-function openDeleteModal() {
-  document.getElementById("deleteModal").classList.remove("hidden");
-}
-
-function closeDeleteModal() {
-  document.getElementById("deleteModal").classList.add("hidden");
-}
-
-async function deleteAccount() {
-  await account.delete();
-  window.location.href = "signup.html";
-}
-
 function openPasswordModal() {
   document.getElementById("passwordModal").classList.remove("hidden");
 }
