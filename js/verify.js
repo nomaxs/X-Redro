@@ -4,7 +4,7 @@ async function confirmVerification() {
   const secret = params.get("secret");
 
   if (!userId || !secret) {
-    alert("Invalid verification link");
+    showToast("Invalid verification link", "error");
     return;
   }
 
