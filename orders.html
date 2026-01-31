@@ -58,11 +58,11 @@
 
 <div id="toast-container"></div>
 
-<div id="confirmModal" class="modal hidden" onclick="closeOrderDeleteModal(event)">
+<div id="confirmModal" class="modal hidden" onclick="OrderDeleteModal(event)">
   <div class="modal-content" onclick="event.stopPropagation()">
     <label>Are you sure you want to delete all order?</label>
     <div class="actions">
-      <button class="danger" onclick="closeOrderDeleteModal()>Cancel</button>
+      <button class="danger" onclick="OrderDeleteModal()>Cancel</button>
       <button onclick="deleteAllOrders()">Delete</button>
     </div>
   </div>
