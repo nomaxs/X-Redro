@@ -144,7 +144,7 @@ function updateSystemStatus(ok = true, message = "") {
 function copyFormLink() {
   const link = `${window.location.origin}/X-Redro/form.html?fid=${user.$id}`;
   navigator.clipboard.writeText(link);
-  showToast("Form link copied");
+  showToast("Form link copied", "success");
 }
 
 async function loadLatestOrders(userId) {
