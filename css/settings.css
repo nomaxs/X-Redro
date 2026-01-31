@@ -350,3 +350,90 @@ button {
     align-items: stretch;
   }
 }
+
+/* =========================
+   MOBILE OPTIMIZATION – SETTINGS
+========================= */
+@media (max-width: 600px) {
+
+  body {
+    font-size: 15px;
+  }
+
+  /* ---------- LAYOUT ---------- */
+  .settings {
+    margin: var(--space-4) auto;
+    padding: 0 var(--space-4);
+  }
+
+  .settings h1 {
+    font-size: 26px;
+    margin-bottom: var(--space-3);
+  }
+
+  /* ---------- SECTIONS ---------- */
+  section {
+    padding: var(--space-4);
+    margin-top: var(--space-4);
+  }
+
+  section h2 {
+    font-size: 17px;
+  }
+
+  /* ---------- INPUTS ---------- */
+  input {
+    padding: 16px 20px;
+    font-size: 15px;
+  }
+
+  label {
+    font-size: 14px;
+  }
+
+  .inline-edit {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* ---------- BUTTONS ---------- */
+  button {
+    width: 100%;
+    padding: 14px 18px;
+    margin-right: 0;
+    margin-top: var(--space-2);
+    font-size: 14px;
+  }
+
+  .primary {
+    margin-top: var(--space-4);
+  }
+
+  /* ---------- SUBSCRIPTION ---------- */
+  .subscription-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+  }
+
+  /* ---------- STATUS ---------- */
+  .status-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+
+  /* ---------- MODAL ---------- */
+  .modal-content {
+    width: calc(100% - 32px);
+    padding: var(--space-4);
+  }
+
+  .modal-content .actions {
+    flex-direction: column;
+  }
+
+  .modal-content .actions button {
+    width: 100%;
+  }
+}
