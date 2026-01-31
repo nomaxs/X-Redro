@@ -13,6 +13,15 @@ const USERS = "695c501b001d24549b03";
 const SUBS = "subscriptions";
 const PRODUCT_IMAGES_BUCKET = "696825350032fe17c1eb";
 
+function formatWithCommas(value) {
+  if (!value) return "";
+  return Number(value.replace(/,/g, "")).toLocaleString();
+}
+
+function stripCommas(value) {
+  return value.replace(/,/g, "");
+}
+
 let fields = [];
 let profileDocId = null;
 let user;
@@ -252,6 +261,18 @@ function removeOption(fieldId, index) {
 }
 
 /* ---------------- PRODUCTS ---------------- */
+function handlePriceInput(input) {
+  const raw = input.value.replace(/,/g, "").replace(/\D/g, "");
+  input.value = raw ? Number(raw).toLocaleString() : "";
+}
+
+function savePrice(fieldId, index, value) {
+  const field = fields.find(f => f.id === fieldId);
+  if (!field) return;
+
+  // 🔒 store clean number only
+  field.products[index].price = stripCommas(value);
+}
 
 function renderProducts(field) {
   const wrap = document.createElement('div');
@@ -274,8 +295,8 @@ function renderProducts(field) {
       <input placeholder="Product name" value="${p.name || ""}"
         onchange="updateProduct('${field.id}', ${i}, 'name', this.value)">
 
-      <input placeholder="₦ Price" value="${p.price || ""}"
-        onchange="updateProduct('${field.id}', ${i}, 'price', this.value)">
+      <input placeholder="₦ Price" value="${p.price ? formatWithCommas(p.price) : ""}"
+        oninput="handlePriceInput(this)" onblur="savePrice('${field.id}', ${i}, this.value)">
 
       <span class="remove" onclick="removeProduct('${field.id}', ${i})">×</span>
     `;
@@ -429,7 +450,7 @@ function renderPreviewProducts(field) {
           ${p.imageUrl ? `<img src="${p.imageUrl}">` : ""}
         </div>
         <div class="product-name">${p.name || "Product Name"}</div>
-        <div class="product-price">₦${p.price || 0}</div>
+        <div class="product-price">₦${Number(p.price || 0).toLocaleString()}</div>
         <div class="product-qty">Qty: 1</div>
       </div>
     `;
