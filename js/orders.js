@@ -94,6 +94,7 @@ async function fetchOrders() {
   const formRes = await databases.listDocuments(DB_ID, FORMS, [
     Query.equal("userId", user.$id)
   ]);
+  alert(formRes.documents[0]); 
 
   businessTitle = formRes.documents?.[0]?.title || "Your Business";
 
