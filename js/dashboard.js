@@ -25,17 +25,9 @@ async function requireAuth() {
   }
 }
 
-async function handleGoogleLogin() {
-  try {
-    const user = await account.get();
-    await createInitialUserData(user);
-  } catch {}
-}
-
 async function initDashboard() {
   user = await requireAuth();
   if (!user) return;
-  //handleGoogleLogin();
 
   res = await databases.listDocuments(DB_ID, USERS, [
     Query.equal("userId", user.$id)
@@ -50,6 +42,7 @@ async function initDashboard() {
 
   const savedTheme = res.documents[0].theme || "light";
   applyTheme(savedTheme);
+  showToast(savedTheme);
   
   //Quick Subscription Check
   const sub = subRes.documents[0];
