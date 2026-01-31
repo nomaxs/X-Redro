@@ -13,11 +13,11 @@ async function confirmReset() {
   const password = newPassword.value.trim();
 
   if (!password || password.length < 8) {
-    showToast("Password must be at least 8 characters");
+    showToast("Password must be at least 8 characters", "warning");
     return;
   }
 
   await account.updateRecovery(userId, secret, password);
-  showToast("Password updated");
+  showToast("Password updated", "sucsess");
   window.location.href = "login.html";
 }
