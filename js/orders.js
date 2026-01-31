@@ -522,29 +522,34 @@ function openOrderDeleteModal() {
 
 function closeOrderDeleteModal(e) {
   if (e && e.target !== e.currentTarget) return;
-  document.getElementById("confirmModel").classList.add("hidden");
+  document.getElementById("confirmModal").classList.add("hidden");
 }
 
 async function deleteAllOrders() {
-  if (!allOrders.length) return showToast("No orders to delete.", "info");
-  //if (!confirm("Are you sure you want to delete ALL orders including their images?")) return;
+  if (!allOrders.length) {
+    showToast("No orders to delete.", "info");
+    return;
+  }
 
   for (const order of allOrders) {
-    // Delete payment proof image if exists
+    // Delete payment proof image
     if (order.paymentProof) {
       try {
-        await client.storage.deleteFile("696825350032fe17c1eb", order.paymentProof);
+        await client.storage.deleteFile(
+          "696825350032fe17c1eb",
+          order.paymentProof
+        );
       } catch (e) {
-        console.warn(`Failed to delete image for order ${order.$id}:`, e);
+        console.warn(`Failed to delete image for order ${order.$id}`, e);
       }
     }
 
-    // Delete order document
     await databases.deleteDocument(DB_ID, ORDERS, order.$id);
   }
 
+  closeOrderDeleteModal();
   fetchOrders();
+  showToast("All orders deleted successfully", "success");
 }
-
 /* INIT */
 fetchOrders();
