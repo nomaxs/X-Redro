@@ -422,3 +422,144 @@ body {
     flex-wrap: wrap;
   }
 }
+
+/* =================================
+   MOBILE OPTIMIZATION – DASHBOARD
+   ================================= */
+
+@media (max-width: 600px) {
+
+  /* ---------- GLOBAL ---------- */
+  body {
+    font-size: 15px;
+  }
+
+  /* ---------- NAV ---------- */
+  .nav-inner {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .nav-links {
+    gap: var(--space-md);
+  }
+
+  .nav-links a {
+    font-size: 15px;
+  }
+
+  /* ---------- MAIN ---------- */
+  .dashboard {
+    margin: var(--space-lg) auto;
+    padding: 0 var(--space-md);
+  }
+
+  .dashboard h1 {
+    font-size: 24px;
+    margin-bottom: var(--space-md);
+  }
+
+  /* ---------- STATS ---------- */
+  .stats {
+    grid-template-columns: 1fr;
+    padding: var(--space-lg);
+  }
+
+  .stats div span {
+    font-size: 28px;
+  }
+
+  .stats div p {
+    font-size: 14px;
+  }
+
+  /* ---------- SUBSCRIPTION ---------- */
+  .subscription {
+    font-size: 15px;
+    gap: var(--space-sm);
+  }
+
+  .subscription button,
+  .subscribe button {
+    font-size: 14px;
+    padding: 12px 18px;
+  }
+
+  .subscribe {
+    padding: var(--space-lg);
+  }
+
+  .subscribe h2 {
+    font-size: 16px;
+  }
+
+  .subscribe-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-sm);
+  }
+
+  /* ---------- ORDER CARD ---------- */
+  .order-card {
+    padding: var(--space-md);
+  }
+
+  .order-name {
+    font-size: 15px;
+  }
+
+  .status {
+    font-size: 13px;
+    padding: 6px 14px;
+  }
+
+  /* ---------- META GRID ---------- */
+  .order-meta {
+    grid-template-columns: 1fr;
+    font-size: 14px;
+  }
+
+  /* ---------- SUMMARY LINE ---------- */
+  .order-summary-line {
+    flex-wrap: wrap;
+    white-space: normal;
+    gap: var(--space-xs);
+  }
+
+  .summary-item {
+    font-size: 14px;
+  }
+
+  .order-date {
+    width: 100%;
+    margin-left: 0;
+    font-size: 13px;
+  }
+
+  /* ---------- FORM STATUS ---------- */
+  .form-status {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+  }
+
+  .form-status strong {
+    font-size: 15px;
+  }
+
+  .form-status .copybtn {
+    font-size: 13px;
+    padding: 8px 14px;
+  }
+
+  /* ---------- ATTENTION ---------- */
+  .attention-status {
+    font-size: 15px;
+    padding: var(--space-md);
+  }
+
+  /* ---------- SYSTEM STATUS ---------- */
+  .system-status {
+    font-size: 14px;
+  }
+}
