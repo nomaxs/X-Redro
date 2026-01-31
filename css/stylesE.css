@@ -311,3 +311,82 @@ input:focus {
   color: var(--text-primary);
   cursor: pointer;
 }
+
+/* ================================
+   MOBILE OPTIMIZATION – AUTH PAGES
+================================ */
+@media (max-width: 600px) {
+
+  body {
+    align-items: flex-start;
+  }
+
+  /* ---------- PAGE ---------- */
+  .page {
+    padding: 32px 16px;
+  }
+
+  /* ---------- CARD ---------- */
+  .card {
+    padding: 28px 22px 30px;
+    border-radius: var(--radius-lg);
+  }
+
+  h2 {
+    font-size: 20px;
+    margin-bottom: 18px;
+  }
+
+  /* ---------- FORM ---------- */
+  .field {
+    margin-bottom: 20px;
+  }
+
+  .field label {
+    font-size: 13px;
+  }
+
+  input {
+    height: 52px;
+    font-size: 15px;
+    padding-left: 16px;
+  }
+
+  /* ---------- PASSWORD TOGGLE ---------- */
+  .toggle-password {
+    right: 14px;
+  }
+
+  .toggle-password img {
+    width: 20px;
+  }
+
+  /* ---------- PRIMARY BUTTON ---------- */
+  .primary-btn {
+    height: 52px;
+    font-size: 16px;
+    margin-top: 14px;
+  }
+
+  /* ---------- DIVIDER ---------- */
+  .divider {
+    margin: 26px 0;
+  }
+
+  /* ---------- LINKS ---------- */
+  .link {
+    font-size: 13px;
+    margin-top: 20px;
+  }
+
+  /* ---------- MODAL ---------- */
+  .modal-content {
+    width: calc(100% - 32px);
+    padding: var(--space-4);
+  }
+
+  .modal-content button {
+    width: 100%;
+    margin: var(--space-2) 0;
+  }
+}
