@@ -54,7 +54,7 @@ async function login() {
   
   } catch (err) {  
     console.error("LOGIN ERROR:", err.message);  
-    showToast(err.message);  
+    showToast(err.message, "error");  
   }  
 }  
   
@@ -78,12 +78,12 @@ async function signup() {
     const username = getUsernameFromEmail(email);  
       
     if (!email || !password) {  
-      showToast("All fields are required");  
+      showToast("All fields are required", "warning");  
       return;  
     }  
   
     if (password.length < 8) {  
-      showToast("Password must be at least 8 characters");  
+      showToast("Password must be at least 8 characters", "warning");  
       return;  
     }  
   
@@ -103,7 +103,7 @@ async function signup() {
     window.location.href = "verifyInfo.html";  
   
   } catch (err) {  
-    showToast(err.message);  
+    showToast(err.message, "error");  
   }  
 }  
   
@@ -120,7 +120,7 @@ async function sendReset() {
   const email = document.getElementById("resetEmail").value.trim();  
   
   if (!email) {  
-    showToast("Please enter your email");   
+    showToast("Please enter your email", "warning");   
     return;  
   }  
   
@@ -130,10 +130,10 @@ async function sendReset() {
       `${location.origin}/X-Redro/reset-password.html`  
     );  
   
-    showToast("Password reset link sent");  
+    showToast("Password reset link sent", "success");  
     closeResetModal();  
   } catch (err) {  
-    showToast(err.message || "Failed to send email");  
+    showToast(err.message || "Failed to send email", "error");  
   }  
 }
 
@@ -152,17 +152,17 @@ async function resetPassword() {
   }
 
   if (!password || !confirm) {
-    showToast("All fields are required");
+    showToast("All fields are required", "warning");
     return;
   }
 
   if (password.length < 8) {
-    showToast("Password must be at least 8 characters");
+    showToast("Password must be at least 8 characters", "warning");
     return;
   }
 
   if (password !== confirm) {
-    showToast("Passwords do not match");
+    showToast("Passwords do not match", "warning");
     return;
   }
 
@@ -174,11 +174,11 @@ async function resetPassword() {
       confirm
     );
 
-    showToast("Password reset successful. Please login.");
+    showToast("Password reset successful. Please login.", "success");
     window.location.href = "login.html";
 
   } catch (err) {
     console.error(err);
-    showToast(err.message || "Reset failed");
+    showToast(err.message || "Reset failed", "error");
   }
 }
