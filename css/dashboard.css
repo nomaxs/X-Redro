@@ -565,3 +565,78 @@ body {
     font-size: 14px;
   }
 }
+
+
+/* =================================
+   APP-LIKE MOBILE SCALE (IMPORTANT)
+   ================================= */
+
+@media (max-width: 600px) {
+
+  /* Global scale */
+  body {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .dashboard h1 {
+    font-size: 26px;
+    font-weight: 700;
+  }
+
+  #latestOrders h2 {
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .order-card,
+  .form-status,
+  .attention-status,
+  .subscribe {
+    padding: 18px;
+    border-radius: 20px;
+  }
+   
+  .order-name {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .order-meta,
+  .summary-item,
+  .meta,
+  .system-status {
+    font-size: 15px;
+  }
+
+  .status {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  button,
+  .copybtn,
+  .subscription button,
+  .subscribe button {
+    min-height: 48px;
+    font-size: 15px;
+    padding: 12px 20px;
+  }
+
+  .stats div span {
+    font-size: 30px;
+  }
+
+  .stats div p {
+    font-size: 15px;
+  }
+
+  .nav-links a {
+    font-size: 16px;
+  }
+
+  .order-summary-line {
+    gap: 10px;
+  }
+
+}
