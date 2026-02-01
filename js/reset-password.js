@@ -1,3 +1,11 @@
+/* =========================
+FILE OVERVIEW
+========================= */
+// Password reset functionality with Appwrite
+
+/* =========================
+EXTERNAL SERVICE SETUP
+========================= */
 const client = new Appwrite.Client()
   .setEndpoint('https://nyc.cloud.appwrite.io/v1')
   .setProject('695981480033c7a4eb0d');
@@ -5,7 +13,9 @@ const client = new Appwrite.Client()
 const account = new Appwrite.Account(client);
 const databases = new Appwrite.Databases(client);
 
-
+/* =========================
+CORE BUSINESS LOGIC
+========================= */
 async function confirmReset() {
   const params = new URLSearchParams(location.search);
   const userId = params.get("userId");
