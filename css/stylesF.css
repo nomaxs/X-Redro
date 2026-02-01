@@ -341,7 +341,6 @@ textarea {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-md);
-  width: 100%;
 }
 
 .fields input {
