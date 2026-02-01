@@ -1,3 +1,21 @@
+/* =========================
+FILE OVERVIEW
+========================= */
+// Order management and reporting application with Appwrite
+
+/* =========================
+GLOBAL CONSTANTS / CONFIG
+========================= */
+const DB_ID = "695c4fce0039f513dc83";
+const USERS = "695c501b001d24549b03";
+const FORMS = "form";
+const SUBS = "subscriptions";
+const ORDERS = "orders";
+const PRODUCT_IMAGES_BUCKET = "696825350032fe17c1eb";
+
+/* =========================
+EXTERNAL SERVICE SETUP
+========================= */
 const client = new Appwrite.Client()
   .setEndpoint('https://nyc.cloud.appwrite.io/v1')
   .setProject('695981480033c7a4eb0d');
@@ -6,40 +24,26 @@ const account = new Appwrite.Account(client);
 const databases = new Appwrite.Databases(client);
 const Query = Appwrite.Query;
 
-const DB_ID = "695c4fce0039f513dc83";
-const USERS = "695c501b001d24549b03";
-const FORMS = "form";
-const SUBS = "subscriptions";
-const ORDERS = "orders";
-const PRODUCT_IMAGES_BUCKET = "696825350032fe17c1eb";
-
+/* =========================
+GLOBAL STATE VARIABLES
+========================= */
 let profileDocId = null;
 let user;
 let res;
 let businessTitle = "Your Business";
 
-async function requireAuth() {
-  try {
-    return await account.get();
-  } catch {
-    window.location.href = "login.html";
-  }
-}
-
-
-const searchInput = document.getElementById("orderSearch");
-searchInput.addEventListener("input", () => {
-  applyFilter();
-});
-
-const ordersList = document.getElementById("ordersList");
-const modal = document.getElementById("modal");
-
 let allOrders = [];
 let activeFilter = "all";
 
+const EXPAND_DOWN = `
+<path d="m480-340 180-180-57-56-123 123-123-123-57 56 180 180Zm0 260q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>`;
 
+const CLOSE_EXPAND = `
+<path d="m357-384 123-123 123 123 57-56-180-180-180 180 57 56ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>`;
 
+/* =========================
+UTILITY / HELPER FUNCTIONS
+========================= */
 function parseFormData(raw) {
   if (!Array.isArray(raw)) return [];
 
@@ -52,6 +56,97 @@ function parseFormData(raw) {
       }
     })
     .filter(Boolean);
+}
+
+function getProductSummary(rawFormData, maxItems = null) {
+  const formData = parseFormData(rawFormData);
+  const products = [];
+
+  formData.forEach(f => {
+    if (f.type === "product" && Array.isArray(f.value)) {
+      f.value.forEach(p => {
+        products.push(`${p.name} x${p.qty}`);
+      });
+    }
+  });
+
+  return maxItems !== null
+    ? products.slice(0, maxItems).join(", ")
+    : products.join(", ");
+}
+
+function getCardTitle(order) {
+  const formData = parseFormData(order.formData);
+
+  // Filter out product types first
+  const nonProducts = formData.filter(f => f.type !== "product" && f.value);
+
+  // Use first non-product label's value
+  if (nonProducts.length) {
+    return nonProducts[0].value;
+  }
+
+  // If no non-product values exist, fallback to second field (if exists)
+  if (formData.length > 1 && formData[1].value) {
+    return formData[1].value;
+  }
+
+  // Fallback default
+  return "Order";
+}
+
+function normalizeAmount(value) {
+  if (value === null || value === undefined) return 0;
+
+  if (typeof value === "number") return value;
+
+  if (typeof value === "string") {
+    const clean = value.replace(/[₦,\s]/g, "");
+    const num = Number(clean);
+    return isNaN(num) ? 0 : num;
+  }
+
+  return 0;
+}
+
+function normalizeOrdersForExport(orders) {
+  return orders.map(order => {
+    const formData = parseFormData(order.formData);
+
+    const products = [];
+    const details = [];
+
+    formData.forEach(f => {
+      if (f.type === "product" && Array.isArray(f.value)) {
+        f.value.forEach(p => {
+          products.push(`${p.name} × ${p.qty}`);
+        });
+      } else if (f.value) {
+        details.push(`${f.label}: ${f.value}`);
+      }
+    });
+
+    const amount = normalizeAmount(order.totalAmount);
+
+    return {
+      "Order Summary": products.slice(0, 3).join(", "),
+      "Order Details": details.concat(products).join("\n"),
+      "Payment Status": order.status.toUpperCase(),
+      "Total Amount (₦)": `₦${amount.toLocaleString()}`,
+      "Last Updated": new Date(order.$updatedAt).toLocaleString()
+    };
+  });
+}
+
+/* =========================
+CORE BUSINESS LOGIC
+========================= */
+async function requireAuth() {
+  try {
+    return await account.get();
+  } catch {
+    window.location.href = "login.html";
+  }
 }
 
 async function fetchOrders() {
@@ -104,14 +199,14 @@ async function fetchOrders() {
 function applyFilter() {
   let result = [];
 
-  // 1️⃣ Filter by status first
+  // Filter by status first
   if (activeFilter === "all") {
     result = allOrders;
   } else {
     result = allOrders.filter(o => o.status === activeFilter);
   }
 
-  // 2️⃣ Filter by search input (partial, case-insensitive)
+  // Filter by search input (partial, case-insensitive)
   const query = searchInput.value.trim().toLowerCase();
   if (query) {
     result = result.filter(order => {
@@ -134,144 +229,6 @@ function applyFilter() {
   document.querySelectorAll(".filters button").forEach(btn => {
     btn.classList.toggle("active", btn.dataset.filter === activeFilter);
   });
-}
-
-function getProductSummary(rawFormData, maxItems = null) {
-  const formData = parseFormData(rawFormData);
-  const products = [];
-
-  formData.forEach(f => {
-    if (f.type === "product" && Array.isArray(f.value)) {
-      f.value.forEach(p => {
-        products.push(`${p.name} x${p.qty}`);
-      });
-    }
-  });
-
-  return maxItems !== null
-    ? products.slice(0, maxItems).join(", ")
-    : products.join(", ");
-}
-
-function getCardTitle(order) {
-  const formData = parseFormData(order.formData);
-
-  // Filter out product types first
-  const nonProducts = formData.filter(f => f.type !== "product" && f.value);
-
-  // Use first non-product label's value
-  if (nonProducts.length) {
-    return nonProducts[0].value;
-  }
-
-  // If no non-product values exist, fallback to second field (if exists)
-  if (formData.length > 1 && formData[1].value) {
-    return formData[1].value;
-  }
-
-  // Fallback default
-  return "Order";
-}
-
-function renderOrders(orders) {
-  ordersList.innerHTML = "";
-
-  if (!orders.length) {
-    ordersList.innerHTML = "<p>No orders found.</p>";
-    return;
-  }
-
-  orders.forEach(order => {
-    const card = document.createElement("div");
-    card.className = "order-card";
-
-    const summary = getProductSummary(order.formData);
-
-    // Collect values shown in collapsed area
-    const collapsedValues = new Set();
-    parseFormData(order.formData).forEach(f => {
-      if (f.type === "product" && Array.isArray(f.value)) {
-        f.value.forEach(p => collapsedValues.add(`${p.name} x${p.qty}`));
-      }
-    });
-
-    card.innerHTML = `
-      <div class="card-header">
-        <h3>${getCardTitle(order)}</h3>
-
-        <div class="status-select" data-id="${order.$id}" onclick="toggleStatusMenu(this)">
-          <span class="status-value">${order.status}</span>
-          <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" /></svg>
-
-          <div class="status-menu hidden">
-            <div onclick="setStatus(this, 'pending')">pending</div>
-            <div onclick="setStatus(this, 'paid')">paid</div>
-            <div onclick="setStatus(this, 'delivered')">delivered</div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="order-summary-line">
-        <span class="summary-item">${summary || "No products"}</span>
-        <span class="order-date">${new Date(order.$createdAt).toDateString()}</span>
-      </div>
-
-      <div class="meta">
-        <span>₦${order.totalAmount || 0}</span>
-        <div>
-          ${order.paymentProof ? `
-            <button onclick="viewImage('${order.paymentProof}')"><svg xmlns="http://www.w3.org/2000/svg" height="24px" class="theme-icon" viewBox="0 -960 960 960" width="24px" ><path fill="currentColor" d="M260-361v-40H160v-80h200v-80H200q-17 0-28.5-11.5T160-601v-160q0-17 11.5-28.5T200-801h60v-40h80v40h100v80H240v80h160q17 0 28.5 11.5T440-601v160q0 17-11.5 28.5T400-401h-60v40h-80Zm298 240L388-291l56-56 114 114 226-226 56 56-282 282Z"/></svg></button>
-          ` : ""}
-          
-          <button class="expand-btn" onclick="toggleExpand(this)"> <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#999999"> ${EXPAND_DOWN} </svg></button>
-          <button onclick="deleteOrder('${order.$id}')"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#999999"><path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z"/></svg></button>
-        </div>
-      </div>
-
-      <div class="expanded hidden">
-        ${parseFormData(order.formData)
-          .map(f => {
-            let val;
-            if (f.type === "product" && Array.isArray(f.value)) {
-              val = f.value.map(p => `${p.name} x${p.qty}`)
-                          .filter(v => !collapsedValues.has(v)) // exclude collapsed
-                          .join(", ");
-            } else {
-              val = f.value;
-            }
-            if (!val) return "";
-            return `
-              <div class="order-field">
-                <strong>${f.label}:</strong> ${val}
-              </div>
-            `;
-          })
-          .filter(Boolean)
-          .join("")}
-      </div>
-    `;
-
-    ordersList.appendChild(card);
-  });
-}
-
-/* ---------- ACTIONS ---------- */
-const EXPAND_DOWN = `
-<path d="m480-340 180-180-57-56-123 123-123-123-57 56 180 180Zm0 260q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>`;
-
-const CLOSE_EXPAND = `
-<path d="m357-384 123-123 123 123 57-56-180-180-180 180 57 56ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>`;
-
-function toggleExpand(btn) {
-  const card = btn.closest(".order-card");
-  const expanded = card.querySelector(".expanded");
-  const svg = btn.querySelector("svg");
-
-  const isOpen = !expanded.classList.contains("hidden");
-
-  expanded.classList.toggle("hidden");
-
-  svg.innerHTML = isOpen ? EXPAND_DOWN : CLOSE_EXPAND;
 }
 
 async function updateStatus(id, status) {
@@ -305,101 +262,31 @@ async function deleteOrder(id) {
   fetchOrders();
 }
 
-/* ---------- MODAL ---------- */
-function viewImage(fileId) {
-  if (!fileId) {
-    showToast("No payment proof uploaded.", "info");
+async function deleteAllOrders() {
+  if (!allOrders.length) {
+    showToast("No orders to delete.", "info");
     return;
   }
 
-  modal.innerHTML = `
-    <img src="https://nyc.cloud.appwrite.io/v1/storage/buckets/696825350032fe17c1eb/files/${fileId}/view?project=695981480033c7a4eb0d" />
-  `;
-  modal.classList.remove("hidden");
-}
-
-modal.onclick = () => {
-  modal.classList.add("hidden");
-};
-
-/* ---------- FILTERS ---------- */
-document.querySelectorAll(".filters button").forEach(btn => {
-  btn.onclick = () => {
-    activeFilter = btn.dataset.filter;
-    applyFilter();
-  };
-});
-
-function toggleStatusMenu(el) {
-  event.stopPropagation();
-  el.classList.toggle("open");
-  el.querySelector(".status-menu").classList.toggle("hidden");
-}
-
-function setStatus(item, value) {
-  event.stopPropagation();
-
-  const select = item.closest(".status-select");
-  const id = select.dataset.id;
-
-  select.querySelector(".status-value").textContent = value;
-  select.classList.remove("open");
-  select.querySelector(".status-menu").classList.add("hidden");
-
-  updateStatus(id, value);
-}
-
-/* Close on outside click */
-document.addEventListener("click", e => {
-  document.querySelectorAll(".status-select").forEach(sel => {
-    if (!sel.contains(e.target)) {
-      sel.classList.remove("open");
-      sel.querySelector(".status-menu").classList.add("hidden");
+  for (const order of allOrders) {
+    // Delete payment proof image
+    if (order.paymentProof) {
+      try {
+        await client.storage.deleteFile(
+          "696825350032fe17c1eb",
+          order.paymentProof
+        );
+      } catch (e) {
+        console.warn(`Failed to delete image for order ${order.$id}`, e);
+      }
     }
-  });
-});
 
-function normalizeAmount(value) {
-  if (value === null || value === undefined) return 0;
-
-  if (typeof value === "number") return value;
-
-  if (typeof value === "string") {
-    const clean = value.replace(/[₦,\s]/g, "");
-    const num = Number(clean);
-    return isNaN(num) ? 0 : num;
+    await databases.deleteDocument(DB_ID, ORDERS, order.$id);
   }
 
-  return 0;
-}
-
-function normalizeOrdersForExport(orders) {
-  return orders.map(order => {
-    const formData = parseFormData(order.formData);
-
-    const products = [];
-    const details = [];
-
-    formData.forEach(f => {
-      if (f.type === "product" && Array.isArray(f.value)) {
-        f.value.forEach(p => {
-          products.push(`${p.name} × ${p.qty}`);
-        });
-      } else if (f.value) {
-        details.push(`${f.label}: ${f.value}`);
-      }
-    });
-
-    const amount = normalizeAmount(order.totalAmount);
-
-    return {
-      "Order Summary": products.slice(0, 3).join(", "),
-      "Order Details": details.concat(products).join("\n"),
-      "Payment Status": order.status.toUpperCase(),
-      "Total Amount (₦)": `₦${amount.toLocaleString()}`,
-      "Last Updated": new Date(order.$updatedAt).toLocaleString()
-    };
-  });
+  closeOrderDeleteModal();
+  fetchOrders();
+  showToast("All orders deleted successfully", "success");
 }
 
 function exportOrdersCSV() {
@@ -463,12 +350,12 @@ function exportOrdersPDF() {
   const normalized = normalizeOrdersForExport(allOrders);
 
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF("landscape"); // landscape fits more columns
+  const doc = new jsPDF("landscape");
 
   const businessName = businessTitle;
   const platformName = "X Redro";
 
-  // ---------- HEADER ----------
+  // HEADER
   doc.setFontSize(18);
   doc.text(businessName, 14, 15);
 
@@ -476,7 +363,7 @@ function exportOrdersPDF() {
   doc.text(`Orders Report • Generated via ${platformName}`, 14, 22);
   doc.text(`Total Orders: ${allOrders.length}`, 14, 28);
 
-  // ---------- TABLE ----------
+  // TABLE
   const columns = Object.keys(normalized[0]).map(key => ({
     header: key,
     dataKey: key
@@ -516,6 +403,134 @@ function exportOrdersPDF() {
   doc.save(`x_redro_orders_${Date.now()}.pdf`);
 }
 
+/* =========================
+UI INTERACTION LOGIC
+========================= */
+function renderOrders(orders) {
+  ordersList.innerHTML = "";
+
+  if (!orders.length) {
+    ordersList.innerHTML = "<p>No orders found.</p>";
+    return;
+  }
+
+  orders.forEach(order => {
+    const card = document.createElement("div");
+    card.className = "order-card";
+
+    const summary = getProductSummary(order.formData);
+
+    // Collect values shown in collapsed area
+    const collapsedValues = new Set();
+    parseFormData(order.formData).forEach(f => {
+      if (f.type === "product" && Array.isArray(f.value)) {
+        f.value.forEach(p => collapsedValues.add(`${p.name} x${p.qty}`));
+      }
+    });
+
+    card.innerHTML = `
+      <div class="card-header">
+        <h3>${getCardTitle(order)}</h3>
+
+        <div class="status-select" data-id="${order.$id}" onclick="toggleStatusMenu(this)">
+          <span class="status-value">${order.status}</span>
+          <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" /></svg>
+
+          <div class="status-menu hidden">
+            <div onclick="setStatus(this, 'pending')">pending</div>
+            <div onclick="setStatus(this, 'paid')">paid</div>
+            <div onclick="setStatus(this, 'delivered')">delivered</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="order-summary-line">
+        <span class="summary-item">${summary || "No products"}</span>
+        <span class="order-date">${new Date(order.$createdAt).toDateString()}</span>
+      </div>
+
+      <div class="meta">
+        <span>₦${order.totalAmount || 0}</span>
+        <div>
+          ${order.paymentProof ? `
+            <button onclick="viewImage('${order.paymentProof}')"><svg xmlns="http://www.w3.org/2000/svg" height="24px" class="theme-icon" viewBox="0 -960 960 960" width="24px" ><path fill="currentColor" d="M260-361v-40H160v-80h200v-80H200q-17 0-28.5-11.5T160-601v-160q0-17 11.5-28.5T200-801h60v-40h80v40h100v80H240v80h160q17 0 28.5 11.5T440-601v160q0 17-11.5 28.5T400-401h-60v40h-80Zm298 240L388-291l56-56 114 114 226-226 56 56-282 282Z"/></svg></button>
+          ` : ""}
+          
+          <button class="expand-btn" onclick="toggleExpand(this)"> <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#999999"> ${EXPAND_DOWN} </svg></button>
+          <button onclick="deleteOrder('${order.$id}')"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#999999"><path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z"/></svg></button>
+        </div>
+      </div>
+
+      <div class="expanded hidden">
+        ${parseFormData(order.formData)
+          .map(f => {
+            let val;
+            if (f.type === "product" && Array.isArray(f.value)) {
+              val = f.value.map(p => `${p.name} x${p.qty}`)
+                          .filter(v => !collapsedValues.has(v))
+                          .join(", ");
+            } else {
+              val = f.value;
+            }
+            if (!val) return "";
+            return `
+              <div class="order-field">
+                <strong>${f.label}:</strong> ${val}
+              </div>
+            `;
+          })
+          .filter(Boolean)
+          .join("")}
+      </div>
+    `;
+
+    ordersList.appendChild(card);
+  });
+}
+
+function toggleExpand(btn) {
+  const card = btn.closest(".order-card");
+  const expanded = card.querySelector(".expanded");
+  const svg = btn.querySelector("svg");
+
+  const isOpen = !expanded.classList.contains("hidden");
+
+  expanded.classList.toggle("hidden");
+
+  svg.innerHTML = isOpen ? EXPAND_DOWN : CLOSE_EXPAND;
+}
+
+function viewImage(fileId) {
+  if (!fileId) {
+    showToast("No payment proof uploaded.", "info");
+    return;
+  }
+
+  modal.innerHTML = `
+    <img src="https://nyc.cloud.appwrite.io/v1/storage/buckets/696825350032fe17c1eb/files/${fileId}/view?project=695981480033c7a4eb0d" />
+  `;
+  modal.classList.remove("hidden");
+}
+
+function toggleStatusMenu(el) {
+  event.stopPropagation();
+  el.classList.toggle("open");
+  el.querySelector(".status-menu").classList.toggle("hidden");
+}
+
+function setStatus(item, value) {
+  event.stopPropagation();
+
+  const select = item.closest(".status-select");
+  const id = select.dataset.id;
+
+  select.querySelector(".status-value").textContent = value;
+  select.classList.remove("open");
+  select.querySelector(".status-menu").classList.add("hidden");
+
+  updateStatus(id, value);
+}
+
 function openOrderDeleteModal() {
   document.getElementById("confirmModal").classList.remove("hidden");
 }
@@ -525,31 +540,38 @@ function closeOrderDeleteModal(e) {
   document.getElementById("confirmModal").classList.add("hidden");
 }
 
-async function deleteAllOrders() {
-  if (!allOrders.length) {
-    showToast("No orders to delete.", "info");
-    return;
-  }
+/* =========================
+EVENT LISTENERS / TRIGGERS
+========================= */
+const searchInput = document.getElementById("orderSearch");
+searchInput.addEventListener("input", () => {
+  applyFilter();
+});
 
-  for (const order of allOrders) {
-    // Delete payment proof image
-    if (order.paymentProof) {
-      try {
-        await client.storage.deleteFile(
-          "696825350032fe17c1eb",
-          order.paymentProof
-        );
-      } catch (e) {
-        console.warn(`Failed to delete image for order ${order.$id}`, e);
-      }
+const ordersList = document.getElementById("ordersList");
+const modal = document.getElementById("modal");
+
+document.querySelectorAll(".filters button").forEach(btn => {
+  btn.onclick = () => {
+    activeFilter = btn.dataset.filter;
+    applyFilter();
+  };
+});
+
+modal.onclick = () => {
+  modal.classList.add("hidden");
+};
+
+document.addEventListener("click", e => {
+  document.querySelectorAll(".status-select").forEach(sel => {
+    if (!sel.contains(e.target)) {
+      sel.classList.remove("open");
+      sel.querySelector(".status-menu").classList.add("hidden");
     }
+  });
+});
 
-    await databases.deleteDocument(DB_ID, ORDERS, order.$id);
-  }
-
-  closeOrderDeleteModal();
-  fetchOrders();
-  showToast("All orders deleted successfully", "success");
-}
-/* INIT */
+/* =========================
+INITIALIZATION / BOOTSTRAP LOGIC
+========================= */
 fetchOrders();
