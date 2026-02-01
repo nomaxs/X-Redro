@@ -352,6 +352,11 @@ body {
   text-decoration: underline;
 }
 
+/* ---------- HIDDEN FOR SELECTOR(STATUS MENU) AND EXPANDED DETAILS ---------- */
+.hidden {
+  display: none;
+}
+
 /* ---------- COMPONENTS: SUBSCRIPTION ---------- */
 .subscribe {
   display: flex;
