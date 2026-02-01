@@ -344,6 +344,16 @@ textarea {
   width: 100%;
 }
 
+.fields input {
+  width: 90%;
+  padding: 14px 20px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  font-size: 14px;
+  background: var(--card);
+  color: var(--text);
+}
+
 .field-card {
   background-color: var(--card);
   border-radius: var(--radius-md);
