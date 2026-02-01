@@ -74,6 +74,15 @@ body {
   min-height: 100vh;
 }
 
+input {
+  width: 90%;
+  padding: 14px 20px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+}
+
 input,
 textarea,
 select,
