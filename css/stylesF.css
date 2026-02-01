@@ -83,6 +83,11 @@ input {
   color: var(--text);
 }
 
+input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
 input,
 textarea,
 select,
@@ -193,11 +198,6 @@ button {
   font-size: 15px;
   outline: none;
   transition: border 0.2s ease, box-shadow 0.2s ease;
-}
-
-.actions input:focus {
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 .actions button {
