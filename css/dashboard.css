@@ -409,234 +409,133 @@ body {
 }
 
 /* ---------- RESPONSIVE ---------- */
-@media (max-width: 768px) {
-  .stats {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-lg);
-  }
-
-  .order-meta {
-    grid-template-columns: 1fr;
-    gap: var(--space-sm);
-  }
-
-  .subscription {
-    flex-wrap: wrap;
-  }
-}
-
-/* =================================
-   MOBILE OPTIMIZATION – DASHBOARD
-   ================================= */
+/* =========================================
+   TRUE MOBILE APP MODE (WhatsApp scale)
+   ========================================= */
 
 @media (max-width: 600px) {
 
-  /* ---------- GLOBAL ---------- */
+  /* -------- GLOBAL -------- */
   body {
-    font-size: 15px;
+    font-size: 17px;
+    line-height: 1.65;
   }
 
-  /* ---------- NAV ---------- */
+  /* -------- NAV -------- */
   .nav-inner {
-    padding: var(--space-sm) var(--space-md);
-  }
-
-  .nav-links {
-    gap: var(--space-md);
+    padding: 12px 14px;
   }
 
   .nav-links a {
-    font-size: 15px;
+    font-size: 17px;
+    font-weight: 500;
   }
 
-  /* ---------- MAIN ---------- */
-  .dashboard {
-    margin: var(--space-lg) auto;
-    padding: 0 var(--space-md);
-  }
-
+  /* -------- PAGE TITLE -------- */
   .dashboard h1 {
-    font-size: 24px;
-    margin-bottom: var(--space-md);
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 20px;
   }
 
-  /* ---------- STATS ---------- */
+  /* -------- STATS (THIS IS KEY) -------- */
   .stats {
     grid-template-columns: 1fr;
-    padding: var(--space-lg);
+    padding: 26px;
+    gap: 26px;
+    border-radius: 24px;
+  }
+
+  .stats div {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
   }
 
   .stats div span {
-    font-size: 28px;
+    font-size: 38px; /* 👈 BIG LIKE WHATSAPP */
+    font-weight: 800;
+    line-height: 1.1;
   }
 
   .stats div p {
-    font-size: 14px;
-  }
-
-  /* ---------- SUBSCRIPTION ---------- */
-  .subscription {
-    font-size: 15px;
-    gap: var(--space-sm);
-  }
-
-  .subscription button,
-  .subscribe button {
-    font-size: 14px;
-    padding: 12px 18px;
-  }
-
-  .subscribe {
-    padding: var(--space-lg);
-  }
-
-  .subscribe h2 {
     font-size: 16px;
+    color: #bdbdbd;
   }
 
-  .subscribe-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: var(--space-sm);
-  }
-
-  /* ---------- ORDER CARD ---------- */
-  .order-card {
-    padding: var(--space-md);
-  }
-
-  .order-name {
-    font-size: 15px;
-  }
-
-  .status {
-    font-size: 13px;
-    padding: 6px 14px;
-  }
-
-  /* ---------- META GRID ---------- */
-  .order-meta {
-    grid-template-columns: 1fr;
-    font-size: 14px;
-  }
-
-  /* ---------- SUMMARY LINE ---------- */
-  .order-summary-line {
-    flex-wrap: wrap;
-    white-space: normal;
-    gap: var(--space-xs);
-  }
-
-  .summary-item {
-    font-size: 14px;
-  }
-
-  .order-date {
-    width: 100%;
-    margin-left: 0;
-    font-size: 13px;
-  }
-
-  /* ---------- FORM STATUS ---------- */
-  .form-status {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-sm);
-    padding: var(--space-md);
-  }
-
-  .form-status strong {
-    font-size: 15px;
-  }
-
-  .form-status .copybtn {
-    font-size: 13px;
-    padding: 8px 14px;
-  }
-
-  /* ---------- ATTENTION ---------- */
-  .attention-status {
-    font-size: 15px;
-    padding: var(--space-md);
-  }
-
-  /* ---------- SYSTEM STATUS ---------- */
-  .system-status {
-    font-size: 14px;
-  }
-}
-
-
-/* =================================
-   APP-LIKE MOBILE SCALE (IMPORTANT)
-   ================================= */
-
-@media (max-width: 600px) {
-
-  /* Global scale */
-  body {
-    font-size: 16px;
-    line-height: 1.6;
-  }
-
-  .dashboard h1 {
-    font-size: 26px;
-    font-weight: 700;
-  }
-
-  #latestOrders h2 {
-    font-size: 20px;
-    font-weight: 600;
-  }
-
+  /* -------- CARDS -------- */
   .order-card,
   .form-status,
   .attention-status,
   .subscribe {
-    padding: 18px;
-    border-radius: 20px;
-  }
-   
-  .order-name {
-    font-size: 16px;
-    font-weight: 600;
+    padding: 22px;
+    border-radius: 22px;
   }
 
-  .order-meta,
-  .summary-item,
-  .meta,
-  .system-status {
-    font-size: 15px;
+  /* -------- ORDER HEADER -------- */
+  .order-name {
+    font-size: 17px;
+    font-weight: 700;
   }
 
   .status {
     font-size: 14px;
-    padding: 8px 16px;
+    padding: 10px 18px;
+    border-radius: 999px;
   }
 
-  button,
-  .copybtn,
-  .subscription button,
-  .subscribe button {
-    min-height: 48px;
+  /* -------- ORDER META -------- */
+  .order-meta {
     font-size: 15px;
-    padding: 12px 20px;
-  }
-
-  .stats div span {
-    font-size: 30px;
-  }
-
-  .stats div p {
-    font-size: 15px;
-  }
-
-  .nav-links a {
-    font-size: 16px;
-  }
-
-  .order-summary-line {
     gap: 10px;
   }
 
+  /* -------- SUMMARY LINE -------- */
+  .summary-item {
+    font-size: 15px;
+  }
+
+  .order-date {
+    font-size: 14px;
+  }
+
+  /* -------- FORM STATUS -------- */
+  .form-status strong {
+    font-size: 17px;
+  }
+
+  .form-status .label {
+    font-size: 14px;
+  }
+
+  .form-status .copybtn {
+    font-size: 15px;
+    padding: 12px 20px;
+    min-height: 50px;
+  }
+
+  /* -------- BUTTONS -------- */
+  button,
+  .subscription button,
+  .subscribe button {
+    min-height: 52px;
+    font-size: 16px;
+    padding: 14px 22px;
+    border-radius: 999px;
+  }
+
+  /* -------- ATTENTION -------- */
+  .attention-status {
+    font-size: 16px;
+    gap: 12px;
+  }
+
+  .attention-status span {
+    font-size: 22px;
+  }
+
+  /* -------- SYSTEM STATUS -------- */
+  .system-status {
+    font-size: 15px;
+  }
 }
