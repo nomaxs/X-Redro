@@ -1,3 +1,18 @@
+/* =========================
+FILE OVERVIEW
+========================= */
+// User settings and account management with Appwrite
+
+/* =========================
+GLOBAL CONSTANTS / CONFIG
+========================= */
+const DB_ID = "695c4fce0039f513dc83";
+const USERS = "695c501b001d24549b03";
+const SUBS = "subscriptions";
+
+/* =========================
+EXTERNAL SERVICE SETUP
+========================= */
 const client = new Appwrite.Client()
   .setEndpoint('https://nyc.cloud.appwrite.io/v1')
   .setProject('695981480033c7a4eb0d');
@@ -6,14 +21,16 @@ const account = new Appwrite.Account(client);
 const databases = new Appwrite.Databases(client);
 const Query = Appwrite.Query;
 
-const DB_ID = "695c4fce0039f513dc83";
-const USERS = "695c501b001d24549b03";
-const SUBS = "subscriptions";
-
+/* =========================
+GLOBAL STATE VARIABLES
+========================= */
 let profileDocId = null;
 let user;
 let res;
 
+/* =========================
+CORE BUSINESS LOGIC
+========================= */
 async function requireAuth() {
   try {
     return await account.get();
@@ -65,44 +82,6 @@ async function loadUser() {
   }
 }
 
-document.getElementById("updateAccount").onclick = async () => {
-  const nameVal = username.value.trim();
-
-  await account.updateName(nameVal);
-
-  await databases.updateDocument(DB_ID, USERS, profileDocId, {
-    username: nameVal
-  });
-
-  showToast("Updated", "success");
-};
-
-document.getElementById("userUpdate").onclick = () => {
-  document.getElementById("username").disabled = false;
-  document.getElementById("email").disabled = false;
-};
-
-function buySubscription(days) {
-  window.location.href =
-    days === 7
-      ? "https://selar.co/7days"
-      : "https://selar.co/30days";
-}
-
-async function logout() {
-  await account.deleteSession("current");
-  window.location.href = "login.html";
-}
-
-function openPasswordModal() {
-  document.getElementById("passwordModal").classList.remove("hidden");
-}
-
-function closePasswordModal(e) {
-  if (e && e.target !== e.currentTarget) return;
-  document.getElementById("passwordModal").classList.add("hidden");
-}
-
 async function changePassword() {
   const current = document.getElementById("currentPassword").value.trim();
   const next = document.getElementById("newPassword").value.trim();
@@ -141,4 +120,48 @@ async function changePassword() {
   }
 }
 
+async function logout() {
+  await account.deleteSession("current");
+  window.location.href = "login.html";
+}
+
+function buySubscription(days) {
+  window.location.href =
+    days === 7
+      ? "https://selar.co/7days"
+      : "https://selar.co/30days";
+}
+
+/* =========================
+UI INTERACTION LOGIC
+========================= */
+document.getElementById("updateAccount").onclick = async () => {
+  const nameVal = username.value.trim();
+
+  await account.updateName(nameVal);
+
+  await databases.updateDocument(DB_ID, USERS, profileDocId, {
+    username: nameVal
+  });
+
+  showToast("Updated", "success");
+};
+
+document.getElementById("userUpdate").onclick = () => {
+  document.getElementById("username").disabled = false;
+  document.getElementById("email").disabled = false;
+};
+
+function openPasswordModal() {
+  document.getElementById("passwordModal").classList.remove("hidden");
+}
+
+function closePasswordModal(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById("passwordModal").classList.add("hidden");
+}
+
+/* =========================
+INITIALIZATION / BOOTSTRAP LOGIC
+========================= */
 loadUser();
