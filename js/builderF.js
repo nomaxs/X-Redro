@@ -1,3 +1,20 @@
+/* =========================
+FILE OVERVIEW
+========================= */
+// Form builder application with Appwrite
+
+/* =========================
+GLOBAL CONSTANTS / CONFIG
+========================= */
+const DB_ID = "695c4fce0039f513dc83";
+const FORMS = "form";
+const USERS = "695c501b001d24549b03";
+const SUBS = "subscriptions";
+const PRODUCT_IMAGES_BUCKET = "696825350032fe17c1eb";
+
+/* =========================
+EXTERNAL SERVICE SETUP
+========================= */
 const client = new Appwrite.Client()
   .setEndpoint('https://nyc.cloud.appwrite.io/v1')
   .setProject('695981480033c7a4eb0d');
@@ -7,21 +24,9 @@ const databases = new Appwrite.Databases(client);
 const storage = new Appwrite.Storage(client);
 const Query = Appwrite.Query;
 
-const DB_ID = "695c4fce0039f513dc83";
-const FORMS = "form";
-const USERS = "695c501b001d24549b03";
-const SUBS = "subscriptions";
-const PRODUCT_IMAGES_BUCKET = "696825350032fe17c1eb";
-
-function formatWithCommas(value) {
-  if (!value) return "";
-  return Number(value.replace(/,/g, "")).toLocaleString();
-}
-
-function stripCommas(value) {
-  return value.replace(/,/g, "");
-}
-
+/* =========================
+GLOBAL STATE VARIABLES
+========================= */
 let fields = [];
 let profileDocId = null;
 let user;
@@ -31,8 +36,37 @@ let formId;
 let formTitle = "";
 let formSubtitle = "";
 
-/* ---------------- AUTH ---------------- */
+/* =========================
+UTILITY / HELPER FUNCTIONS
+========================= */
+function formatWithCommas(value) {
+  if (!value) return "";
+  return Number(value.replace(/,/g, "")).toLocaleString();
+}
 
+function stripCommas(value) {
+  return value.replace(/,/g, "");
+}
+
+function handlePriceInput(input) {
+  const raw = input.value.replace(/,/g, "").replace(/\D/g, "");
+  input.value = raw ? Number(raw).toLocaleString() : "";
+}
+
+function getDefaultLabel(type) {
+  return {
+    text: "Text Input",
+    number: "Number Input",
+    textarea: "Text Area",
+    dropdown: "Dropdown",
+    product: "Product Listing"
+  }[type];
+}
+
+/* =========================
+CORE BUSINESS LOGIC
+========================= */
+/* ---------------- AUTH ---------------- */
 async function requireAuth() {
   try {
     return await account.get();
@@ -41,77 +75,7 @@ async function requireAuth() {
   }
 }
 
-/* ---------------- INIT ---------------- */
-
-async function initBuilder() {
-  user = await requireAuth();
-  
-  res = await databases.listDocuments(DB_ID, USERS, [
-    Query.equal("userId", user.$id)
-  ]);
-  
-  // Quick Subscription Check
-  const subRes = await databases.listDocuments(DB_ID, SUBS, [
-    Query.equal("userId", user.$id)
-  ]);
-  
-  //Theme Application
-  profileDocId = res.documents[0].$id;
-
-  const savedTheme = res.documents[0].theme || "light";
-  applyTheme(savedTheme);
-
-  //Quick Subscription Check
-  const sub = subRes.documents[0];
-  const daysLeft = Math.ceil(
-    (new Date(sub.expiresAt) - new Date()) / 86400000
-  );
-
-  if (daysLeft <= 0) {
-    document.getElementById("subscriptionModal").classList.remove("hidden");
-    return;
-  } 
-
-  try {
-    const formDoc = await databases.getDocument(DB_ID, FORMS, user.$id);
-    fields = [];
-
-    if (formDoc.fields && Array.isArray(formDoc.fields)) {
-      fields = formDoc.fields.map(f => {
-        try {
-          return JSON.parse(f);
-        } catch {
-          return null;
-        }
-      }).filter(Boolean);
-    }  
-    formId = user.$id;
-    formTitle = formDoc.title || "";
-    formSubtitle = formDoc.subtitle || "";
-
-    document.getElementById("titleInput").value = formTitle;
-    document.getElementById("subtitleInput").value = formSubtitle;
-  } catch (err) {
-    // create empty form if not exists
-    await databases.createDocument(DB_ID, FORMS, user.$id, {
-      userId: user.$id,
-      fields: [],
-      $createdAt: new Date().toISOString()
-    });
-    fields = [];
-    formId = user.$id;
-  }
-  
-  if (!res.documents.length) return;    
-  
-  renderFields();
-  setupFormLink();
-}
-
-initBuilder();
-
 /* ---------------- SAVE ---------------- */
-
 async function saveForm() {
   const safeFields = fields.map(f => JSON.stringify(f));
 
@@ -124,8 +88,8 @@ async function saveForm() {
 
   showToast("Form saved successfully", "success");
 }
-/* ---------------- FORM LINK ---------------- */
 
+/* ---------------- FORM LINK ---------------- */
 function setupFormLink() {
   const input = document.getElementById("formLinkInput");
   const link = `${window.location.origin}/X-Redro/form.html?fid=${formId}`;
@@ -140,7 +104,6 @@ function copyFormLink() {
 }
 
 /* ---------------- ADD MENU ---------------- */
-
 function toggleAddMenu(btn) {
   const menu = document.getElementById('addMenu');
   const rect = btn.getBoundingClientRect();
@@ -165,18 +128,7 @@ function addField(type) {
   renderFields();
 }
 
-function getDefaultLabel(type) {
-  return {
-    text: "Text Input",
-    number: "Number Input",
-    textarea: "Text Area",
-    dropdown: "Dropdown",
-    product: "Product Listing"
-  }[type];
-}
-
 /* ---------------- RENDER ---------------- */
-
 function renderFields() {
   const container = document.getElementById('fields');
   container.innerHTML = "";
@@ -225,7 +177,6 @@ async function removeField(id) {
 }
 
 /* ---------------- DROPDOWN ---------------- */
-
 function renderDropdown(field) {
   const wrap = document.createElement('div');
 
@@ -261,16 +212,11 @@ function removeOption(fieldId, index) {
 }
 
 /* ---------------- PRODUCTS ---------------- */
-function handlePriceInput(input) {
-  const raw = input.value.replace(/,/g, "").replace(/\D/g, "");
-  input.value = raw ? Number(raw).toLocaleString() : "";
-}
-
 function savePrice(fieldId, index, value) {
   const field = fields.find(f => f.id === fieldId);
   if (!field) return;
 
-  // 🔒 store clean number only
+  // store clean number only
   field.products[index].price = stripCommas(value);
 }
 
@@ -354,7 +300,7 @@ async function removeProduct(fieldId, index) {
   const field = fields.find(f => f.id === fieldId);
   const product = field.products[index];
   
-  // 🔴 delete image from storage
+  // delete image from storage
   if (product.imageId) {
     await storage.deleteFile(PRODUCT_IMAGES_BUCKET, product.imageId);
   }
@@ -460,6 +406,80 @@ function renderPreviewProducts(field) {
   return html;
 }
 
+/* =========================
+UI INTERACTION LOGIC
+========================= */
+/* ---------------- INIT ---------------- */
+async function initBuilder() {
+  user = await requireAuth();
+  
+  res = await databases.listDocuments(DB_ID, USERS, [
+    Query.equal("userId", user.$id)
+  ]);
+  
+  // Quick Subscription Check
+  const subRes = await databases.listDocuments(DB_ID, SUBS, [
+    Query.equal("userId", user.$id)
+  ]);
+  
+  //Theme Application
+  profileDocId = res.documents[0].$id;
+
+  const savedTheme = res.documents[0].theme || "light";
+  applyTheme(savedTheme);
+
+  //Quick Subscription Check
+  const sub = subRes.documents[0];
+  const daysLeft = Math.ceil(
+    (new Date(sub.expiresAt) - new Date()) / 86400000
+  );
+
+  if (daysLeft <= 0) {
+    document.getElementById("subscriptionModal").classList.remove("hidden");
+    return;
+  } 
+
+  try {
+    const formDoc = await databases.getDocument(DB_ID, FORMS, user.$id);
+    fields = [];
+
+    if (formDoc.fields && Array.isArray(formDoc.fields)) {
+      fields = formDoc.fields.map(f => {
+        try {
+          return JSON.parse(f);
+        } catch {
+          return null;
+        }
+      }).filter(Boolean);
+    }  
+    formId = user.$id;
+    formTitle = formDoc.title || "";
+    formSubtitle = formDoc.subtitle || "";
+
+    document.getElementById("titleInput").value = formTitle;
+    document.getElementById("subtitleInput").value = formSubtitle;
+  } catch (err) {
+    // create empty form if not exists
+    await databases.createDocument(DB_ID, FORMS, user.$id, {
+      userId: user.$id,
+      fields: [],
+      $createdAt: new Date().toISOString()
+    });
+    fields = [];
+    formId = user.$id;
+  }
+  
+  if (!res.documents.length) return;    
+  
+  renderFields();
+  setupFormLink();
+}
+
+initBuilder();
+
+/* =========================
+EVENT LISTENERS / TRIGGERS
+========================= */
 document.addEventListener("click", (e) => {
   const menu = document.getElementById("addMenu");
   const addBtn = document.getElementById("addFieldBtn"); // your + button
@@ -480,3 +500,7 @@ document.getElementById("previewOverlay").addEventListener("click", (e) => {
     closePreview();
   }
 });
+
+/* =========================
+UNUSED / EXPERIMENTAL / FUTURE CODE
+========================= */
