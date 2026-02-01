@@ -1,3 +1,20 @@
+/* =========================
+FILE OVERVIEW
+========================= */
+// Dashboard application with Appwrite
+
+/* =========================
+GLOBAL CONSTANTS / CONFIG
+========================= */
+const DB_ID = "695c4fce0039f513dc83";
+const USERS = "695c501b001d24549b03";
+const FORMS = "form";
+const SUBS = "subscriptions";
+const ORDERS = "orders";
+
+/* =========================
+EXTERNAL SERVICE SETUP
+========================= */
 const client = new Appwrite.Client()
   .setEndpoint('https://nyc.cloud.appwrite.io/v1')
   .setProject('695981480033c7a4eb0d');
@@ -6,64 +23,16 @@ const account = new Appwrite.Account(client);
 const databases = new Appwrite.Databases(client);
 const Query = Appwrite.Query;
 
-const DB_ID = "695c4fce0039f513dc83";
-const USERS = "695c501b001d24549b03";
-const FORMS = "form";
-const SUBS = "subscriptions";
-const ORDERS = "orders";
-
+/* =========================
+GLOBAL STATE VARIABLES
+========================= */
 let profileDocId = null;
 let user;
 let res;
 
-async function requireAuth() {
-  try {
-    return await account.get();
-  } catch {
-    window.location.replace("login.html");
-    return null;
-  }
-}
-
-async function initDashboard() {
-  user = await requireAuth();
-  if (!user) return;
-
-  res = await databases.listDocuments(DB_ID, USERS, [
-    Query.equal("userId", user.$id)
-  ]);
-
-  const subRes = await databases.listDocuments(DB_ID, SUBS, [
-    Query.equal("userId", user.$id)
-  ]);
-  
-  //Theme Application
-  profileDocId = res.documents[0].$id;
-
-  const savedTheme = res.documents[0].theme  || "light";
-  applyTheme(savedTheme);
-  
-  //Quick Subscription Check
-  const sub = subRes.documents[0];
-  const daysLeft = Math.ceil(
-    (new Date(sub.expiresAt) - new Date()) / 86400000
-  );
-
-  if (daysLeft <= 0) {
-    document.getElementById("subscriptionModal").classList.remove("hidden");
-    return;
-  }
-
-  planDays.innerText = `${sub.plan}`;
-  expiresIn.innerText = `${daysLeft} days`;
-
-  const pendingCount = await loadStats(user.$id);
-  loadLatestOrders(user.$id);
-  updateAttention(pendingCount);
-  
-  if (!res.documents.length) return;    
-}
-
+/* =========================
+UTILITY / HELPER FUNCTIONS
+========================= */
 function parseFormData(raw) {
   if (!Array.isArray(raw)) return [];
 
@@ -76,82 +45,6 @@ function parseFormData(raw) {
       }
     })
     .filter(Boolean);
-}
-
-async function loadStats(userId) {
-  const res = await databases.listDocuments(DB_ID, ORDERS, [
-    Query.equal("userId", userId)
-  ]);
-
-  const orders = res.documents;
-
-  const pendingCount = orders.filter(o => o.status === "pending").length;
-
-  totalOrders.innerText = orders.length;
-  deliveredOrders.innerText = orders.filter(o => o.status === "delivered").length;
-  paidOrders.innerText = orders.filter(o => o.status === "paid").length;
-  pendingOrders.innerText = pendingCount;
-
-  return pendingCount;
-}
-
-
-function updateAttention(pendingCount) {
-  const box = document.getElementById("attentionStatus");
-  const text = document.getElementById("attentionText");
-
-  if (pendingCount > 0) {
-    box.classList.remove("hidden");
-    text.textContent = `${pendingCount} orders awaiting payment`;
-  } else {
-    box.classList.remove("hidden");
-    text.textContent = "✓ No pending actions";
-    document.getElementById("attentionIcon").textContent = "✓";
-  }
-}
-
-
-function updateFormStatus(isPublished, link) {
-  const state = document.getElementById("formState");
-  const input = document.getElementById("formLinkInput");
-
-  if (isPublished) {
-    state.textContent = "Live";
-    input.value = link;
-  } else {
-    state.textContent = "Not published";
-  }
-}
-
-function updateSystemStatus(ok = true, message = "") {
-  const text = document.getElementById("systemText");
-  const dot = document.querySelector(".system-status .dot");
-
-  if (!ok) {
-    dot.style.background = "#ff5252";
-    text.textContent = message;
-  }
-}
-
-function copyFormLink() {
-  const link = `${window.location.origin}/X-Redro/form.html?fid=${user.$id}`;
-  navigator.clipboard.writeText(link);
-  showToast("Form link copied", "success");
-}
-
-async function loadLatestOrders(userId) {
-  const user = await requireAuth();
-  const res = await databases.listDocuments(
-    DB_ID,
-    ORDERS,
-    [
-      Query.equal("userId", user.$id),
-      Query.orderDesc("$createdAt"),
-      Query.limit(3)
-    ]
-  );
-
-  renderOrders(res.documents);
 }
 
 function getProductSummary(rawFormData, maxItems = null) {
@@ -189,6 +82,95 @@ function getCardTitle(order) {
 
   // Fallback default
   return "Order";
+}
+
+/* =========================
+CORE BUSINESS LOGIC
+========================= */
+async function requireAuth() {
+  try {
+    return await account.get();
+  } catch {
+    window.location.replace("login.html");
+    return null;
+  }
+}
+
+async function loadStats(userId) {
+  const res = await databases.listDocuments(DB_ID, ORDERS, [
+    Query.equal("userId", userId)
+  ]);
+
+  const orders = res.documents;
+
+  const pendingCount = orders.filter(o => o.status === "pending").length;
+
+  totalOrders.innerText = orders.length;
+  deliveredOrders.innerText = orders.filter(o => o.status === "delivered").length;
+  paidOrders.innerText = orders.filter(o => o.status === "paid").length;
+  pendingOrders.innerText = pendingCount;
+
+  return pendingCount;
+}
+
+async function loadLatestOrders(userId) {
+  const user = await requireAuth();
+  const res = await databases.listDocuments(
+    DB_ID,
+    ORDERS,
+    [
+      Query.equal("userId", user.$id),
+      Query.orderDesc("$createdAt"),
+      Query.limit(3)
+    ]
+  );
+
+  renderOrders(res.documents);
+}
+
+/* =========================
+UI INTERACTION LOGIC
+========================= */
+function updateAttention(pendingCount) {
+  const box = document.getElementById("attentionStatus");
+  const text = document.getElementById("attentionText");
+
+  if (pendingCount > 0) {
+    box.classList.remove("hidden");
+    text.textContent = `${pendingCount} orders awaiting payment`;
+  } else {
+    box.classList.remove("hidden");
+    text.textContent = "✓ No pending actions";
+    document.getElementById("attentionIcon").textContent = "✓";
+  }
+}
+
+function updateFormStatus(isPublished, link) {
+  const state = document.getElementById("formState");
+  const input = document.getElementById("formLinkInput");
+
+  if (isPublished) {
+    state.textContent = "Live";
+    input.value = link;
+  } else {
+    state.textContent = "Not published";
+  }
+}
+
+function updateSystemStatus(ok = true, message = "") {
+  const text = document.getElementById("systemText");
+  const dot = document.querySelector(".system-status .dot");
+
+  if (!ok) {
+    dot.style.background = "#ff5252";
+    text.textContent = message;
+  }
+}
+
+function copyFormLink() {
+  const link = `${window.location.origin}/X-Redro/form.html?fid=${user.$id}`;
+  navigator.clipboard.writeText(link);
+  showToast("Form link copied", "success");
 }
 
 function renderOrders(orders) {
@@ -229,6 +211,48 @@ function renderOrders(orders) {
 
     wrap.appendChild(card);
   });
+}
+
+/* =========================
+INITIALIZATION / BOOTSTRAP LOGIC
+========================= */
+async function initDashboard() {
+  user = await requireAuth();
+  if (!user) return;
+
+  res = await databases.listDocuments(DB_ID, USERS, [
+    Query.equal("userId", user.$id)
+  ]);
+
+  const subRes = await databases.listDocuments(DB_ID, SUBS, [
+    Query.equal("userId", user.$id)
+  ]);
+  
+  //Theme Application
+  profileDocId = res.documents[0].$id;
+
+  const savedTheme = res.documents[0].theme  || "light";
+  applyTheme(savedTheme);
+  
+  //Quick Subscription Check
+  const sub = subRes.documents[0];
+  const daysLeft = Math.ceil(
+    (new Date(sub.expiresAt) - new Date()) / 86400000
+  );
+
+  if (daysLeft <= 0) {
+    document.getElementById("subscriptionModal").classList.remove("hidden");
+    return;
+  }
+
+  planDays.innerText = `${sub.plan}`;
+  expiresIn.innerText = `${daysLeft} days`;
+
+  const pendingCount = await loadStats(user.$id);
+  loadLatestOrders(user.$id);
+  updateAttention(pendingCount);
+  
+  if (!res.documents.length) return;    
 }
 
 initDashboard();
