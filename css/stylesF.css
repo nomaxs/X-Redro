@@ -349,8 +349,8 @@ textarea {
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   padding: var(--space-md);
-  width: fit-content;
   height: fit-content;
+  width: fit-content;
 }
 
 .field-header {
