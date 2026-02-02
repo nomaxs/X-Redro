@@ -33,6 +33,20 @@ let res;
 /* =========================
 UTILITY / HELPER FUNCTIONS
 ========================= */
+function normalizeAmount(value) {
+  if (value === null || value === undefined) return 0;
+
+  if (typeof value === "number") return value;
+
+  if (typeof value === "string") {
+    const clean = value.replace(/[₦,\s]/g, "");
+    const num = Number(clean);
+    return isNaN(num) ? 0 : num;
+  }
+
+  return 0;
+}
+
 function parseFormData(raw) {
   if (!Array.isArray(raw)) return [];
 
@@ -214,6 +228,7 @@ function renderOrders(orders) {
 
     const title = getCardTitle(order);
     const summary = getProductSummary(order.formData, 2);
+    const amount = normalizeAmount(order.totalAmount);
 
     card.innerHTML = `
       <div class="card-header">
@@ -231,7 +246,7 @@ function renderOrders(orders) {
       </div>
 
       <div class="meta">
-        <span>₦${order.totalAmount || 0}</span>
+        <span>₦${amount.toLocaleString() || 0}</span>
       </div>
     `;
 
