@@ -270,6 +270,7 @@ async function initDashboard() {
   ]);
   
   //Theme Application
+  if (!res.documents.length) return;
   profileDocId = res.documents[0].$id;
 
   const savedTheme = res.documents[0].theme  || "light";
