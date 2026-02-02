@@ -193,7 +193,7 @@
 }
 
 .product-card {
-  min-width: 580px;
+  min-width: 280px;
   flex: 0 0 auto;
   background-color: var(--card);
   border-radius: var(--radius-lg);
@@ -412,7 +412,7 @@
   }
 
   .preview-card {
-    max-width: 520px;
+    max-width: 820px;
     padding: var(--space-4) var(--space-4);
     border-radius: var(--radius-xl);
   }
@@ -428,7 +428,7 @@
   }
 
   .product-card {
-    min-width: 0;
+    min-width: 280;
     padding: var(--space-4);
   }
 
