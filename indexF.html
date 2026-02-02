@@ -9,7 +9,14 @@
   <link rel="stylesheet" href="css/alert.css" />
 </head>
 <body>
-
+<script>
+  (function () {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      document.body.dataset.theme = savedTheme;
+    }
+  })();
+</script>
 <!-- NAV -->
 <nav class="nav">
   <div class="nav-inner">
