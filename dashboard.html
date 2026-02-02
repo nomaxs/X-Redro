@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 🔥 THEME BOOTSTRAP (MUST BE FIRST) -->
+  <script>
+    (function () {
+      const savedTheme = localStorage.getItem("theme") || "light";
+      document.documentElement.dataset.theme = savedTheme;
+    })();
+  </script>
+  
   <title>Dashboard | X REDRO</title>
   <link rel="stylesheet" href="css/dashboard.css" />
   <link rel="stylesheet" href="css/alert.css" />
 </head>
 <body>
-<script>
-  (function () {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) {
-      document.body.dataset.theme = savedTheme;
-    }
-  })();
-</script>
-
+  
 <!-- NAV -->
 <nav class="nav">
   <div class="nav-inner">
