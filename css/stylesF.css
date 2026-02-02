@@ -349,7 +349,9 @@ textarea {
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   padding: var(--space-md);
-  width: 100%;
+  height: fit-content;
+  width: fit-content;
+  min-width: 260px;
 }
 
 .field-header {
@@ -406,7 +408,7 @@ textarea {
 /* ---------- COMPONENTS: PRODUCT BUILDER ---------- */
 .product-row {
   display: grid;
-  grid-template-columns: 80px 1fr 100px 20px;
+  grid-template-columns: 1fr;
   gap: var(--space-sm);
   align-items: center;
   margin-top: var(--space-md);
