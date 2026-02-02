@@ -147,7 +147,7 @@
 }
 
 .product-card {
-  min-width: 200px;
+  min-width: 140px;
   flex: 0 0 auto;
   background-color: #f7f7f7;
   border-radius: var(--radius-lg);
