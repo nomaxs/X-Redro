@@ -253,6 +253,7 @@ button {
 
 .row > div {
   flex: 1;
+  width: 100%;
 }
 
 .row p {
@@ -341,16 +342,6 @@ textarea {
   flex-wrap: wrap;
   gap: var(--space-md);
   width: 100%;
-}
-
-.fields input {
-  width: 90%;
-  padding: 14px 20px;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  font-size: 14px;
-  background: var(--card);
-  color: var(--text);
 }
 
 .field-card {
