@@ -225,7 +225,7 @@ button:active {
 button.primary {
   background-color: #000;
   color: #fff;
-  margin-right: var(--space-md);
+  margin-top: var(--space-md);
 }
 
 button.danger {
