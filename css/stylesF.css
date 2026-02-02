@@ -406,7 +406,7 @@ textarea {
 /* ---------- COMPONENTS: PRODUCT BUILDER ---------- */
 .product-row {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 80px 1fr 100px 20px;
   gap: var(--space-sm);
   align-items: center;
   margin-top: var(--space-md);
@@ -414,10 +414,6 @@ textarea {
   background-color: var(--card);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
-}
-
-.product-row input {
-  width: 95%;
 }
 
 .product-image {
