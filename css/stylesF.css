@@ -605,9 +605,9 @@ textarea {
     flex-direction: row;
   }
 
-  .field-card {
+  /*.field-card {
     width: calc(50% - var(--space-md));
-  }
+  }*/
 
   .product-row {
     grid-template-columns: 80px 1fr 100px 20px;
@@ -643,9 +643,9 @@ textarea {
     font-size: 32px;
   }
 
-  .field-card {
+  /*.field-card {
     width: calc(33.333% - var(--space-md));
-  }
+  }*/
 
   .overlay-content {
     max-width: 600px;
