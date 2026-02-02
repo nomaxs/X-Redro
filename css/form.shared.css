@@ -210,8 +210,7 @@
 }
 
 .product-image {
-  width: 100%;
-  height: 220px;
+  width: 100%; 
   border-radius: var(--radius-md);
   overflow: hidden;
   background-color: #eaeaea;
@@ -423,17 +422,17 @@
     gap: var(--space-4);
     overflow-x: visible;
     padding-bottom: 0;
-    scroll-snap-type: none;
     flex-wrap: wrap;
   }
 
   .product-card {
-    min-width: 320px;
+    min-width: 0px;
     padding: var(--space-4);
   }
 
   .product-image {
     height: 260px;
+    width: 250px;
   }
 
   .business-name {
