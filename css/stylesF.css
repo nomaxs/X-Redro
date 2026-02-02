@@ -341,6 +341,7 @@ textarea {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-md);
+  width: 100%;
 }
 
 .fields input {
@@ -423,6 +424,10 @@ textarea {
   background-color: var(--card);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
+}
+
+.product-row input {
+  width: 95%;
 }
 
 .product-image {
