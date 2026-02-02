@@ -180,7 +180,6 @@ input {
   width: 100%;
   min-height: 48px;
   padding: 14px 20px;
-  margin: var(--space-md);
   border-radius: 999px;
   border: 1px solid var(--border);
   background-color: var(--card);
@@ -206,7 +205,7 @@ input:focus {
 button {
   min-height: 48px;
   padding: 14px 18px;
-  margin: var(--space-md);
+  margin-right: var(--space-md);
   border-radius: var(--radius-lg);
   border: none;
   background-color: var(--cards);
@@ -226,6 +225,7 @@ button:active {
 button.primary {
   background-color: #000;
   color: #fff;
+  margin-right: var(--space-md);
 }
 
 button.danger {
