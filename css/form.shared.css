@@ -406,11 +406,12 @@
     padding: 24px;
     align-items: center;
     min-height: 100vh;
+    font-size: 16px;
   }
 
   .preview-card {
     max-width: 520px;
-    padding: var(--space-5) var(--space-4);
+    padding: var(--space-4) var(--space-4);
     border-radius: var(--radius-xl);
   }
 
@@ -426,71 +427,71 @@
   }
 
   .product-image {
-    height: 220px;
+    height: 180px;
   }
 
   .business-name {
-    font-size: 32px;
-  }
-
-  .subtitle {
-    font-size: 20px;
-  }
-
-  .section-title {
     font-size: 26px;
   }
 
-  .product-name {
+  .subtitle {
+    font-size: 18px;
+  }
+
+  .section-title {
     font-size: 22px;
+  }
+
+  .product-name {
+    font-size: 18px;
   }
 
   .product-price {
-    font-size: 22px;
+    font-size: 18px;
   }
 
   .total-box {
-    padding: var(--space-5);
-    font-size: 20px;
+    padding: var(--space-4);
+    font-size: 18px;
   }
 
   .total-box div:last-child {
-    font-size: 24px;
+    font-size: 20px;
   }
 
   .send-btn {
-    font-size: 22px;
-    padding: 24px;
-    min-height: 72px;
+    font-size: 18px;
+    padding: 20px;
+    min-height: 62px;
   }
 
   .form-group input,
   .form-group textarea,
   .form-group select {
-    font-size: 20px;
-    padding: 22px 28px;
-    min-height: 68px;
+    font-size: 16px;
+    padding: 18px 24px;
+    min-height: 56px;
   }
 
   .form-group textarea {
-    min-height: 180px;
+    min-height: 140px;
   }
 
   .upload-ui {
-    font-size: 20px;
-    padding: 22px;
-    min-height: 68px;
+    font-size: 16px;
+    padding: 18px;
+    min-height: 56px;
   }
 
   .product-qty button {
-    width: 48px;
-    height: 48px;
-    font-size: 26px;
-    min-height: 48px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    min-height: 40px;
   }
 
   .product-qty span {
-    font-size: 22px;
+    font-size: 18px;
   }
 }
 
@@ -498,11 +499,12 @@
 @media (min-width: 1024px) {
   .preview-theme {
     padding: 32px;
+    font-size: 16px;
   }
 
   .preview-card {
     max-width: 600px;
-    padding: var(--space-6) var(--space-5);
+    padding: var(--space-5) var(--space-5);
   }
 
   .product-grid {
@@ -511,40 +513,43 @@
   }
 
   .product-card {
-    padding: var(--space-5);
+    padding: var(--space-4);
   }
 
   .product-image {
-    height: 260px;
+    height: 200px;
   }
 
   .business-name {
-    font-size: 36px;
+    font-size: 28px;
   }
 
   .subtitle {
-    font-size: 22px;
+    font-size: 18px;
   }
 
   .section-title {
-    font-size: 28px;
+    font-size: 24px;
   }
 
   .form-group input,
   .form-group textarea,
   .form-group select {
-    font-size: 20px;
-    padding: 24px 32px;
+    font-size: 16px;
+    padding: 20px 28px;
+    min-height: 60px;
   }
 
   .upload-ui {
-    font-size: 20px;
-    padding: 24px;
+    font-size: 16px;
+    padding: 20px;
+    min-height: 60px;
   }
 
   .send-btn {
-    font-size: 22px;
-    min-height: 76px;
+    font-size: 18px;
+    min-height: 64px;
+    padding: 22px;
   }
 }
 
