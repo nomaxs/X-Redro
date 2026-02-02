@@ -1,13 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Verifying Payment</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Payment Verification | X redro</title>
+  <link rel="stylesheet" href="css/stylesE.css">
+    <link rel="stylesheet" href="css/alert.css" />
 </head>
 <body>
 
-<p>Verifying payment, please wait…</p>
+<div class="page">
+  <div class="card">
+    
+    <!-- IMAGE HEADING -->
+    <img src="assets/logo.png" class="logo" alt="X REDRO">
+    
+    <h2>Verifying payment, please wait… </h2>
+    <label>Please wait, you’ll be redirected shortly.</label>
+    
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.1"></script>
-<script>
+<div id="toast-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+<script src="js/verify-payment.js"></script>
+<script src="js/alert.js"></script>
+</body>
+</html>
