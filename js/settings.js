@@ -126,10 +126,29 @@ async function logout() {
 }
 
 function buySubscription(days) {
-  window.location.href =
+  // Prevent overwriting an active pending payment
+  if (localStorage.getItem("pendingSubscription")) {
+    showToast("You already have a pending payment", "warning");
+    return;
+  }
+
+  const planData = {
+    userId: user.$id,
+    plan: days === 7 ? "weekly" : "monthly",
+    durationDays: days,
+    amount: days === 7 ? 5000 : 15000, // adjust
+    createdAt: new Date().toISOString()
+  };
+
+  localStorage.setItem("pendingSubscription", JSON.stringify(planData));
+
+  // Redirect to Selar
+  const selarLink =
     days === 7
-      ? "https://selar.co/7days"
-      : "https://selar.co/30days";
+      ? "https://selar.co/YOUR-7-DAY-LINK"
+      : "https://selar.co/YOUR-30-DAY-LINK";
+
+  window.location.href = selarLink;
 }
 
 /* =========================
