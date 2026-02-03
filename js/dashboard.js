@@ -1,3 +1,4 @@
+showToast("The file is loading the JS file is not the problem", "warning");
 /* =========================
 FILE OVERVIEW
 ========================= */
@@ -23,6 +24,7 @@ const account = new Appwrite.Account(client);
 const databases = new Appwrite.Databases(client);
 const Query = Appwrite.Query;
 
+showToast("Declaration is not the problem either", "warning");
 /* =========================
 GLOBAL STATE VARIABLES
 ========================= */
