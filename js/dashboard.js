@@ -279,19 +279,16 @@ async function initDashboard() {
   profileDocId = profile.$id;
   showToast("After passing profile a1", "info");
 
-  //const savedTheme = res.documents[0].theme  || "light";
-  //applyTheme(savedTheme);
   if (!res.documents.length) return;
   const savedTheme = res.documents[0].theme || "light";
   applyTheme(savedTheme);
-  showToast("After passing profile a2", "info");
-  
   
   //Quick Subscription Check
   const sub = subRes.documents[0];
   const daysLeft = Math.ceil(
     (new Date(sub.expiresAt) - new Date()) / 86400000
   );
+  showToast("After passing profile a2", "info");
 
   if (daysLeft <= 0) {
     document.getElementById("subscriptionModal").classList.remove("hidden");
