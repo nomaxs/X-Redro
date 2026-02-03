@@ -279,7 +279,6 @@ async function initDashboard() {
   profileDocId = profile.$id;
   showToast("After passing profile A-1", "info");
 
-  if (!res.documents.length) return;
   const savedTheme = res.documents[0].theme || "light";
   applyTheme(savedTheme);
 
