@@ -1,4 +1,3 @@
-showToast("The file is loading the JS file is not the problem", "warning");
 /* =========================
 FILE OVERVIEW
 ========================= */
@@ -24,7 +23,6 @@ const account = new Appwrite.Account(client);
 const databases = new Appwrite.Databases(client);
 const Query = Appwrite.Query;
 
-showToast("Declaration is not the problem either", "warning");
 /* =========================
 GLOBAL STATE VARIABLES
 ========================= */
@@ -276,9 +274,10 @@ async function initDashboard() {
   //Theme Application
   if (!res.documents.length) return;
 
+  showToast("Before passing profile", "info");
   const profile = res.documents[0];
   profileDocId = profile.$id;
-  
+  showToast("After passing profile", "info");
 
   const savedTheme = res.documents[0].theme  || "light";
   applyTheme(savedTheme);
