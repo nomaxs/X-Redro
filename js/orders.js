@@ -44,32 +44,6 @@ const CLOSE_EXPAND = `
 /* =========================
 UTILITY / HELPER FUNCTIONS
 ========================= */
-function buySubscription(days) {
-  // Prevent overwriting an active pending payment
-  if (localStorage.getItem("pendingSubscription")) {
-    showToast("You already have a pending payment", "warning");
-    return;
-  }
-
-  const planData = {
-    userId: user.$id,
-    plan: days === 7 ? "weekly" : "monthly",
-    durationDays: days,
-    amount: days === 7 ? 5000 : 15000, // adjust
-    createdAt: new Date().toISOString()
-  };
-
-  localStorage.setItem("pendingSubscription", JSON.stringify(planData));
-
-  // Redirect to Selar
-  const selarLink =
-    days === 7
-      ? "https://selar.co/YOUR-7-DAY-LINK"
-      : "https://selar.co/YOUR-30-DAY-LINK";
-
-  window.location.href = selarLink;
-}
-
 function parseFormData(raw) {
   if (!Array.isArray(raw)) return [];
 
@@ -183,10 +157,7 @@ async function fetchOrders() {
   ]);
   
   //Theme Application
-  //profileDocId = res.documents[0].$id;
-  const profile = res.documents[0];
-  profileDocId = profile.$id;
-  
+  profileDocId = res.documents[0].$id;
 
   const savedTheme = res.documents[0].theme || "light";
   applyTheme(savedTheme);
