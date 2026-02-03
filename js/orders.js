@@ -183,7 +183,10 @@ async function fetchOrders() {
   ]);
   
   //Theme Application
-  profileDocId = res.documents[0].$id;
+  //profileDocId = res.documents[0].$id;
+  const profile = res.documents[0];
+  profileDocId = profile.$id;
+  
 
   const savedTheme = res.documents[0].theme || "light";
   applyTheme(savedTheme);
