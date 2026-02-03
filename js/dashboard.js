@@ -261,8 +261,6 @@ async function initDashboard() {
   user = await requireAuth();
   if (!user) return;
 
-  showToast("This one works", "info");
-
   res = await databases.listDocuments(DB_ID, USERS, [
     Query.equal("userId", user.$id)
   ]);
@@ -274,28 +272,17 @@ async function initDashboard() {
   //Theme Application
   if (!res.documents.length) return;
 
-  showToast("Before passing profile", "info");
   const profile = res.documents[0];
   profileDocId = profile.$id;
-  showToast("After passing profile Ads-1", "info");
 
   const savedTheme = res.documents[0].theme || "light";
-  //applyTheme(savedTheme);
-  try {
-    applyTheme(savedTheme);
-    showToast("Theme applied and saved", "info");
-  } catch (e) {
-    console.error("Theme error:", e);
-    showToast("Theme crashed", "error");
-    alert(e);
-  }
+  applyTheme(savedTheme);
   
   //Quick Subscription Check
   const sub = subRes.documents[0];
   const daysLeft = Math.ceil(
     (new Date(sub.expiresAt) - new Date()) / 86400000
   );
-  showToast("After passing profile a2", "info");
 
   if (daysLeft <= 0) {
     document.getElementById("subscriptionModal").classList.remove("hidden");
@@ -305,13 +292,9 @@ async function initDashboard() {
   planDays.innerText = `${sub.plan}`;
   expiresIn.innerText = `${daysLeft} days`;
 
-  showToast("passed subscription", "info");
-
   const pendingCount = await loadStats(user.$id);
   loadLatestOrders(user.$id);
   updateAttention(pendingCount);
-  showToast("Methods loaded", "info");
-      
 }
 
 initDashboard();
