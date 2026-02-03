@@ -277,14 +277,14 @@ async function initDashboard() {
   showToast("Before passing profile", "info");
   const profile = res.documents[0];
   profileDocId = profile.$id;
-  showToast("After passing profile 1", "info");
+  showToast("After passing profile a1", "info");
 
   //const savedTheme = res.documents[0].theme  || "light";
   //applyTheme(savedTheme);
-
+  if (!res.documents.length) return;
   const savedTheme = res.documents[0].theme || "light";
   applyTheme(savedTheme);
-  showToast("After passing profile 2", "info");
+  showToast("After passing profile a2", "info");
   
   
   //Quick Subscription Check
@@ -307,8 +307,7 @@ async function initDashboard() {
   loadLatestOrders(user.$id);
   updateAttention(pendingCount);
   showToast("Methods loaded", "info");
-  
-  if (!res.documents.length) return;    
+      
 }
 
 initDashboard();
