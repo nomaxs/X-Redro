@@ -282,6 +282,7 @@ async function initDashboard() {
 
   const savedTheme = res.documents[0].theme  || "light";
   applyTheme(savedTheme);
+  showToast("Theme applied and saved", "info");
   
   //Quick Subscription Check
   const sub = subRes.documents[0];
@@ -297,9 +298,12 @@ async function initDashboard() {
   planDays.innerText = `${sub.plan}`;
   expiresIn.innerText = `${daysLeft} days`;
 
+  showToast("passed subscription", "info");
+
   const pendingCount = await loadStats(user.$id);
   loadLatestOrders(user.$id);
   updateAttention(pendingCount);
+  showToast("Methods loaded", "info");
   
   if (!res.documents.length) return;    
 }
