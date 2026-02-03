@@ -9,7 +9,14 @@
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 <body>
-
+<script>
+  (function () {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      document.body.dataset.theme = savedTheme;
+    }
+  })();
+</script>
 <!-- NAV -->
 <nav class="nav">
   <div class="nav-inner">
@@ -57,7 +64,6 @@
 
 </main>
 
-
 <div id="toast-container"></div>
 
 <div id="confirmModal" class="modal hidden" onclick="closeOrderDeleteModal(event)">
@@ -96,4 +102,4 @@
 <script src="js/alert.js"></script>
 
 </body>
-     </html>
+</html>
