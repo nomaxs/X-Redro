@@ -8,6 +8,14 @@
   <link rel="stylesheet" href="css/alert.css" />
 </head>
 <body>
+<script>
+  (function () {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      document.body.dataset.theme = savedTheme;
+    }
+  })();
+</script>
 
 <!-- NAV -->
 <nav class="nav">
@@ -61,7 +69,7 @@
     <strong id="planDays">0 days</strong>
     <span>Expires in</span>
     <strong id="expiresIn">0 days</strong>
-    <button id="buySubscription">Buy Subscription</button>
+    <!-- <button id="buySubscription">Buy Subscription</button> -->
   </section>
   
   <!-- FORM STATUS -->
