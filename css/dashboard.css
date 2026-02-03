@@ -11,7 +11,7 @@
 }
 
 /* ---------- DESIGN TOKENS ---------- */
-[data-theme="light"] {
+:root {
   /* Colors - Light */
   --bg: #fafafa;
   --surface: #fafafa;
