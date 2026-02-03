@@ -54,7 +54,7 @@ function applyTheme(theme) {
   const icon = document.getElementById("themeIcon");
   document.body.dataset.theme = theme;
 
-  localStorage.setItem("theme", current);
+  //localStorage.setItem("theme", current);
 
   if (!icon) return;
 
