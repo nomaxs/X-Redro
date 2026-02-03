@@ -277,14 +277,15 @@ async function initDashboard() {
   showToast("Before passing profile", "info");
   const profile = res.documents[0];
   profileDocId = profile.$id;
-  showToast("After passing profile", "info");
+  showToast("After passing profile 1", "info");
 
   //const savedTheme = res.documents[0].theme  || "light";
   //applyTheme(savedTheme);
 
   const savedTheme = res.documents[0].theme || "light";
   applyTheme(savedTheme);
-  showToast("Theme applied and saved", "info");
+  showToast("After passing profile 2", "info");
+  
   
   //Quick Subscription Check
   const sub = subRes.documents[0];
