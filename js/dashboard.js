@@ -2,7 +2,6 @@
 FILE OVERVIEW
 ========================= */
 // Dashboard application with Appwrite
-
 /* =========================
 GLOBAL CONSTANTS / CONFIG
 ========================= */
@@ -29,6 +28,7 @@ GLOBAL STATE VARIABLES
 let profileDocId = null;
 let user;
 let res;
+
 
 /* =========================
 UTILITY / HELPER FUNCTIONS
