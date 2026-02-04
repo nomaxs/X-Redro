@@ -475,12 +475,6 @@ body {
   font-size: 14px;
 }
 
-.mobile-menu .theme-toggle {
-  padding: 8px;
-  border-radius: 50%;
-  background: var(--surface);
-}
-
 /* ---------- RESPONSIVE NAV ---------- */
 
 @media (max-width: 768px) {
