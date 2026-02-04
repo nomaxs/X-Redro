@@ -1,18 +1,7 @@
-/* ================================
-   BUILDER PAGES – X REDRO
-   Light + Dark Mode
-   =============================== */
-
-/* ---------- RESET & BASE ---------- */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* ---------- DESIGN TOKENS ---------- */
+/* =========================
+   THEME VARIABLES
+========================= */
 :root {
-  /* Colors - Light */
   --bg: #fafafa;
   --card: #ffffff;
   --cards: #fefefe;
@@ -21,12 +10,25 @@
   --border: #e5e5e5;
   --surface: #fafafa;
   --surface-elevated: #ffffff;
+  
+  /* Brand */
   --accent: #9cff00;
   --accent-soft: rgba(156, 255, 0, 0.12);
+  
+  /* Borders & Lines */
   --border-default: #e5e7eb;
   --border-focus: #9cff00;
 
-  /* Spacing */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  --space-1: 6px;
+  --space-2: 10px;
+  --space-3: 14px;
+  --space-4: 20px;
+  --space-5: 32px;
+  
   --space-xs: 6px;
   --space-sm: 10px;
   --space-md: 16px;
@@ -34,17 +36,10 @@
   --space-xl: 32px;
   --space-2xl: 40px;
 
-  /* Radius */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-
-  /* Shadows */
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.07);
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 8px rgba(0,0,0,0.07);
 }
 
-/* ---------- DARK MODE ---------- */
 [data-theme="dark"] {
   --bg: #111111;
   --surface: #141414;
@@ -56,36 +51,20 @@
   --border: #333333;
 }
 
-[data-theme="light"] {
-  --icon-color: #555;
-}
-
-[data-theme="dark"] {
-  --icon-color: #00ff97;
-}
-
-/* ---------- BASE STYLES ---------- */
-body {
+/* =========================
+   GLOBAL
+========================= */
+* {
+  box-sizing: border-box;
   font-family: Inter, system-ui, sans-serif;
-  font-size: 15px;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, sans-serif;
   line-height: 1.5;
-  background-color: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-}
-
-input {
-  width: 90%;
-  padding: 14px 20px;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-}
-
-input:focus {
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 input,
@@ -93,333 +72,308 @@ textarea,
 select,
 button {
   font-family: inherit;
-  font-size: 15px;
 }
 
-/* ---------- LAYOUT ---------- */
-.container {
-  width: 100%;
-  padding: var(--space-lg) var(--space-md);
+input:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
-/* ---------- COMPONENTS: NAVIGATION ---------- */
+/* =========================
+   NAVIGATION
+========================= */
 .nav {
-  background-color: var(--surface-elevated);
   border-bottom: 1px solid var(--border);
-  width: 100%;
+  background: var(--surface-elevated);
 }
 
 .nav-inner {
+  max-width: 1200px;
+  margin: auto;
+  padding: var(--space-md) var(--space-lg);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-md);
 }
 
 .logo {
   height: 40px;
-  display: block;
 }
 
 .nav-links {
   display: flex;
-  gap: var(--space-md);
+  gap: var(--space-lg);
 }
 
 .nav-links a {
-  font-size: 15px;
-  color: var(--muted);
+  font-size: 14px;
+  color: var(--text-secondary);
   text-decoration: none;
-  padding: var(--space-xs) 0;
 }
 
 .nav-links a.active {
-  color: var(--text);
+  color: var(--text-primary);
   font-weight: 600;
 }
 
 .theme-toggle {
   cursor: pointer;
-  background: none;
-  border: none;
-  padding: var(--space-xs);
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .theme-icon {
   width: 22px;
   height: 22px;
   color: var(--icon-color);
-  transition: transform 0.2s ease, color 0.2s ease;
+  transition: color 0.2s ease;
+}
+
+[data-theme="light"] {
+  --icon-color: #555;
+}
+
+[data-theme="dark"] {
+  --icon-color: #00ff97; /* premium sun glow */
 }
 
 .theme-toggle:hover .theme-icon {
   transform: rotate(12deg);
 }
 
-/* ---------- COMPONENTS: HEADINGS ---------- */
-.page-header h1 {
-  font-size: 24px;
-  margin-bottom: var(--space-lg);
-  line-height: 1.3;
+/* =========================
+   LAYOUT
+========================= */
+.container {
+  max-width: 1100px;
+  margin: var(--space-5) auto;
+  padding: 0 var(--space-3);
 }
 
-.section-header h3 {
-  font-size: 18px;
-  margin: 0;
-  line-height: 1.4;
-}
-
-/* ---------- COMPONENTS: HEADER & ACTIONS ---------- */
 .page-header {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+}
+
+.page-header h1 {
+  font-size: 32px;
   margin-bottom: var(--space-lg);
 }
 
+/* =========================
+   ACTION BUTTONS
+========================= */
 .actions {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  width: 100%;
+  gap: var(--space-2);
 }
 
 .actions input {
   width: 45%;
-  min-height: 48px;
   padding: 14px 20px;
-  border-radius: var(--radius-lg);
+  border-radius: 999px;
   border: 1px solid var(--border);
-  background-color: var(--card);
+  font-size: 14px;
+  background: var(--card);
   color: var(--text);
-  font-size: 15px;
-  outline: none;
-  transition: border 0.2s ease, box-shadow 0.2s ease;
 }
 
 .actions button {
-  min-height: 48px;
-  padding: 14px 18px;
-  border-radius: var(--radius-lg);
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: 999px;
   border: none;
-  background-color: var(--card);
-  color: var(--text);
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
   box-shadow: var(--shadow-sm);
-  transition: opacity 0.2s ease;
-  width: 100%;
+  background: var(--card);
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
 }
 
-.actions button:active {
-  opacity: 0.8;
+/* =========================
+   SECTIONS & CARDS
+========================= */
+.card {
+  background: var(--card);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  margin-top: var(--space-3);
 }
 
-/* ---------- COMPONENTS: SECTIONS & CARDS ---------- */
 .section-header {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
-  margin-top: var(--space-xl);
-  margin-bottom: var(--space-md);
+  gap: var(--space-2);
+  margin-top: var(--space-5);
 }
 
-.card {
-  background-color: var(--card);
-  border-radius: var(--radius-md);
-  padding: var(--space-lg);
-  margin-top: var(--space-md);
-  box-shadow: var(--shadow-sm);
+.section-header h3 {
+  margin: 0;
 }
 
 .inputCard {
   background: none;
-  box-shadow: none;
-  padding: 0;
-  margin-top: var(--space-md);
+  padding: none;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  margin-top: var(--space-3);
 }
 
-/* ---------- COMPONENTS: FORM ROWS ---------- */
+
+/* =========================
+   FORM ROWS
+========================= */
 .row {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-  width: 100%;
+  gap: var(--space-3);
 }
 
 .row > div {
   flex: 1;
-  width: 100%;
 }
 
 .row p {
-  font-size: 14px;
+  font-size: 12px;
   color: var(--muted);
   font-weight: 600;
-  margin-bottom: var(--space-xs);
+  margin-bottom: var(--space-1);
 }
 
 textarea,
 select {
-  width: 100%;
-  min-height: 48px;
-  padding: 14px 16px;
+  width: 90%;
+  padding: 10px 12px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-  background-color: var(--card);
+  background: transparent;
   color: var(--text);
-  outline: none;
-  transition: border 0.2s ease, box-shadow 0.2s ease;
 }
 
-textarea:focus,
-select:focus {
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px var(--accent-soft);
+input {
+  width: 90%;
+  padding: 14px 20px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  font-size: 14px;
+  background: var(--card);
+  color: var(--text);
 }
 
-textarea {
-  min-height: 100px;
-  resize: vertical;
-}
 
-/* ---------- COMPONENTS: ADD BUTTON & MENU ---------- */
+/* =========================
+   ADD BUTTON
+========================= */
 .add-btn {
-  width: 42px;
-  height: 42px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: none;
-  background-color: var(--card);
-  color: green;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
   cursor: pointer;
+  background: var(--card);
   box-shadow: var(--shadow-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.2s ease;
-}
-
-.add-btn:active {
-  opacity: 0.8;
+  color: green;
 }
 
 .add-menu {
   position: absolute;
-  z-index: 50;
-  background-color: var(--text);
-  color: var(--card);
-  border-radius: var(--radius-sm);
-  padding: var(--space-sm);
-  box-shadow: var(--shadow-md);
-  min-width: 180px;
+  background: var(--text);
+  box-shadow: var(--shadow-sm);
+  padding: 8px;
+  border-radius: 8px;
 }
 
 .add-menu div {
-  padding: var(--space-sm) var(--space-md);
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.add-menu div:active {
-  background-color: rgba(255, 255, 255, 0.1);
+  margin: 14px;
+  margin-right: 60px;
 }
 
 .add-menu hr {
-  border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  margin: var(--space-xs) 0;
+  max-width: 80%;
+  border: 1px solid var(--muted);
+  opacity: 0.8;  
 }
 
-/* ---------- COMPONENTS: FIELD CARDS ---------- */
+
+.hidden {
+  display: none;
+}
+
+/* =========================
+   FIELD CARDS
+========================= */
 .fields {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-md);
-  width: 100%;
+  gap: var(--space-3);
 }
 
 .field-card {
-  background-color: var(--card);
+  background: var(--card);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
-  padding: var(--space-md);
-  height: fit-content;
+  padding: var(--space-3);
   width: fit-content;
+  min-width: 260px;
 }
 
 .field-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--space-sm);
 }
 
 .field-label {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   border: none;
   background: transparent;
-  color: var(--text);
-  outline: none;
-  width: 100%;
 }
 
 .remove {
   cursor: pointer;
   font-size: 18px;
   color: var(--text);
-  background: none;
-  border: none;
-  padding: var(--space-xs);
 }
 
-/* ---------- COMPONENTS: DROPDOWN OPTIONS ---------- */
+/* =========================
+   DROPDOWN OPTIONS
+========================= */
 .chips {
   display: flex;
-  gap: var(--space-xs);
+  gap: var(--space-1);
   flex-wrap: wrap;
-  margin-top: var(--space-sm);
+  margin-top: var(--space-2);
 }
 
 .chip {
-  padding: 6px 12px;
-  border-radius: var(--radius-lg);
-  font-size: 13px;
-  background-color: var(--card);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: var(--card);
   box-shadow: var(--shadow-sm);
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
 }
 
 .chip span {
+  margin-left: 6px;
   cursor: pointer;
-  font-size: 16px;
-  line-height: 1;
 }
 
-/* ---------- COMPONENTS: PRODUCT BUILDER ---------- */
+/* =========================
+   PRODUCT BUILDER
+========================= */
 .product-row {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-sm);
+  grid-template-columns: 80px 1fr 100px 20px;
+  gap: var(--space-2);
   align-items: center;
-  margin-top: var(--space-md);
-  padding: var(--space-md);
-  background-color: var(--card);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
+  margin-top: var(--space-2);
 }
 
 .product-image {
-  width: 100%;
-  max-width: 80px;
+  width: 80px;
   height: 80px;
   border-radius: var(--radius-sm);
   border: 1px dashed var(--border);
@@ -427,7 +381,6 @@ textarea {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background-color: var(--surface);
 }
 
 .product-img {
@@ -437,58 +390,66 @@ textarea {
 }
 
 .upload-btn {
-  font-size: 13px;
+  font-size: 11px;
   color: var(--muted);
   cursor: pointer;
   text-align: center;
-  padding: var(--space-xs);
-  background: none;
-  border: none;
-  width: 100%;
 }
 
 .add-product {
-  margin-top: var(--space-md);
+  margin-top: var(--space-2);
   background: none;
   border: none;
   color: var(--muted);
   cursor: pointer;
-  font-size: 15px;
-  padding: var(--space-sm);
-  width: 100%;
-  text-align: left;
 }
 
-/* ---------- COMPONENTS: SAVE BUTTON ---------- */
+/* =========================
+   SAVE BUTTON
+========================= */
 .save {
-  margin-top: var(--space-xl);
-  padding: 14px 28px;
-  border-radius: var(--radius-lg);
-  background-color: var(--text);
+  margin-top: var(--space-4);
+  padding: 12px 26px;
+  border-radius: 999px;
+  background: var(--text);
   color: var(--bg);
   border: none;
   cursor: pointer;
-  font-size: 15px;
-  font-weight: 600;
-  width: 100%;
-  min-height: 48px;
-  transition: opacity 0.2s ease;
 }
 
-.save:active {
-  opacity: 0.8;
+/* =========================
+   ADD MENU
+========================= */
+.add-menu {
+  position: absolute;
+  z-index: 50;
+  background: var(--text);;
+  color: var(--card);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2);
 }
 
-/* ---------- COMPONENTS: PREVIEW OVERLAY ---------- */
+.add-menu div {
+  padding: var(--space-1) var(--space-2);
+  cursor: pointer;
+}
+
+.add-menu hr {
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+/* =========================
+   PREVIEW OVERLAY
+========================= */
 .overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background: rgba(0,0,0,0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9999;
-  padding: var(--space-md);
 }
 
 .overlay.hidden {
@@ -496,160 +457,205 @@ textarea {
 }
 
 .overlay-content {
-  background-color: #fff;
+  background: #fff;
   border-radius: var(--radius-lg);
-  width: 100%;
+  width: 90%;
   max-width: 500px;
   max-height: 90vh;
   overflow-y: auto;
-  padding: var(--space-lg);
+  padding: var(--space-3);
 }
 
-/* ---------- COMPONENTS: SUBSCRIPTION ---------- */
+/* Exipred Subscription */
 .subscribe {
-  display: flex;
-  flex-direction: column;
+  display: inline;
+  background: var(--cards);
+  align-items: center;
   gap: var(--space-md);
-  background-color: var(--cards);
-  border-radius: var(--radius-lg);
-  padding: var(--space-lg);
-  margin-top: var(--space-xl);
+  padding: var(--space-xl);
+  margin-bottom: var(--space-2xl);
+  font-size: 14px;
+  color: var(--text-secondary);
+  box-shadow: var(--shadow-soft);
   text-align: center;
-  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-lg);
 }
+  
+.subscribe button {
+  margin-left: auto;
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: 999px;
+  border: none;
+  box-shadow: var(--shadow-sm);
+  background: var(--card);
+  font-size: 13px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
 
 .subscribe h2 {
   font-size: 18px;
-  margin: 0 0 var(--space-md);
-  line-height: 1.4;
+  margin: 0 0 var(--space-3);
 }
 
 .subscribe-row {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-3);
+  gap: var(--space-2);
 }
 
-.subscribe button {
-  background-color: var(--card);
-  color: var(--text);
-  border: none;
-  border-radius: var(--radius-lg);
-  padding: 12px 18px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  box-shadow: var(--shadow-sm);
-  min-height: 48px;
-  width: 100%;
-  transition: opacity 0.2s ease;
-}
-
-.subscribe button:active {
-  opacity: 0.8;
-}
-
-/* ---------- COMPONENTS: MODAL ---------- */
+/* ---------- MODAL ---------- */
 .modal {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.4);
+  background: rgba(0,0,0,0.4);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 999;
-  padding: var(--space-md);
 }
 
-.modal.hidden {
-  display: none;
-}
-
-/* ---------- UTILITY ---------- */
 .hidden {
   display: none;
 }
-
-/* ---------- MEDIA QUERIES: TABLET (≥600px) ---------- */
-@media (min-width: 600px) {
-  .container {
-    padding: var(--space-lg);
-  }
-
-  .nav-inner {
-    padding: var(--space-md) var(--space-lg);
-  }
-
-  .page-header {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .actions {
-    flex-direction: row;
-    align-items: center;
-    width: auto;
-  }
-
-  .actions input {
-    width: 200px;
-  }
-
-  .actions button {
-    width: auto;
-    min-width: 120px;
-  }
-
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
   .row {
-    flex-direction: row;
-  }
-
-  /*.field-card {
-    width: calc(50% - var(--space-md));
-  }*/
-
-  .product-row {
-    grid-template-columns: 80px 1fr 100px 20px;
-    padding: var(--space-sm);
-  }
-
-  .subscribe-row {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .subscribe button {
-    width: auto;
-    min-width: 140px;
-  }
-
-  .save {
-    width: auto;
-    min-width: 160px;
+    flex-direction: column;
   }
 }
 
-/* ---------- MEDIA QUERIES: DESKTOP (≥1024px) ---------- */
-@media (min-width: 1024px) {
+/* =========================
+   MOBILE OPTIMIZATION – BUILDER / DASHBOARD
+========================= */
+@media (max-width: 600px) {
+
+  /* ---------- CONTAINER ---------- */
   .container {
-    max-width: 1100px;
-    margin: var(--space-2xl) auto;
-    padding: 0 var(--space-lg);
+    margin: var(--space-4) auto;
+    padding: 0 var(--space-3);
+  }
+
+  /* ---------- HEADER ---------- */
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
   }
 
   .page-header h1 {
-    font-size: 32px;
+    font-size: 24px;
+    margin-bottom: 0;
   }
 
-  /*.field-card {
-    width: calc(33.333% - var(--space-md));
-  }*/
+  /* ---------- ACTIONS ---------- */
+  .actions {
+    width: 100%;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
 
+  .actions input {
+    width: 100%;
+    height: 50px;
+    font-size: 15px;
+  }
+
+  .actions button {
+    width: 100%;
+    padding: 14px;
+    font-size: 14px;
+  }
+
+  /* ---------- CARDS ---------- */
+  .card {
+    padding: var(--space-3);
+    border-radius: var(--radius-lg);
+  }
+
+  /* ---------- FORM ROWS ---------- */
+  .row {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  textarea,
+  select,
+  input {
+    width: 100%;
+    font-size: 15px;
+  }
+
+  textarea {
+    min-height: 90px;
+  }
+
+  /* ---------- FIELD CARDS ---------- */
+  .fields {
+    gap: var(--space-3);
+  }
+
+  .field-card {
+    width: 100%;
+    min-width: unset;
+  }
+
+  /* ---------- PRODUCT BUILDER ---------- */
+  .product-row {
+    grid-template-columns: 64px 1fr;
+    grid-template-rows: auto auto;
+    gap: var(--space-2);
+  }
+
+  .product-image {
+    width: 64px;
+    height: 64px;
+  }
+
+  .product-row input {
+    grid-column: span 2;
+  }
+
+  /* ---------- ADD BUTTON ---------- */
+  .add-btn {
+    width: 42px;
+    height: 42px;
+    font-size: 20px;
+  }
+
+  .add-menu {
+    width: 220px;
+  }
+
+  /* ---------- SAVE BUTTON ---------- */
+  .save {
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+  }
+
+  /* ---------- OVERLAY ---------- */
   .overlay-content {
-    max-width: 600px;
-    padding: var(--space-xl);
+    width: calc(100% - 32px);
+    max-height: 85vh;
+  }
+
+  /* ---------- SUBSCRIBE ---------- */
+  .subscribe {
+    padding: var(--space-lg);
+  }
+
+  .subscribe-row {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .subscribe button {
+    width: 100%;
   }
 }
