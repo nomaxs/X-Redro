@@ -1,49 +1,33 @@
 /* =========================
-   FORM – X REDRO
-   Light + Dark Mode
-   ========================= */
-
-/* ---------- DESIGN TOKENS ---------- */
+   THEME VARIABLES
+========================= */
 :root {
-  /* Colors - Light */
   --bg: #f2f2f2;
   --card: #ffffff;
   --text: #111111;
   --muted: #8a8a8a;
   --border: #e6e6e6;
+
+  /* Signature (minimal usage) */
   --accent: #e8f7d8;
   --accent-text: #3a8f00;
 
-  /* Spacing */
-  --space-1: 8px;
-  --space-2: 14px;
-  --space-3: 20px;
-  --space-4: 28px;
-  --space-5: 36px;
-  --space-6: 48px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
 
-  /* Radius */
-  --radius-sm: 12px;
-  --radius-md: 18px;
-  --radius-lg: 28px;
-  --radius-xl: 38px;
+  --space-1: 6px;
+  --space-2: 10px;
+  --space-3: 14px;
+  --space-4: 18px;
+  --space-5: 24px;
 
-  /* Shadows */
-  --shadow-lg: 0 12px 35px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 25px rgba(0,0,0,0.04);
 }
 
-/* ---------- DARK MODE ---------- */
-[data-theme="dark"] {
-  --bg: #0f0f0f;
-  --card: #1a1a1a;
-  --text: #f2f2f2;
-  --muted: #888888;
-  --border: #262626;
-  --accent: #1e2a15;
-  --accent-text: #96d97f;
-}
-
-/* ---------- RESET & BASE ---------- */
+/* =========================
+   RESET
+========================= */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -51,138 +35,74 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, system-ui, sans-serif;
-  font-size: 18px;
-  line-height: 1.7;
-  background-color: var(--bg);
+  background: var(--bg);
+  padding: var(--space-3);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+               Roboto, Inter, system-ui, sans-serif;
   color: var(--text);
-  min-height: 100vh;
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-/* ---------- COMPONENTS: SUCCESS STATE ---------- */
+
 .success-state {
   text-align: center;
-  background-color: var(--card);
-  border-radius: var(--radius-xl);
-  padding: var(--space-5) var(--space-4);
-  margin: 0 auto;
-  max-width: 430px;
-  width: 100%;
-  box-shadow: var(--shadow-lg);
-  border: 2px solid var(--border);
+  padding: 48px 24px;
 }
 
 .success-icon {
-  width: 100px;
-  height: 100px;
-  margin: var(--space-4) auto;
+  width: 64px;
+  height: 64px;
+  margin: 24px auto;
   border-radius: 50%;
-  background-color: rgba(60, 180, 120, 0.1);
+  background: rgba(60, 180, 120, 0.1);
   color: #3cb478;
-  font-size: 48px;
+  font-size: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 4px solid rgba(60, 180, 120, 0.2);
 }
 
 .success-title {
-  font-size: 28px;
-  font-weight: 700;
-  margin-top: var(--space-3);
-  line-height: 1.4;
-  letter-spacing: -0.2px;
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 12px;
 }
 
 .success-subtitle {
-  font-size: 18px;
-  color: var(--muted);
-  margin-top: var(--space-2);
-  line-height: 1.6;
-  padding: 0 var(--space-3);
+  font-size: 14px;
+  opacity: 0.7;
+  margin-top: 6px;
 }
 
-/* ---------- MEDIA QUERIES: TABLET (≥600px) ---------- */
-@media (min-width: 600px) {
+/* =========================
+   MOBILE OPTIMIZATION – FORM
+========================= */
+@media (max-width: 600px) {
+
   body {
-    padding: 24px;
+    padding: var(--space-4);
+    font-size: 15px;
   }
 
+  /* ---------- SUCCESS STATE ---------- */
   .success-state {
-    padding: var(--space-6) var(--space-5);
-    max-width: 520px;
-    border-radius: var(--radius-xl);
+    padding: 56px 20px;
   }
 
   .success-icon {
-    width: 120px;
-    height: 120px;
-    font-size: 56px;
-    margin: var(--space-5) auto;
-    border-width: 5px;
+    width: 72px;
+    height: 72px;
+    font-size: 40px;
+    margin: 32px auto;
   }
 
   .success-title {
-    font-size: 32px;
-    margin-top: var(--space-4);
-  }
-
-  .success-subtitle {
     font-size: 20px;
-    margin-top: var(--space-3);
-    padding: 0 var(--space-4);
-  }
-}
-
-/* ---------- MEDIA QUERIES: DESKTOP (≥1024px) ---------- */
-@media (min-width: 1024px) {
-  body {
-    padding: 32px;
-  }
-
-  .success-state {
-    max-width: 600px;
-    padding: var(--space-6) var(--space-5);
-  }
-
-  .success-icon {
-    width: 140px;
-    height: 140px;
-    font-size: 64px;
-  }
-
-  .success-title {
-    font-size: 36px;
+    line-height: 1.4;
   }
 
   .success-subtitle {
-    font-size: 22px;
-    padding: 0 var(--space-5);
-  }
-}
-
-/* ---------- LARGE MOBILE ENHANCEMENTS (360px-430px) ---------- */
-@media (min-width: 360px) and (max-width: 430px) {
-  .success-state {
-    padding: var(--space-5) var(--space-4);
-  }
-
-  .success-icon {
-    width: 90px;
-    height: 90px;
-    font-size: 44px;
-  }
-
-  .success-title {
-    font-size: 26px;
-  }
-
-  .success-subtitle {
-    font-size: 17px;
-    padding: 0 var(--space-2);
+    font-size: 15px;
+    line-height: 1.6;
+    margin-top: 10px;
   }
 }
