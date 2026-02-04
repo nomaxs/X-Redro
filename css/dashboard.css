@@ -462,7 +462,7 @@ body {
 }
 
 .mobile-menu a.active {
-  color: var(--icon-color);
+  color: var(--text-primary);
   font-weight: 600;
 }
 
@@ -473,6 +473,7 @@ body {
   padding-top: var(--space-sm);
   border-top: 1px dashed var(--border);
   font-size: 14px;
+  color: var(--icon-color);
 }
 
 /* ---------- RESPONSIVE NAV ---------- */
