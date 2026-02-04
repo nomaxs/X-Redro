@@ -20,21 +20,44 @@
 <!-- NAV -->
 <nav class="nav">
   <div class="nav-inner">
-    <img src="assets/logo.png" class="logo">
+    <img src="assets/logo.png" class="logo" />
 
-    <div class="nav-links">
-      <a href="dashboard.html">Dashboard</a>
+    <!-- Desktop links -->
+    <div class="nav-links desktop-only">
+      <a class="active" href="dashboard.html">Dashboard</a>
       <a href="orders.html">Orders</a>
-      <a class="active" href="indexF.html">Form Builder</a>
+      <a href="indexF.html">Form Builder</a>
       <a href="settings.html">Settings</a>
     </div>
-
-    <div class="theme-toggle" onclick="toggleTheme()">
-      <svg id="themeIcon" class="theme-icon" viewBox="0 -960 960 960" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="desktop-only">
+      <div class="theme-toggle" onclick="toggleTheme()">
+        <svg id="themeIconD" class="theme-icon" viewBox="0 -960 960 960" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
     </div>
+
+    <!-- Burger button -->
+    <button class="burger" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu">
+    <a class="active" href="dashboard.html">Dashboard</a>
+    <a href="orders.html">Orders</a>
+    <a href="indexF.html">Form Builder</a>
+    <a href="settings.html">Settings</a>
+
+   <div class="mobile-theme-toggle"> 
+     <span>Theme</span>
+     <div class="theme-toggle" onclick="toggleTheme()">
+      <svg id="themeIconM" class="theme-icon" viewBox="0 -960 960 960" xmlns="http://www.w3.org/2000/svg"></svg>
+     </div>
+   </div>
   </div>
 </nav>
-
 <!-- MAIN -->
 <main class="container">
 
@@ -128,6 +151,14 @@
 <script src="js/themeF.js"></script>
 <script src="js/builderF.js"></script>
 <script src="js/alert.js"></script>
+<script>
+  const burger = document.querySelector('.burger');
+  const mobileMenu = document.querySelector('.mobile-menu');
+
+  burger.addEventListener('click', () => {
+    mobileMenu.classList.toggle('open');
+  });
+</script>
 </script>
 </body>
 </html>
