@@ -72,12 +72,14 @@
 .form-group {
   display: flex;
   flex-direction: column;
+  margin-bottom: var(--space-4);
 }
 
 .form-group label {
   font-size: 14px;
   font-weight: 600;
-  margin-bottom: var(--space-1);
+  margin-bottom: var(--space-2);
+  line-height: 1.5;
 }
 
 /* =========================
@@ -97,8 +99,10 @@
 }
 
 .form-group textarea {
-  min-height: 120px;
+  min-height: 160px;
   resize: none;
+  line-height: 1.7;
+  padding-top: var(--space-3);
 }
 
 .form-group input:focus,
