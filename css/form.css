@@ -1,6 +1,7 @@
 /* =========================
    THEME VARIABLES
 ========================= */
+
 :root {
   --bg: #f2f2f2;
   --card: #ffffff;
@@ -16,93 +17,118 @@
   --radius-md: 14px;
   --radius-lg: 22px;
 
-  --space-1: 6px;
-  --space-2: 10px;
-  --space-3: 14px;
-  --space-4: 18px;
-  --space-5: 24px;
+  --space-1: 8px;
+  --space-2: 14px;
+  --space-3: 20px;
+  --space-4: 28px;
+  --space-5: 36px;
 
-  --shadow-lg: 0 8px 25px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.06);
 }
 
 /* =========================
    RESET
 ========================= */
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+/* =========================
+   PAGE BASE
+========================= */
+
 body {
   background: var(--bg);
-  padding: var(--space-3);
+  min-height: 100vh;
+  padding: var(--space-4);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
                Roboto, Inter, system-ui, sans-serif;
   color: var(--text);
+  display: flex;
+  justify-content: center;
 }
 
+/* =========================
+   FORM PAGE CONTAINER
+========================= */
+
+.form-page {
+  width: 100%;
+  max-width: 1100px;
+}
+
+/* =========================
+   SUCCESS STATE
+========================= */
 
 .success-state {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-5) var(--space-4);
   text-align: center;
-  padding: 48px 24px;
+  margin: 0 auto;
+  max-width: 520px;
 }
 
 .success-icon {
-  width: 64px;
-  height: 64px;
-  margin: 24px auto;
+  width: 80px;
+  height: 80px;
+  margin: 32px auto;
   border-radius: 50%;
-  background: rgba(60, 180, 120, 0.1);
+  background: rgba(60, 180, 120, 0.12);
   color: #3cb478;
-  font-size: 36px;
+  font-size: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .success-title {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 22px;
+  font-weight: 700;
   margin-top: 12px;
 }
 
 .success-subtitle {
-  font-size: 14px;
-  opacity: 0.7;
-  margin-top: 6px;
+  font-size: 16px;
+  color: var(--muted);
+  margin-top: 10px;
+  line-height: 1.6;
 }
 
 /* =========================
-   MOBILE OPTIMIZATION – FORM
+   OPTIONAL ACTION (IF ANY)
 ========================= */
-@media (max-width: 600px) {
 
-  body {
-    padding: var(--space-4);
-    font-size: 15px;
-  }
+.success-actions {
+  margin-top: var(--space-4);
+  display: flex;
+  justify-content: center;
+}
 
-  /* ---------- SUCCESS STATE ---------- */
-  .success-state {
-    padding: 56px 20px;
-  }
+.success-actions button,
+.success-actions a {
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 18px;
+  padding: 14px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
 
-  .success-icon {
-    width: 72px;
-    height: 72px;
-    font-size: 40px;
-    margin: 32px auto;
-  }
+.success-actions button:hover,
+.success-actions a:hover {
+  opacity: 0.92;
+}
 
-  .success-title {
-    font-size: 20px;
-    line-height: 1.4;
-  }
-
-  .success-subtitle {
-    font-size: 15px;
-    line-height: 1.6;
-    margin-top: 10px;
-  }
+.success-actions button:active,
+.success-actions a:active {
+  transform: scale(0.97);
 }
