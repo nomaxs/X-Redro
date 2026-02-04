@@ -38,7 +38,8 @@ const SUN_SVG_PATH = `
 
 
 function applyTheme(theme) {
-  const icon = document.getElementById("themeIcon");
+  //const icon = document.getElementById("themeIcon");
+  const icon = document.querySelectorAll(".theme-icon");
   document.body.dataset.theme = theme;
 
   localStorage.setItem("theme", theme);
