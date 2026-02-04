@@ -462,7 +462,7 @@ body {
 }
 
 .mobile-menu a.active {
-  color: var(--text-primary);
+  color: var(--icon-color);
   font-weight: 600;
 }
 
