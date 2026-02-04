@@ -38,15 +38,21 @@ const SUN_SVG_PATH = `
 
 
 function applyTheme(theme) {
-  //const icon = document.getElementById("themeIcon");
-  const icon = document.querySelectorAll(".theme-icon");
+  const iconDesktop = document.getElementById("themeIconD");
+  const iconMobile = document.getElementById("themeIconM");
   document.body.dataset.theme = theme;
 
   localStorage.setItem("theme", theme);
 
-  if (!icon) return;
+  if (!iconDesktop) return;
+  if (!iconMobile) return;
 
-  icon.innerHTML =
+  iconDesktop.innerHTML =
+    theme === "dark"
+      ? SUN_SVG_PATH
+      : MOON_SVG_PATH;
+
+  iconMobile.innerHTML =
     theme === "dark"
       ? SUN_SVG_PATH
       : MOON_SVG_PATH;
