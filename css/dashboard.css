@@ -481,15 +481,6 @@ body {
   background: var(--surface);
 }
 
-.mobile-menu .theme-icon {
-  width: 24px;
-  height: 24px;
-}
-
-[data-theme="dark"] .mobile-menu .theme-toggle {
-  background: rgba(150, 217, 127, 0.12);
-}
-
 /* ---------- RESPONSIVE NAV ---------- */
 
 @media (max-width: 768px) {
