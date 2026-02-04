@@ -436,48 +436,17 @@ body {
 
   /* ---------- NAV ---------- */
   .nav-inner {
-    padding: 8px 12px;          
-    gap: 10px;
+    padding: var(--space-sm) var(--space-md);
   }
 
-  /* LOGO */
-  .logo {
-    height: 28px;               
-    flex-shrink: 0;
-  }
-
-  /* NAV LINKS */
   .nav-links {
-    gap: 12px;                 
-    flex-wrap: nowrap;
+    gap: var(--space-md);
   }
 
   .nav-links a {
-    font-size: 13px;             
-    white-space: nowrap;        
+    font-size: 15px;
   }
 
-  /* ACTIVE LINK */
-  .nav-links a.active {
-    font-weight: 600;
-  }
-
-  /* THEME TOGGLE */
-  .theme-toggle {
-    padding: 4px;
-    flex-shrink: 0;
-  }
-
-  .theme-icon {
-    width: 18px;
-    height: 18px;
-  }
-
-  /* PREVENT OVERFLOW */
-  .nav {
-    overflow-x: hidden;
-  }
-   
   /* ---------- MAIN ---------- */
   .dashboard {
     margin: var(--space-lg) auto;
@@ -593,4 +562,4 @@ body {
   .system-status {
     font-size: 14px;
   }
-   }
+}
