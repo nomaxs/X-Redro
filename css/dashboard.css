@@ -3,44 +3,43 @@
    Light + Dark Mode
    =============================== */
 
-/* ---------- RESET & BASE ---------- */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* ---------- DESIGN TOKENS ---------- */
+/* ---------- VARIABLES ---------- */
 :root {
-  /* Colors - Light */
   --bg: #fafafa;
   --surface: #fafafa;
   --surface-elevated: #ffffff;
-  --card: #ffffff;
-  --cards: #fefefe;
+
   --text-primary: #111111;
   --text-secondary: #6b6b6b;
   --text-muted: #9a9a9a;
+
   --border: #e6e6e6;
+
   --accent: #96d97f;
 
-  /* Spacing */
+  --dark-surface: #141414;
+
+  --radius-lg: 18px;
+  --radius-md: 14px;
+  --radius-pill: 999px;
+
   --space-xs: 6px;
   --space-sm: 10px;
   --space-md: 16px;
   --space-lg: 24px;
   --space-xl: 32px;
   --space-2xl: 40px;
+  
+  --space-1: 6px;
+  --space-2: 10px;
+  --space-3: 14px;
+  --space-4: 20px;
+  --space-5: 32px;
+  
 
-  /* Radius */
-  --radius-lg: 18px;
-  --radius-md: 14px;
-  --radius-pill: 999px;
-
-  /* Shadows */
-  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.05);
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.06);
+  --shadow-soft: 0 8px 24px rgba(0,0,0,0.05);
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 8px rgba(0,0,0,0.06);
 }
 
 /* ---------- DARK MODE ---------- */
@@ -50,65 +49,56 @@
   --surface-elevated: #1a1a1a;
   --card: #1c1c1c;
   --cards: #222222;
+
   --text-primary: #f2f2f2;
   --text-secondary: #b5b5b5;
   --text-muted: #888888;
+
   --border: #262626;
 }
 
-[data-theme="light"] {
-  --icon-color: #555;
-}
-
-[data-theme="dark"] {
-  --icon-color: #96d97f;
-}
-
-/* ---------- BASE STYLES ---------- */
-body {
+/* ---------- BASE ---------- */
+* {
+  box-sizing: border-box;
   font-family: Inter, system-ui, sans-serif;
-  font-size: 15px;
-  line-height: 1.5;
-  background-color: var(--bg);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
   color: var(--text-primary);
-  min-height: 100vh;
+  font-family: Inter, system-ui, sans-serif;
+  line-height: 1.5;
 }
 
-/* ---------- LAYOUT ---------- */
-.dashboard {
-  width: 100%;
-  padding: var(--space-lg) var(--space-md);
-}
-
-/* ---------- COMPONENTS: NAVIGATION ---------- */
+/* ---------- NAV ---------- */
 .nav {
-  background-color: var(--surface-elevated);
   border-bottom: 1px solid var(--border);
-  width: 100%;
+  background: var(--surface-elevated);
 }
 
 .nav-inner {
+  max-width: 1200px;
+  margin: auto;
+  padding: var(--space-md) var(--space-lg);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-md);
 }
 
 .logo {
   height: 40px;
-  display: block;
 }
 
 .nav-links {
   display: flex;
-  gap: var(--space-md);
+  gap: var(--space-lg);
 }
 
 .nav-links a {
-  font-size: 15px;
+  font-size: 14px;
   color: var(--text-secondary);
   text-decoration: none;
-  padding: var(--space-xs) 0;
 }
 
 .nav-links a.active {
@@ -118,121 +108,167 @@ body {
 
 .theme-toggle {
   cursor: pointer;
-  background: none;
-  border: none;
-  padding: var(--space-xs);
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .theme-icon {
   width: 22px;
   height: 22px;
   color: var(--icon-color);
-  transition: transform 0.2s ease, color 0.2s ease;
+  transition: color 0.2s ease;
+}
+
+[data-theme="light"] {
+  --icon-color: #555;
+}
+
+[data-theme="dark"] {
+  --icon-color: #96d97f; /* premium green sun glow */
 }
 
 .theme-toggle:hover .theme-icon {
   transform: rotate(12deg);
 }
 
-/* ---------- COMPONENTS: HEADINGS ---------- */
+/* ---------- MAIN ---------- */
+.dashboard {
+  max-width: 1100px;
+  margin: var(--space-2xl) auto;
+  padding: 0 var(--space-lg);
+}
+
 .dashboard h1 {
-  font-size: 24px;
-  margin-bottom: var(--space-md);
+  font-size: 32px;
+  margin-bottom: var(--space-lg);
 }
 
-h2 {
-  font-size: 18px;
-  margin-bottom: var(--space-md);
-}
-
-/* ---------- COMPONENTS: STATS GRID ---------- */
+/* ---------- STATS ---------- */
 .stats {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-lg);
-  background-color: var(--dark-surface);
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--dark-surface);
   border-radius: var(--radius-lg);
-  padding: var(--space-lg);
+  padding: var(--space-xl);
   margin-bottom: var(--space-lg);
 }
 
 .stats div span {
-  display: block;
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 700;
   color: var(--accent);
-  line-height: 1.2;
 }
 
 .stats div p {
-  font-size: 14px;
-  color: #aaaaaa;
   margin-top: var(--space-xs);
+  font-size: 13px;
+  color: #aaaaaa;
 }
 
-/* ---------- COMPONENTS: SUBSCRIPTION BLOCKS ---------- */
-.subscription,
-.subscribe {
+/* ---------- SUBSCRIPTION ---------- */
+.subscription {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: var(--space-md);
-  background-color: var(--card);
-  border-radius: var(--radius-lg);
-  padding: var(--space-lg);
-  margin-bottom: var(--space-lg);
-  box-shadow: var(--shadow-soft);
+  margin-bottom: var(--space-2xl);
+  font-size: 14px;
+  color: var(--text-secondary);
 }
 
+.subscription strong {
+  color: var(--text-primary);
+}
+
+.subscription button {
+  margin-left: auto;
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: 999px;
+  border: none;
+  box-shadow: var(--shadow-sm);
+  background: var(--surface-elevated);
+  font-size: 13px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+/* Exipred Subscription */
 .subscribe {
+  display: inline;
+  background: var(--bg);
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-xl);
+  margin-bottom: var(--space-2xl);
+  font-size: 14px;
+  color: var(--text-secondary);
+  box-shadow: var(--shadow-soft);
+  text-align: center;
+  border-radius: var(--radius-lg);
+}
+  
+.subscribe button {
+  margin-left: auto;
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: 999px;
+  border: none;
+  box-shadow: var(--shadow-sm);
+  background: var(--surface-elevated);
+  font-size: 13px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+
+.subscribe h2 {
+  font-size: 18px;
+  margin: 0 0 var(--space-3);
+}
+
+.subscribe-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-3);
+  gap: var(--space-2);
+}
+
+/* ---------- MODAL ---------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: var(--card);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  width: 300px;
   text-align: center;
 }
 
-.subscription strong,
-.subscribe strong {
-  color: var(--text-primary);
-}
-
-.subscription-row,
-.subscribe-row {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  width: 100%;
-}
-
-.subscription button,
-.subscribe button {
-  background-color: var(--surface-elevated);
-  color: var(--text-primary);
-  border: none;
-  border-radius: var(--radius-pill);
-  padding: 12px 18px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  box-shadow: var(--shadow-sm);
-  min-height: 48px;
-  width: 100%;
-  transition: opacity 0.2s ease;
-}
-
-.subscription button:active,
-.subscribe button:active {
-  opacity: 0.8;
-}
-
-/* ---------- COMPONENTS: CARDS ---------- */
-.order-card {
-  background-color: var(--surface-elevated);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border);
-  padding: var(--space-lg);
+/* ---------- LATEST ORDERS ---------- */
+#latestOrders h2 {
+  font-size: 18px;
   margin-bottom: var(--space-md);
 }
 
+/* ---------- ORDER CARD ---------- */
+.order-card {
+  background: var(--surface-elevated);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  border: 1px solid var(--border);
+  margin-bottom: var(--space-md);
+}
+
+/* Header */
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -241,48 +277,53 @@ h2 {
 }
 
 .order-name {
-  font-size: 15px;
   font-weight: 600;
+  font-size: 14px;
 }
 
+/* Status pill */
 .status {
-  background-color: var(--text-primary);
+  background: var(--text-primary);
   color: var(--surface);
-  font-size: 13px;
-  font-weight: 500;
-  padding: 6px 14px;
+  padding: 6px 12px;
   border-radius: var(--radius-pill);
   border: 1px solid var(--border);
+  font-size: 12px;
 }
 
+/* Meta */
 .order-meta {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-sm);
-  font-size: 14px;
+  grid-template-columns: 1fr 2fr 120px;
+  gap: var(--space-md);
+  font-size: 13px;
   color: var(--text-secondary);
-  margin-bottom: var(--space-sm);
 }
 
+/* ---------- SUMMARY LINE ---------- */
 .order-summary-line {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-xs);
+  gap: var(--space-sm);
   margin-top: var(--space-sm);
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .summary-item {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-secondary);
+  flex-shrink: 0;
 }
 
 .order-date {
-  font-size: 13px;
+  margin-left: auto;
+  font-size: 12px;
   color: var(--text-muted);
-  width: 100%;
+  flex-shrink: 0;
 }
 
+/* ---------- META ---------- */
 .meta {
   display: flex;
   justify-content: space-between;
@@ -295,38 +336,38 @@ h2 {
 .meta button {
   background: none;
   border: none;
-  color: var(--text-secondary);
-  font-size: 16px;
   cursor: pointer;
-  padding: var(--space-xs);
+  font-size: 16px;
+  color: var(--text-secondary);
 }
 
-/* ---------- COMPONENTS: STATUS INDICATORS ---------- */
+/* ATTENTION STATUS */
 .attention-status {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  background-color: var(--surface);
+  background: var(--surface);
   border: 1px dashed var(--border);
   border-radius: var(--radius-md);
   padding: var(--space-md);
   margin-bottom: var(--space-lg);
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .attention-status span {
   font-size: 18px;
 }
 
+/* FORM STATUS */
 .form-status {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  background-color: var(--surface-elevated);
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface-elevated);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: var(--space-md);
-  margin-bottom: var(--space-lg);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-2xl);
 }
 
 .form-status .label {
@@ -335,29 +376,25 @@ h2 {
 }
 
 .form-status strong {
-  font-size: 15px;
-  display: block;
-  margin-bottom: var(--space-sm);
+  font-size: 14px;
 }
 
 .form-status .copybtn {
-  background-color: var(--text-primary);
+  background: var(--text-primary);
   color: var(--surface);
-  border: 1px solid var(--border);
+  padding: 6px 12px;
   border-radius: var(--radius-pill);
-  padding: 8px 14px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  min-height: 40px;
-  align-self: flex-start;
+  border: 1px solid var(--border);
+  font-size: 12px;
 }
 
+
+/* SYSTEM STATUS */
 .system-status {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-muted);
   margin-top: var(--space-2xl);
 }
@@ -366,176 +403,163 @@ h2 {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: var(--accent);
+  background: var(--accent);
 }
 
-/* ---------- COMPONENTS: MODAL ---------- */
-.modal {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-  padding: var(--space-md);
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 768px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .order-meta {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+
+  .subscription {
+    flex-wrap: wrap;
+  }
 }
 
-.modal.hidden {
-  display: none;
-}
+/* =================================
+   MOBILE OPTIMIZATION – DASHBOARD
+   ================================= */
 
-.modal-content {
-  background-color: var(--card);
-  border-radius: var(--radius-lg);
-  padding: var(--space-xl);
-  width: 100%;
-  max-width: 300px;
-  text-align: center;
-}
+@media (max-width: 600px) {
 
-/* ---------- MEDIA QUERIES: TABLET (≥600px) ---------- */
-@media (min-width: 600px) {
+  /* ---------- GLOBAL ---------- */
+  body {
+    font-size: 15px;
+  }
+
+  /* ---------- NAV ---------- */
+  .nav-inner {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .nav-links {
+    gap: var(--space-md);
+  }
+
+  .nav-links a {
+    font-size: 15px;
+  }
+
+  /* ---------- MAIN ---------- */
   .dashboard {
+    margin: var(--space-lg) auto;
+    padding: 0 var(--space-md);
+  }
+
+  .dashboard h1 {
+    font-size: 24px;
+    margin-bottom: var(--space-md);
+  }
+
+  /* ---------- STATS ---------- */
+  .stats {
+    grid-template-columns: 1fr;
     padding: var(--space-lg);
   }
 
-  .nav-inner {
-    padding: var(--space-md) var(--space-lg);
+  .stats div span {
+    font-size: 28px;
   }
 
-  .stats {
-    grid-template-columns: repeat(2, 1fr);
+  .stats div p {
+    font-size: 14px;
   }
 
-  .subscription,
-  .subscribe {
-    flex-direction: row;
-    align-items: center;
-    text-align: left;
-  }
-
-  .subscription-row,
-  .subscribe-row {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    flex: 1;
+  /* ---------- SUBSCRIPTION ---------- */
+  .subscription {
+    font-size: 15px;
+    gap: var(--space-sm);
   }
 
   .subscription button,
   .subscribe button {
-    width: auto;
-    margin-left: auto;
+    font-size: 14px;
+    padding: 12px 18px;
   }
 
-  .order-meta {
-    grid-template-columns: 1fr 2fr 120px;
-  }
-
-  .order-summary-line {
-    flex-wrap: nowrap;
-  }
-
-  .order-date {
-    width: auto;
-    margin-left: auto;
-  }
-
-  .form-status {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--space-lg);
-  }
-
-  .form-status strong {
-    margin-bottom: 0;
-  }
-
-  .form-status .copybtn {
-    align-self: center;
-  }
-}
-
-/* ---------- MEDIA QUERIES: DESKTOP (≥1024px) ---------- */
-@media (min-width: 1024px) {
-  .dashboard {
-    max-width: 1100px;
-    margin: var(--space-2xl) auto;
-    padding: 0 var(--space-lg);
-  }
-
-  .dashboard h1 {
-    font-size: 32px;
-    margin-bottom: var(--space-lg);
-  }
-
-  .stats {
-    grid-template-columns: repeat(4, 1fr);
-    padding: var(--space-xl);
-  }
-
-  .stats div span {
-    font-size: 32px;
-  }
-
-  .stats div p {
-    font-size: 13px;
-  }
-
-  .subscription,
   .subscribe {
-    margin-bottom: var(--space-2xl);
+    padding: var(--space-lg);
   }
 
   .subscribe h2 {
-    font-size: 18px;
+    font-size: 16px;
   }
 
+  .subscribe-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-sm);
+  }
+
+  /* ---------- ORDER CARD ---------- */
   .order-card {
-    padding: var(--space-lg);
+    padding: var(--space-md);
   }
 
   .order-name {
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .status {
-    font-size: 12px;
-    padding: 6px 12px;
+    font-size: 13px;
+    padding: 6px 14px;
   }
 
+  /* ---------- META GRID ---------- */
   .order-meta {
-    font-size: 13px;
+    grid-template-columns: 1fr;
+    font-size: 14px;
+  }
+
+  /* ---------- SUMMARY LINE ---------- */
+  .order-summary-line {
+    flex-wrap: wrap;
+    white-space: normal;
+    gap: var(--space-xs);
   }
 
   .summary-item {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .order-date {
-    font-size: 12px;
+    width: 100%;
+    margin-left: 0;
+    font-size: 13px;
   }
 
-  .form-status .label {
-    font-size: 12px;
+  /* ---------- FORM STATUS ---------- */
+  .form-status {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    padding: var(--space-md);
   }
 
   .form-status strong {
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .form-status .copybtn {
-    font-size: 12px;
-    padding: 6px 12px;
+    font-size: 13px;
+    padding: 8px 14px;
   }
 
+  /* ---------- ATTENTION ---------- */
   .attention-status {
+    font-size: 15px;
+    padding: var(--space-md);
+  }
+
+  /* ---------- SYSTEM STATUS ---------- */
+  .system-status {
     font-size: 14px;
   }
-
-  .system-status {
-    font-size: 13px;
-  }
-}
+   }
