@@ -512,6 +512,9 @@ body {
   .expanded {
     grid-template-columns: 1fr 1fr;
   }
+  .actions button {
+    margin: var(--space-sm) var(--space-xs) 0 0;
+  }
 }
 
 @media (max-width: 480px) {
