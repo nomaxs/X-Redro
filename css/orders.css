@@ -157,7 +157,8 @@ body {
 /* ---------- ACTIONS ---------- */
 .actions button {
   padding: var(--space-sm) var(--space-lg);
-  margin: var(--space-sm);
+  margin: var(--space-sm) var(--space-lg);
+  margin-top
   border-radius: 999px;
   border: none;
   box-shadow: var(--shadow-sm);
