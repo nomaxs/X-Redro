@@ -446,10 +446,12 @@ button {
   display: none;
   appearance: none;
   -webkit-appearance: none;
-  flex-direction: column;
-  gap: 4px;
-  background: none;
+  background: transparent;
   border: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  outline: none;
   cursor: pointer;
 }
 
