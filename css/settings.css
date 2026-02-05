@@ -442,16 +442,12 @@ button {
 
 /* ---------- BURGER MENU ---------- */
 
-.burger {
+.burger button {
   display: none;
-  appearance: none;
-  -webkit-appearance: none;
-  background: transparent;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
   border: none;
-  padding: 0;
-  margin: 0;
-  box-shadow: none;
-  outline: none;
   cursor: pointer;
 }
 
