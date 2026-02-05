@@ -433,7 +433,7 @@ button {
 
 /* ---------- BURGER MENU ---------- */
 
-.burger button {
+.burger {
   display: none;
   flex-direction: column;
   gap: 4px;
