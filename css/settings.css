@@ -444,6 +444,8 @@ button {
 
 .burger {
   display: none;
+  appearance: none;
+  -webkit-appearance: none;
   flex-direction: column;
   gap: 4px;
   background: none;
