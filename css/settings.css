@@ -6,6 +6,7 @@
   --card: #ffffff;
   --cards: #fefefe;
   --text: #111111;
+  --text-secondary: #6b6b6b;
   --muted: #777777;
   --border: #e5e5e5;
   --surface: #fafafa;
@@ -47,6 +48,7 @@
   --card: #1c1c1c;
   --cards: #222222;
   --text: #ffffff;
+  --text-secondary: #b5b5b5;
   --muted: #9a9a9a;
   --border: #333333;
 }
@@ -355,7 +357,7 @@ button {
 .burger span {
   width: 22px;
   height: 2px;
-  background: var(--text-primary);
+  background: var(--text);
   border-radius: 2px;
 }
 
@@ -377,7 +379,7 @@ button {
 }
 
 .mobile-menu a.active {
-  color: var(--text-primary);
+  color: var(--text);
   font-weight: 600;
 }
 
