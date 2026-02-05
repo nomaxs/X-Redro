@@ -527,21 +527,12 @@ body {
     align-items: flex-start;
     gap: var(--space-md);
   }
-
-  .actions button {
-    margin: var(--space-sm) 0 0 0;
-  }
-   
 }
 
 @media (max-width: 600px) {
   .orders-page {
     margin: var(--space-lg) auto;
     padding: 0 var(--space-md) var(--space-lg);
-  }
-
-  .actions button {
-    margin: var(--space-sm) 0 0 0;
   }
    
   body {
