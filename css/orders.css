@@ -222,25 +222,21 @@ body {
 /* ---------- CUSTOM STATUS DROPDOWN ---------- */
 .status-select {
   position: relative;
-
   min-width: 96px;
   height: 32px;
   padding: 0 14px;
-
   border-radius: var(--radius-pill);
   border: 1px solid var(--border);
-
-  background: var(--text-primary);
+  background-color: var(--text-primary);
   color: var(--surface);
-
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
+  transition: box-shadow 0.2s ease;
 }
 
 .status-select .chevron {
@@ -249,20 +245,27 @@ body {
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
+  transition: transform 0.2s ease;
 }
 
-/* Dropdown */
+.status-select.open {
+  box-shadow: 0 0 0 2px rgba(156, 255, 0, 0.25);
+}
+
+.status-select.open .chevron {
+  transform: rotate(180deg);
+}
+
+/* ---------- COMPONENTS: STATUS MENU ---------- */
 .status-menu {
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
   width: 100%;
-
-  background: var(--text-primary);
+  background-color: var(--text-primary);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-soft);
-
   overflow: hidden;
   z-index: 20;
 }
@@ -273,14 +276,11 @@ body {
   font-size: 13px;
   cursor: pointer;
   color: var(--surface);
+  transition: background-color 0.2s ease;
 }
 
 .status-menu div:hover {
-  background: rgba(156,255,0,0.18);
-}
-
-.status-select.open {
-  box-shadow: 0 0 0 2px rgba(156,255,0,0.25);
+  background-color: rgba(156, 255, 0, 0.18);
 }
 
 /* ---------- SUMMARY LINE ---------- */
