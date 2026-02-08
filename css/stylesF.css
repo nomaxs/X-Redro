@@ -318,6 +318,7 @@ input {
   box-shadow: var(--shadow-sm);
   padding: var(--space-3);
   width: fit-content;
+  height: fit-content;
   min-width: 260px;
 }
 
