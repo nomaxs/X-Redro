@@ -148,7 +148,7 @@ UI INTERACTION LOGIC
 ========================= */
 async function buySubscription(days) {
   try {
-    const plan = days === 7 ? "weekly" : "monthly";
+    const plan = days === 7 ? "7_days" : "30_days";
     const amount = days === 7 ? 1000 : 3000;
 
     // Prevent multiple pending payments
@@ -295,8 +295,14 @@ async function initDashboard() {
     Query.equal("userId", user.$id)
   ]);
 
-  const subRes = await databases.listDocuments(DB_ID, SUBS, [
+  /*const subRes = await databases.listDocuments(DB_ID, SUBS, [
     Query.equal("userId", user.$id)
+  ]);*/
+
+  const subRes = await databases.listDocuments(DB_ID, SUBS, [
+    Query.equal("userId", user.$id),
+    Query.orderDesc("expiresAt"),
+    Query.limit(1)
   ]);
   
   //Theme Application
@@ -316,7 +322,11 @@ async function initDashboard() {
     return;
   }
 
+  if (!subRes.documents.length) { ... }
+
   const sub = subRes.documents[0];
+  
+ // const sub = subRes.documents[0];
   const expiresAt = new Date(sub.expiresAt);
 
   if (expiresAt <= now || sub.status !== "active") {
