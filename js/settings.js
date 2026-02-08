@@ -133,7 +133,7 @@ async function buySubscription(days) {
     const plan = days === 7 ? "7 days" : "30 days";
     const amount = days === 7 ? 1000 : 3000;
 
-    // Prevent multiple pending payments
+    // Check for existing pending payments
     const existing = await databases.listDocuments(DB_ID, PAYMENTS, [
       Query.equal("userId", user.$id),
       Query.equal("status", "pending"),
@@ -142,10 +142,32 @@ async function buySubscription(days) {
     ]);
 
     if (existing.documents.length) {
-      showToast("You already have a pending payment", "warning");
-      return;
+      const oldPayment = existing.documents[0];
+      const now = new Date();
+      const expiresAt = new Date(oldPayment.expiresAt);
+
+      if (expiresAt > now) {
+        // Payment is still valid
+        showToast("You already have a pending payment. Please complete it.", "warning");
+
+        // Optional: redirect user directly to Selar with old reference
+        const selarLink =
+          oldPayment.durationDay === 7
+            ? `https://selar.com/9g7elg0071?reference=${oldPayment.$id}`
+            : `https://selar.com/07s670b9vg?reference=${oldPayment.$id}`;
+
+        // Small delay before redirecting so user sees the toast
+        setTimeout(() => window.location.href = selarLink, 2000);
+        return;
+      } else {
+        // Old payment expired → allow new payment
+        await databases.updateDocument(DB_ID, PAYMENTS, oldPayment.$id, {
+          status: "expired"
+        });
+      }
     }
 
+    // Create new token for fresh payment
     const token = crypto.randomUUID();
 
     const expiresAt = new Date();
@@ -168,7 +190,10 @@ async function buySubscription(days) {
     );
 
     localStorage.setItem("paymentToken", token);
+    localStorage.setItem("paymentRef", payment.$id);
+    localStorage.setItem("paymentStartedAt", Date.now());
 
+    // Redirect to Selar with new payment reference
     const selarLink =
       days === 7
         ? `https://selar.com/9g7elg0071?reference=${payment.$id}`
