@@ -176,7 +176,7 @@ async function buySubscription(days) {
       {
         userId: user.$id,
         plan,
-        durationDay: days,
+        durationDay: days.toISOString(),
         amount,
         token,
         expiresAt: expiresAt.toISOString(),
