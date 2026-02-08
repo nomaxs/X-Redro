@@ -196,6 +196,7 @@ async function buySubscription(days) {
 
   } catch (err) {
     console.error(err);
+    alert(err);
     showToast("Unable to start payment", "error");
   }
 }
