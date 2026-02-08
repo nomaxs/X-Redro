@@ -133,7 +133,7 @@ const Query = Appwrite.Query;
     const label = document.getElementById("labeling");
   
     head2.innerHTML = `Payment verification failed`;
-    label.innerHTML = `${err.message}<a href="dashboard.html">Return to dashboard</a>`;
+    label.innerHTML = `${err.message}<br><a href="dashboard.html">Return to dashboard</a>`;
     /*document.body.innerHTML = `
       <h3>Payment verification failed</h3>
       <p>${err.message}</p>
