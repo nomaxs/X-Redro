@@ -151,29 +151,42 @@ async function buySubscription(days) {
     const plan = days === 7 ? "weekly" : "monthly";
     const amount = days === 7 ? 1000 : 3000;
 
+    // Prevent multiple pending payments
+    const existing = await databases.listDocuments(DB_ID, PAYMENTS, [
+      Query.equal("userId", user.$id),
+      Query.equal("status", "pending"),
+      Query.equal("used", false),
+      Query.limit(1)
+    ]);
+
+    if (existing.documents.length) {
+      showToast("You already have a pending payment", "warning");
+      return;
+    }
+
     const token = crypto.randomUUID();
 
-    // Create pending payment record
+    const expiresAt = new Date();
+    expiresAt.setMinutes(expiresAt.getMinutes() + 30); // token valid for 30 mins
+
     const payment = await databases.createDocument(
       DB_ID,
-      "payments",
+      PAYMENTS,
       Appwrite.ID.unique(),
       {
         userId: user.$id,
         plan,
-        durationDays: days,
+        durationDay: days,
         amount,
-        provider: "selar",
-        status: "pending",
         token,
-        createdAt: new Date().toISOString()
+        expiresAt: expiresAt.toISOString(),
+        used: false,
+        status: "pending"
       }
     );
 
-    // Save ONLY token locally
     localStorage.setItem("paymentToken", token);
 
-    // Selar redirect (reference should be payment.$id)
     const selarLink =
       days === 7
         ? `https://selar.co/YOUR-7-DAY-LINK?reference=${payment.$id}`
@@ -186,6 +199,7 @@ async function buySubscription(days) {
     showToast("Unable to start payment", "error");
   }
 }
+
 function updateAttention(pendingCount) {
   const box = document.getElementById("attentionStatus");
   const text = document.getElementById("attentionText");
