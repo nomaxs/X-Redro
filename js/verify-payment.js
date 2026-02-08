@@ -129,10 +129,15 @@ const Query = Appwrite.Query;
 
     localStorage.removeItem("paymentToken");
 
-    document.body.innerHTML = `
+    const head2 = document.getElementById("heading");
+    const label = document.getElementById("labeling");
+  
+    head2.innerHTML = `Payment verification failed`;
+    label.innerHTML = `${err.message}<a href="dashboard.html">Return to dashboard</a>`;
+    /*document.body.innerHTML = `
       <h3>Payment verification failed</h3>
       <p>${err.message}</p>
       <a href="dashboard.html">Return to dashboard</a>
-    `;
+    `;*/
   }
 })();
