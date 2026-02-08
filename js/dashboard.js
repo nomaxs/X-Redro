@@ -148,7 +148,7 @@ UI INTERACTION LOGIC
 ========================= */
 async function buySubscription(days) {
   try {
-    const plan = days === 7 ? "7_days" : "30_days";
+    const plan = days === 7 ? "7 days" : "30 days";
     const amount = days === 7 ? 1000 : 3000;
 
     // Prevent multiple pending payments
