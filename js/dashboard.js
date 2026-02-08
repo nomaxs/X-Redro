@@ -321,12 +321,8 @@ async function initDashboard() {
     document.getElementById("subscriptionModal").classList.remove("hidden");
     return;
   }
-
-  if (!subRes.documents.length) { ... }
-
-  const sub = subRes.documents[0];
   
- // const sub = subRes.documents[0];
+  const sub = subRes.documents[0];
   const expiresAt = new Date(sub.expiresAt);
 
   if (expiresAt <= now || sub.status !== "active") {
