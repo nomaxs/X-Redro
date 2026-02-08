@@ -189,8 +189,8 @@ async function buySubscription(days) {
 
     const selarLink =
       days === 7
-        ? `https://selar.co/YOUR-7-DAY-LINK?reference=${payment.$id}`
-        : `https://selar.co/YOUR-30-DAY-LINK?reference=${payment.$id}`;
+        ? `https://selar.com/9g7elg0071?reference=${payment.$id}`
+        : `https://selar.com/07s670b9vg?reference=${payment.$id}`;
 
     window.location.href = selarLink;
 
