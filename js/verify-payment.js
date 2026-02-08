@@ -2,8 +2,8 @@
 APPWRITE SETUP
 ========================= */
 const DB_ID = "695c4fce0039f513dc83";
-const SUBS = "subscriptions";
 const PAYMENTS = "payments";
+const SUBS = "subscriptions";
 
 const client = new Appwrite.Client()
   .setEndpoint("https://nyc.cloud.appwrite.io/v1")
@@ -19,99 +19,88 @@ VERIFY FLOW
 (async function verifyPayment() {
   try {
     const params = new URLSearchParams(window.location.search);
-    const status = params.get("status");
     const reference = params.get("reference");
 
-    if (status !== "success") {
-      throw new Error("Payment not successful");
-    }
+    if (!reference) throw new Error("Missing reference");
 
-    const pending = JSON.parse(localStorage.getItem("pendingSubscription"));
-    if (!pending) {
-      throw new Error("No pending subscription found");
-    }
+    const token = localStorage.getItem("paymentToken");
+    if (!token) throw new Error("Missing payment token");
 
     const user = await account.get();
 
-    if (user.$id !== pending.userId) {
-      throw new Error("User mismatch");
+    /* =========================
+    VERIFY PAYMENT RECORD
+    ========================= */
+    const paymentRes = await databases.listDocuments(DB_ID, PAYMENTS, [
+      Query.equal("userId", user.$id),
+      Query.equal("reference", reference),
+      Query.equal("token", token),
+      Query.equal("status", "pending"),
+      Query.limit(1)
+    ]);
+
+    if (!paymentRes.documents.length) {
+      throw new Error("Invalid or already processed payment");
     }
 
+    const payment = paymentRes.documents[0];
+
     /* =========================
-    CHECK EXISTING SUBSCRIPTION
+    CALCULATE SUBSCRIPTION DATES
     ========================= */
+    const now = new Date();
+    let expiry = new Date();
+
     const subRes = await databases.listDocuments(DB_ID, SUBS, [
       Query.equal("userId", user.$id),
       Query.orderDesc("expiresAt"),
       Query.limit(1)
     ]);
 
-    let startDate = new Date();
-    let expiryDate = new Date();
-
     if (subRes.documents.length) {
-      const currentSub = subRes.documents[0];
-      const currentExpiry = new Date(currentSub.expiresAt);
-
-      // If subscription is still active, extend from expiry
-      if (currentExpiry > startDate) {
-        expiryDate = new Date(currentExpiry);
+      const currentExpiry = new Date(subRes.documents[0].expiresAt);
+      if (currentExpiry > now) {
+        expiry = currentExpiry;
       }
     }
 
-    // Add new duration
-    expiryDate.setDate(expiryDate.getDate() + pending.durationDays);
+    expiry.setDate(expiry.getDate() + payment.durationDays);
 
     /* =========================
-    SAVE / UPDATE SUBSCRIPTION
+    CREATE SUBSCRIPTION
     ========================= */
-    await databases.createDocument(
-      DB_ID,
-      SUBS,
-      Appwrite.ID.unique(),
-      {
-        userId: user.$id,
-        plan: pending.plan,
-        durationDays: pending.durationDays,
-        $startsAt: startDate.toISOString(),
-        $expiresAt: expiryDate.toISOString(),
-        status: "active",
-        provider: "selar",
-        reference
-      }
-    );
+    await databases.createDocument(DB_ID, SUBS, Appwrite.ID.unique(), {
+      userId: user.$id,
+      plan: payment.plan,
+      durationDay: payment.durationDays,
+      startsAt: now.toISOString(),
+      expiresAt: expiry.toISOString(),
+      status: "active"
+    });
 
     /* =========================
-    RECORD PAYMENT
+    MARK PAYMENT AS SUCCESS
     ========================= */
-    await databases.createDocument(
+    await databases.updateDocument(
       DB_ID,
       PAYMENTS,
-      Appwrite.ID.unique(),
+      payment.$id,
       {
-        userId: user.$id,
-        amount: pending.amount,
-        plan: pending.plan,
-        provider: "selar",
-        reference,
         status: "success",
-        paidAt: new Date().toISOString()
+        paidAt: now.toISOString()
       }
     );
 
     /* =========================
-    CLEANUP (VERY IMPORTANT)
+    CLEANUP
     ========================= */
-    localStorage.removeItem("pendingSubscription");
+    localStorage.removeItem("paymentToken");
 
-    /* =========================
-    REDIRECT
-    ========================= */
     window.location.replace("dashboard.html");
 
   } catch (err) {
     console.error(err);
-    localStorage.removeItem("pendingSubscription");
+    localStorage.removeItem("paymentToken");
     document.body.innerHTML = "<p>Payment verification failed.</p>";
   }
 })();
