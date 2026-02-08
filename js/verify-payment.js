@@ -1,5 +1,5 @@
 /* ========================
-APPWRITE SETUP
+   APPWRITE SETUP
 ========================= */
 const DB_ID = "695c4fce0039f513dc83";
 const PAYMENTS = "payments";
@@ -9,48 +9,66 @@ const client = new Appwrite.Client()
   .setEndpoint("https://nyc.cloud.appwrite.io/v1")
   .setProject("695981480033c7a4eb0d");
 
-const databases = new Appwrite.Databases(client);
 const account = new Appwrite.Account(client);
+const databases = new Appwrite.Databases(client);
 const Query = Appwrite.Query;
 
 /* =========================
-VERIFY FLOW
+   VERIFY PAYMENT FLOW
 ========================= */
 (async function verifyPayment() {
   try {
+    /* -------------------------
+       BASIC CHECKS
+    -------------------------- */
     const params = new URLSearchParams(window.location.search);
     const reference = params.get("reference");
 
-    if (!reference) throw new Error("Missing reference");
+    if (!reference) throw new Error("Missing payment reference");
 
     const token = localStorage.getItem("paymentToken");
-    if (!token) throw new Error("Missing payment token");
+    if (!token) throw new Error("Missing local payment token");
 
     const user = await account.get();
+    if (!user) throw new Error("User not authenticated");
 
-    /* =========================
-    VERIFY PAYMENT RECORD
-    ========================= */
-    const paymentRes = await databases.listDocuments(DB_ID, PAYMENTS, [
-      Query.equal("userId", user.$id),
-      Query.equal("reference", reference),
-      Query.equal("token", token),
-      Query.equal("status", "pending"),
-      Query.limit(1)
-    ]);
+    /* -------------------------
+       FETCH PAYMENT RECORD
+       (reference === payment.$id)
+    -------------------------- */
+    const payment = await databases.getDocument(
+      DB_ID,
+      PAYMENTS,
+      reference
+    );
 
-    if (!paymentRes.documents.length) {
-      throw new Error("Invalid or already processed payment");
-    }
+    /* -------------------------
+       PAYMENT VALIDATION
+    -------------------------- */
+    if (payment.userId !== user.$id)
+      throw new Error("Payment does not belong to user");
 
-    const payment = paymentRes.documents[0];
+    if (payment.token !== token)
+      throw new Error("Invalid payment token");
 
-    /* =========================
-    CALCULATE SUBSCRIPTION DATES
-    ========================= */
+    if (payment.status !== "pending")
+      throw new Error("Payment already processed");
+
+    if (payment.used === true)
+      throw new Error("Payment already used");
+
     const now = new Date();
-    let expiry = new Date();
 
+    if (payment.expiresAt && new Date(payment.expiresAt) < now)
+      throw new Error("Payment token expired");
+
+    /* -------------------------
+       CALCULATE SUBSCRIPTION DATES
+    -------------------------- */
+    let startsAt = now;
+    let expiresAt = new Date(now);
+
+    // Fetch latest subscription (if any)
     const subRes = await databases.listDocuments(DB_ID, SUBS, [
       Query.equal("userId", user.$id),
       Query.orderDesc("expiresAt"),
@@ -58,49 +76,63 @@ VERIFY FLOW
     ]);
 
     if (subRes.documents.length) {
-      const currentExpiry = new Date(subRes.documents[0].expiresAt);
-      if (currentExpiry > now) {
-        expiry = currentExpiry;
+      const lastSub = subRes.documents[0];
+      const lastExpiry = new Date(lastSub.expiresAt);
+
+      // Stack subscription if still active
+      if (lastExpiry > now) {
+        startsAt = lastExpiry;
+        expiresAt = new Date(lastExpiry);
       }
     }
 
-    expiry.setDate(expiry.getDate() + payment.durationDays);
+    expiresAt.setDate(expiresAt.getDate() + payment.durationDay);
 
-    /* =========================
-    CREATE SUBSCRIPTION
-    ========================= */
-    await databases.createDocument(DB_ID, SUBS, Appwrite.ID.unique(), {
-      userId: user.$id,
-      plan: payment.plan,
-      durationDay: payment.durationDays,
-      startsAt: now.toISOString(),
-      expiresAt: expiry.toISOString(),
-      status: "active"
-    });
+    /* -------------------------
+       CREATE SUBSCRIPTION
+    -------------------------- */
+    await databases.createDocument(
+      DB_ID,
+      SUBS,
+      Appwrite.ID.unique(),
+      {
+        userId: user.$id,
+        plan: payment.plan,
+        durationDay: payment.durationDay,
+        startsAt: startsAt.toISOString(),
+        expiresAt: expiresAt.toISOString(),
+        status: "active"
+      }
+    );
 
-    /* =========================
-    MARK PAYMENT AS SUCCESS
-    ========================= */
+    /* -------------------------
+       UPDATE PAYMENT RECORD
+    -------------------------- */
     await databases.updateDocument(
       DB_ID,
       PAYMENTS,
       payment.$id,
       {
         status: "success",
-        paidAt: now.toISOString()
+        used: true
       }
     );
 
-    /* =========================
-    CLEANUP
-    ========================= */
+    /* -------------------------
+       CLEANUP & REDIRECT
+    -------------------------- */
     localStorage.removeItem("paymentToken");
-
     window.location.replace("dashboard.html");
 
   } catch (err) {
-    console.error(err);
+    console.error("Payment verification failed:", err.message);
+
     localStorage.removeItem("paymentToken");
-    document.body.innerHTML = "<p>Payment verification failed.</p>";
+
+    document.body.innerHTML = `
+      <h3>Payment verification failed</h3>
+      <p>${err.message}</p>
+      <a href="dashboard.html">Return to dashboard</a>
+    `;
   }
 })();
