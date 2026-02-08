@@ -10,6 +10,7 @@ const DB_ID = "695c4fce0039f513dc83";
 const USERS = "695c501b001d24549b03";
 const FORMS = "form";
 const SUBS = "subscriptions";
+const PAYMENTS = "payments";
 const ORDERS = "orders";
 
 /* =========================
@@ -145,32 +146,46 @@ async function loadLatestOrders(userId) {
 /* =========================
 UI INTERACTION LOGIC
 ========================= */
-function buySubscription(days) {
-  // Prevent overwriting an active pending payment
-  if (localStorage.getItem("pendingSubscription")) {
-    showToast("You already have a pending payment", "warning");
-    return;
+async function buySubscription(days) {
+  try {
+    const plan = days === 7 ? "weekly" : "monthly";
+    const amount = days === 7 ? 1000 : 3000;
+
+    const token = crypto.randomUUID();
+
+    // Create pending payment record
+    const payment = await databases.createDocument(
+      DB_ID,
+      "payments",
+      Appwrite.ID.unique(),
+      {
+        userId: user.$id,
+        plan,
+        durationDays: days,
+        amount,
+        provider: "selar",
+        status: "pending",
+        token,
+        createdAt: new Date().toISOString()
+      }
+    );
+
+    // Save ONLY token locally
+    localStorage.setItem("paymentToken", token);
+
+    // Selar redirect (reference should be payment.$id)
+    const selarLink =
+      days === 7
+        ? `https://selar.co/YOUR-7-DAY-LINK?reference=${payment.$id}`
+        : `https://selar.co/YOUR-30-DAY-LINK?reference=${payment.$id}`;
+
+    window.location.href = selarLink;
+
+  } catch (err) {
+    console.error(err);
+    showToast("Unable to start payment", "error");
   }
-
-  const planData = {
-    userId: user.$id,
-    plan: days === 7 ? "weekly" : "monthly",
-    durationDays: days,
-    amount: days === 7 ? 5000 : 15000, // adjust
-    createdAt: new Date().toISOString()
-  };
-
-  localStorage.setItem("pendingSubscription", JSON.stringify(planData));
-
-  // Redirect to Selar
-  const selarLink =
-    days === 7
-      ? "https://selar.co/YOUR-7-DAY-LINK"
-      : "https://selar.co/YOUR-30-DAY-LINK";
-
-  window.location.href = selarLink;
 }
-
 function updateAttention(pendingCount) {
   const box = document.getElementById("attentionStatus");
   const text = document.getElementById("attentionText");
@@ -279,19 +294,26 @@ async function initDashboard() {
   applyTheme(savedTheme);
   
   //Quick Subscription Check
-  const sub = subRes.documents[0];
-  const daysLeft = Math.ceil(
-    (new Date(sub.expiresAt) - new Date()) / 86400000
-  );
+  const now = new Date();
 
-  if (daysLeft <= 0) {
+  if (!subRes.documents.length) {
     document.getElementById("subscriptionModal").classList.remove("hidden");
     return;
   }
 
-  planDays.innerText = `${sub.plan}`;
-  expiresIn.innerText = `${daysLeft} days`;
+  const sub = subRes.documents[0];
+  const expiresAt = new Date(sub.expiresAt);
 
+  if (expiresAt <= now || sub.status !== "active") {
+    document.getElementById("subscriptionModal").classList.remove("hidden");
+    return;
+  }
+
+  const daysLeft = Math.ceil((expiresAt - now) / 86400000);
+
+  planDays.innerText = sub.plan;
+  expiresIn.innerText = `${daysLeft} days`;
+  
   const pendingCount = await loadStats(user.$id);
   loadLatestOrders(user.$id);
   updateAttention(pendingCount);
