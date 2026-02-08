@@ -19,30 +19,31 @@
   
 <!-- NAV -->
 <nav class="nav">
- <div class="nav-inner">
-  <img src="assets/logo.png" class="logo" />
+  <div class="nav-inner">
+    <img src="assets/logo.png" class="logo" />
 
-  <div class="nav-right">
+    <!-- Desktop links -->
     <div class="nav-links desktop-only">
       <a href="dashboard.html">Dashboard</a>
       <a href="orders.html">Orders</a>
       <a href="indexF.html">Form Builder</a>
       <a class="active" href="settings.html">Settings</a>
     </div>
-
-    <div class="desktop-only theme-toggle" onclick="toggleTheme()">
-      <svg id="themeIconD" class="theme-icon" viewBox="0 -960 960 960"></svg>
+    <div class="desktop-only">
+      <div class="theme-toggle" onclick="toggleTheme()">
+        <svg id="themeIconD" class="theme-icon" viewBox="0 -960 960 960" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
     </div>
 
+    <!-- Burger button -->
     <button class="burger" aria-label="Menu">
       <span></span>
       <span></span>
       <span></span>
     </button>
   </div>
-</div>
 
-<!-- Mobile menu -->
+  <!-- Mobile menu -->
   <div class="mobile-menu">
     <a href="dashboard.html">Dashboard</a>
     <a href="orders.html">Orders</a>
@@ -56,8 +57,7 @@
      </div>
    </div>
   </div>
-</nav>
-  
+</nav>  
 <main class="settings">
 
   <h1>Settings</h1>
