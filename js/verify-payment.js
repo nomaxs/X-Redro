@@ -19,22 +19,34 @@ const Query = Appwrite.Query;
 (async function verifyPayment() {
   try {
     /* -------------------------
-       BASIC CHECKS
+       URL + LOCAL FLOW CHECKS
     -------------------------- */
     const params = new URLSearchParams(window.location.search);
     const reference = params.get("reference");
+    const source = params.get("src"); // e.g. src=selar
 
     if (!reference) throw new Error("Missing payment reference");
+    if (source !== "selar") throw new Error("Invalid payment source");
 
     const token = localStorage.getItem("paymentToken");
-    if (!token) throw new Error("Missing local payment token");
+    const storedRef = localStorage.getItem("paymentRef");
+    const startedAt = Number(localStorage.getItem("paymentStartedAt"));
 
+    if (!token) throw new Error("Missing local payment token");
+    if (!storedRef || storedRef !== reference)
+      throw new Error("Payment reference mismatch");
+
+    if (!startedAt || Date.now() - startedAt < 5000)
+      throw new Error("Payment verification too fast");
+
+    /* -------------------------
+       AUTH CHECK
+    -------------------------- */
     const user = await account.get();
     if (!user) throw new Error("User not authenticated");
 
     /* -------------------------
        FETCH PAYMENT RECORD
-       (reference === payment.$id)
     -------------------------- */
     const payment = await databases.getDocument(
       DB_ID,
@@ -63,12 +75,19 @@ const Query = Appwrite.Query;
       throw new Error("Payment token expired");
 
     /* -------------------------
+       NORMALIZE DURATION
+       (Appwrite schema expects STRING)
+    -------------------------- */
+    const durationDays = Number(payment.durationDay);
+    if (!durationDays || durationDays <= 0)
+      throw new Error("Invalid subscription duration");
+
+    /* -------------------------
        CALCULATE SUBSCRIPTION DATES
     -------------------------- */
     let startsAt = now;
     let expiresAt = new Date(now);
 
-    // Fetch latest subscription (if any)
     const subRes = await databases.listDocuments(DB_ID, SUBS, [
       Query.equal("userId", user.$id),
       Query.orderDesc("expiresAt"),
@@ -79,14 +98,13 @@ const Query = Appwrite.Query;
       const lastSub = subRes.documents[0];
       const lastExpiry = new Date(lastSub.expiresAt);
 
-      // Stack subscription if still active
       if (lastExpiry > now) {
         startsAt = lastExpiry;
         expiresAt = new Date(lastExpiry);
       }
     }
 
-    expiresAt.setDate(expiresAt.getDate() + payment.durationDay);
+    expiresAt.setDate(expiresAt.getDate() + durationDays);
 
     /* -------------------------
        CREATE SUBSCRIPTION
@@ -97,8 +115,8 @@ const Query = Appwrite.Query;
       Appwrite.ID.unique(),
       {
         userId: user.$id,
-        plan: payment.plan,
-        durationDay: payment.durationDay,
+        plan: payment.plan,                 
+        durationDay: payment.durationDay, 
         startsAt: startsAt.toISOString(),
         expiresAt: expiresAt.toISOString(),
         status: "active"
@@ -122,22 +140,23 @@ const Query = Appwrite.Query;
        CLEANUP & REDIRECT
     -------------------------- */
     localStorage.removeItem("paymentToken");
+    localStorage.removeItem("paymentRef");
+    localStorage.removeItem("paymentStartedAt");
+
     window.location.replace("dashboard.html");
 
   } catch (err) {
     console.error("Payment verification failed:", err.message);
 
     localStorage.removeItem("paymentToken");
+    localStorage.removeItem("paymentRef");
+    localStorage.removeItem("paymentStartedAt");
 
     const head2 = document.getElementById("heading");
     const label = document.getElementById("labeling");
-  
-    head2.innerHTML = `Payment verification failed`;
-    label.innerHTML = `${err.message}<br><a href="dashboard.html">Return to dashboard</a>`;
-    /*document.body.innerHTML = `
-      <h3>Payment verification failed</h3>
-      <p>${err.message}</p>
-      <a href="dashboard.html">Return to dashboard</a>
-    `;*/
+
+    if (head2) head2.innerHTML = "Payment verification failed";
+    if (label)
+      label.innerHTML = `${err.message}<br><a href="dashboard.html">Return to dashboard</a>`;
   }
 })();
