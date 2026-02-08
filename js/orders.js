@@ -11,6 +11,7 @@ const USERS = "695c501b001d24549b03";
 const FORMS = "form";
 const SUBS = "subscriptions";
 const ORDERS = "orders";
+const PAYMENTS = "payments";
 const PRODUCT_IMAGES_BUCKET = "696825350032fe17c1eb";
 
 /* =========================
@@ -44,30 +45,59 @@ const CLOSE_EXPAND = `
 /* =========================
 UTILITY / HELPER FUNCTIONS
 ========================= */
-function buySubscription(days) {
-  // Prevent overwriting an active pending payment
-  if (localStorage.getItem("pendingSubscription")) {
-    showToast("You already have a pending payment", "warning");
-    return;
+async function buySubscription(days) {
+  try {
+    const plan = days === 7 ? "7 days" : "30 days";
+    const amount = days === 7 ? 1000 : 3000;
+
+    // Prevent multiple pending payments
+    const existing = await databases.listDocuments(DB_ID, PAYMENTS, [
+      Query.equal("userId", user.$id),
+      Query.equal("status", "pending"),
+      Query.equal("used", false),
+      Query.limit(1)
+    ]);
+
+    if (existing.documents.length) {
+      showToast("You already have a pending payment", "warning");
+      return;
+    }
+
+    const token = crypto.randomUUID();
+
+    const expiresAt = new Date();
+    expiresAt.setMinutes(expiresAt.getMinutes() + 30); // token valid for 30 mins
+
+    const payment = await databases.createDocument(
+      DB_ID,
+      PAYMENTS,
+      Appwrite.ID.unique(),
+      {
+        userId: user.$id,
+        plan,
+        durationDay: days,
+        amount,
+        token,
+        expiresAt: expiresAt.toISOString(),
+        used: false,
+        status: "pending"
+      }
+    );
+
+    localStorage.setItem("paymentToken", token);
+
+    const selarLink =
+      days === 7
+        ? `https://selar.com/9g7elg0071?reference=${payment.$id}`
+        : `https://selar.com/07s670b9vg?reference=${payment.$id}`;
+
+    window.location.href = selarLink;
+
+  } catch (err) {
+    console.error(err);
+    alert(err);
+    showToast("Unable to start payment", "error");
   }
-
-  const planData = {
-    userId: user.$id,
-    plan: days === 7 ? "weekly" : "monthly",
-    durationDays: days,
-    amount: days === 7 ? 5000 : 15000, // adjust
-    createdAt: new Date().toISOString()
-  };
-
-  localStorage.setItem("pendingSubscription", JSON.stringify(planData));
-
-  // Redirect to Selar
-  const selarLink =
-    days === 7
-      ? "https://selar.co/YOUR-7-DAY-LINK"
-      : "https://selar.co/YOUR-30-DAY-LINK";
-
-  window.location.href = selarLink;
 }
 
 function parseFormData(raw) {
@@ -190,7 +220,9 @@ async function fetchOrders() {
   
   //Subscription Check
   const subRes = await databases.listDocuments(DB_ID, SUBS, [
-    Query.equal("userId", user.$id)
+    Query.equal("userId", user.$id),
+    Query.orderDesc("expiresAt"),
+    Query.limit(1)
   ]);
 
   const sub = subRes.documents[0];
