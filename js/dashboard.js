@@ -186,6 +186,8 @@ async function buySubscription(days) {
     );
 
     localStorage.setItem("paymentToken", token);
+    localStorage.setItem("paymentRef", payment.$id);
+    localStorage.setItem("paymentStartedAt", Date.now());
 
     const selarLink =
       days === 7
