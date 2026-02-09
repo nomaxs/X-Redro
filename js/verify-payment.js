@@ -18,51 +18,59 @@ const Query = Appwrite.Query;
 ========================= */
 (async function verifyPayment() {
   try {
+    /* -------------------------
+       ORIGIN CHECK (SOFT)
+    -------------------------- */
     const params = new URLSearchParams(window.location.search);
     const source = params.get("src");
 
-    if (source !== "selar")
+    if (source !== "selar") {
       throw new Error("Invalid payment source");
+    }
 
-    const token = localStorage.getItem("paymentToken");
-    const paymentRef = localStorage.getItem("paymentRef");
-    const startedAt = Number(localStorage.getItem("paymentStartedAt"));
-
-    if (!token || !paymentRef)
-      throw new Error("Payment session not found");
-
-    if (!startedAt || Date.now() - startedAt < 3000)
-      throw new Error("Payment verification too fast");
-
+    /* -------------------------
+       AUTH CHECK
+    -------------------------- */
     const user = await account.get();
-    if (!user) throw new Error("User not authenticated");
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
 
-    // Fetch payment using LOCAL reference
-    const payment = await databases.getDocument(
-      DB_ID,
-      PAYMENTS,
-      paymentRef
-    );
+    /* -------------------------
+       FETCH LATEST PENDING PAYMENT
+       (DATABASE IS SOURCE OF TRUTH)
+    -------------------------- */
+    const res = await databases.listDocuments(DB_ID, PAYMENTS, [
+      Query.equal("userId", user.$id),
+      Query.equal("status", "pending"),
+      Query.equal("used", false),
+      Query.orderDesc("$createdAt"),
+      Query.limit(1)
+    ]);
 
-    if (payment.userId !== user.$id)
-      throw new Error("Payment does not belong to user");
+    if (!res.documents.length) {
+      throw new Error("No pending payment found");
+    }
 
-    if (payment.token !== token)
-      throw new Error("Invalid payment token");
+    const payment = res.documents[0];
 
-    if (payment.status !== "pending" || payment.used === true)
-      throw new Error("Payment already processed");
-
+    /* -------------------------
+       PAYMENT VALIDATION
+    -------------------------- */
     const now = new Date();
-    if (payment.expiresAt && new Date(payment.expiresAt) < now)
-      throw new Error("Payment expired");
 
-    // Normalize duration
+    if (payment.expiresAt && new Date(payment.expiresAt) < now) {
+      throw new Error("Payment session expired");
+    }
+
     const durationDays = Number(payment.durationDay);
-    if (!durationDays || durationDays <= 0)
+    if (!durationDays || durationDays <= 0) {
       throw new Error("Invalid subscription duration");
+    }
 
-    // Subscription stacking
+    /* -------------------------
+       SUBSCRIPTION STACKING
+    -------------------------- */
     let startsAt = now;
     let expiresAt = new Date(now);
 
@@ -82,36 +90,54 @@ const Query = Appwrite.Query;
 
     expiresAt.setDate(expiresAt.getDate() + durationDays);
 
-    await databases.createDocument(DB_ID, SUBS, Appwrite.ID.unique(), {
-      userId: user.$id,
-      plan: payment.plan,
-      durationDay: payment.durationDay,
-      startsAt: startsAt.toISOString(),
-      expiresAt: expiresAt.toISOString(),
-      status: "active"
-    });
+    /* -------------------------
+       CREATE SUBSCRIPTION
+    -------------------------- */
+    await databases.createDocument(
+      DB_ID,
+      SUBS,
+      Appwrite.ID.unique(),
+      {
+        userId: user.$id,
+        plan: payment.plan,
+        durationDay: payment.durationDay,
+        startsAt: startsAt.toISOString(),
+        expiresAt: expiresAt.toISOString(),
+        status: "active"
+      }
+    );
 
-    await databases.updateDocument(DB_ID, PAYMENTS, payment.$id, {
-      status: "success",
-      used: true
-    });
+    /* -------------------------
+       MARK PAYMENT AS USED
+    -------------------------- */
+    await databases.updateDocument(
+      DB_ID,
+      PAYMENTS,
+      payment.$id,
+      {
+        status: "success",
+        used: true
+      }
+    );
 
-    localStorage.removeItem("paymentToken");
-    localStorage.removeItem("paymentRef");
-    localStorage.removeItem("paymentStartedAt");
-
+    /* -------------------------
+       REDIRECT
+    -------------------------- */
     window.location.replace("dashboard.html");
 
   } catch (err) {
     console.error("Payment verification failed:", err.message);
 
-    localStorage.clear();
-
     const head2 = document.getElementById("heading");
     const label = document.getElementById("labeling");
 
-    if (head2) head2.innerText = "Payment verification failed";
-    if (label)
-      label.innerHTML = `${err.message}<br><a href="dashboard.html">Return to dashboard</a>`;
+    if (head2) {
+      head2.innerText = "Payment verification failed";
+    }
+
+    if (label) {
+      label.innerHTML =
+        `${err.message}<br><a href="dashboard.html">Return to dashboard</a>`;
+    }
   }
 })();
