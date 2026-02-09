@@ -168,6 +168,9 @@ async function buySubscription(days) {
         // Payment is still valid
         showToast("You already have a pending payment. Please complete it.", "warning");
 
+        await databases.updateDocument(DB_ID, PAYMENTS, oldPayment.$id, {
+          expiresAt: new Date(Date.now() + 30 * 60 * 1000).toISOString() });
+        
         // Optional: redirect user directly to Selar with old reference
         const selarLink =
           oldPayment.durationDay === 7
