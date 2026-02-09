@@ -19,19 +19,17 @@ const Query = Appwrite.Query;
 (async function verifyPayment() {
   try {
     const params = new URLSearchParams(window.location.search);
-    const reference = params.get("reference");
     const source = params.get("src");
 
-    if (!reference) throw new Error("Missing payment reference");
-    if (source !== "selar") throw new Error("Invalid payment source");
+    if (source !== "selar")
+      throw new Error("Invalid payment source");
 
     const token = localStorage.getItem("paymentToken");
-    const storedRef = localStorage.getItem("paymentRef");
+    const paymentRef = localStorage.getItem("paymentRef");
     const startedAt = Number(localStorage.getItem("paymentStartedAt"));
 
-    if (!token) throw new Error("Missing payment token");
-    if (!storedRef || storedRef !== reference)
-      throw new Error("Payment reference mismatch");
+    if (!token || !paymentRef)
+      throw new Error("Payment session not found");
 
     if (!startedAt || Date.now() - startedAt < 3000)
       throw new Error("Payment verification too fast");
@@ -39,7 +37,12 @@ const Query = Appwrite.Query;
     const user = await account.get();
     if (!user) throw new Error("User not authenticated");
 
-    const payment = await databases.getDocument(DB_ID, PAYMENTS, reference);
+    // Fetch payment using LOCAL reference
+    const payment = await databases.getDocument(
+      DB_ID,
+      PAYMENTS,
+      paymentRef
+    );
 
     if (payment.userId !== user.$id)
       throw new Error("Payment does not belong to user");
@@ -51,10 +54,15 @@ const Query = Appwrite.Query;
       throw new Error("Payment already processed");
 
     const now = new Date();
-
     if (payment.expiresAt && new Date(payment.expiresAt) < now)
-      throw new Error("Payment token expired");
+      throw new Error("Payment expired");
 
+    // Normalize duration
+    const durationDays = Number(payment.durationDay);
+    if (!durationDays || durationDays <= 0)
+      throw new Error("Invalid subscription duration");
+
+    // Subscription stacking
     let startsAt = now;
     let expiresAt = new Date(now);
 
@@ -76,8 +84,8 @@ const Query = Appwrite.Query;
 
     await databases.createDocument(DB_ID, SUBS, Appwrite.ID.unique(), {
       userId: user.$id,
-      plan: payment.plan,                 
-      durationDay: payment.durationDay, 
+      plan: payment.plan,
+      durationDay: payment.durationDay,
       startsAt: startsAt.toISOString(),
       expiresAt: expiresAt.toISOString(),
       status: "active"
