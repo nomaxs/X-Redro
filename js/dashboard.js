@@ -147,6 +147,11 @@ async function loadLatestOrders(userId) {
 UI INTERACTION LOGIC
 ========================= */
 async function buySubscription(days) {
+  const btn = document.activeElement;
+  if (btn) {
+    btn.disabled = true;
+    btn.innerText = "Redirecting…";
+  }
   try {
     const plan = days === 7 ? "7 days" : "30 days";
     const amount = days === 7 ? 1000 : 3000;
@@ -215,6 +220,10 @@ async function buySubscription(days) {
     window.location.href = selarLink;
 
   } catch (err) {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerText = "Subscribe";
+    }
     console.error(err);
     alert(err);
     showToast("Unable to start payment", "error");
