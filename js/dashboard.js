@@ -171,11 +171,11 @@ async function buySubscription(days) {
         // Optional: redirect user directly to Selar with old reference
         const selarLink =
           oldPayment.durationDay === 7
-            ? `https://selar.com/9g7elg0071?reference=${oldPayment.$id}`
-            : `https://selar.com/07s670b9vg?reference=${oldPayment.$id}`;
+            ? `https://selar.com/9g7elg0071`
+            : `https://selar.com/07s670b9vg`;
 
         // Small delay before redirecting so user sees the toast
-        setTimeout(() => window.location.href = selarLink, 2000);
+        setTimeout(() => window.location.href = selarLink, 1500);
         return;
       } else {
         // Old payment expired → allow new payment
@@ -184,9 +184,6 @@ async function buySubscription(days) {
         });
       }
     }
-
-    // Create new token for fresh payment
-    const token = crypto.randomUUID();
 
     const expiresAt = new Date();
     expiresAt.setMinutes(expiresAt.getMinutes() + 30); // token valid for 30 mins
@@ -200,22 +197,17 @@ async function buySubscription(days) {
         plan,
         durationDay: days,
         amount,
-        token,
         expiresAt: expiresAt.toISOString(),
         used: false,
         status: "pending"
       }
     );
 
-    localStorage.setItem("paymentToken", token);
-    localStorage.setItem("paymentRef", payment.$id);
-    localStorage.setItem("paymentStartedAt", Date.now());
-
     // Redirect to Selar with new payment reference
     const selarLink =
       days === 7
-        ? `https://selar.com/9g7elg0071?reference=${payment.$id}`
-        : `https://selar.com/07s670b9vg?reference=${payment.$id}`;
+        ? `https://selar.com/9g7elg0071`
+        : `https://selar.com/07s670b9vg`;
 
     window.location.href = selarLink;
 
