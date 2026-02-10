@@ -227,19 +227,22 @@ async function resendVerification() {
 }
 
 function startVerifyCountdown(btn, countdownEl) {
-  verifyRemaining = VERIFY_COOLDOWN;
+  // FORCE HIDE button
+  btn.classList.add("hidden");
+  btn.disabled = true;
+
+  let remaining = VERIFY_COOLDOWN;
 
   countdownEl.classList.remove("hidden");
-  countdownEl.innerText = `Resend available in ${verifyRemaining}s`;
+  countdownEl.innerText = `Resend available in ${remaining}s`;
 
   if (verifyTimer) clearInterval(verifyTimer);
 
   verifyTimer = setInterval(() => {
-    verifyRemaining--;
+    remaining--;
+    countdownEl.innerText = `Resend available in ${remaining}s`;
 
-    countdownEl.innerText = `Resend available in ${verifyRemaining}s`;
-
-    if (verifyRemaining <= 0) {
+    if (remaining <= 0) {
       clearInterval(verifyTimer);
       verifyTimer = null;
 
@@ -248,7 +251,7 @@ function startVerifyCountdown(btn, countdownEl) {
       btn.disabled = false;
     }
   }, 1000);
-}
+  }
 
 document.addEventListener("DOMContentLoaded", () => {
   const resendBtn = document.getElementById("resendVerifyBtn");
