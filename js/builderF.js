@@ -41,6 +41,11 @@ let formSubtitle = "";
 UTILITY / HELPER FUNCTIONS
 ========================= */
 async function buySubscription(days) {
+  const btn = document.activeElement;
+  if (btn) {
+    btn.disabled = true;
+    btn.innerText = "Redirecting…";
+  }
   try {
     const plan = days === 7 ? "7 days" : "30 days";
     const amount = days === 7 ? 1000 : 3000;
@@ -62,6 +67,9 @@ async function buySubscription(days) {
         // Payment is still valid
         showToast("You already have a pending payment. Please complete it.", "warning");
 
+        await databases.updateDocument(DB_ID, PAYMENTS, oldPayment.$id, {
+          expiresAt: new Date(Date.now() + 30 * 60 * 1000).toISOString() });
+        
         // Optional: redirect user directly to Selar with old reference
         const selarLink =
           oldPayment.durationDay === 7
@@ -69,7 +77,7 @@ async function buySubscription(days) {
             : `https://selar.com/07s670b9vg`;
 
         // Small delay before redirecting so user sees the toast
-        setTimeout(() => window.location.href = selarLink, 2000);
+        setTimeout(() => window.location.href = selarLink, 1500);
         return;
       } else {
         // Old payment expired → allow new payment
@@ -79,7 +87,6 @@ async function buySubscription(days) {
       }
     }
 
-    
     const expiresAt = new Date();
     expiresAt.setMinutes(expiresAt.getMinutes() + 30); // token valid for 30 mins
 
@@ -97,7 +104,6 @@ async function buySubscription(days) {
         status: "pending"
       }
     );
-    
 
     // Redirect to Selar with new payment reference
     const selarLink =
@@ -108,6 +114,10 @@ async function buySubscription(days) {
     window.location.href = selarLink;
 
   } catch (err) {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerText = "Subscribe";
+    }
     console.error(err);
     alert(err);
     showToast("Unable to start payment", "error");
