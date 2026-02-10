@@ -375,6 +375,20 @@ async function uploadProductImage(fieldId, index, input) {
   renderFields();
 }
 
+function normalizeProducts(field) {
+  if (!Array.isArray(field.products)) {
+    field.products = [];
+    return;
+  }
+
+  field.products = field.products.map(p => ({
+    name: p?.name ?? "",
+    price: p?.price ?? "",
+    imageId: p?.imageId ?? "",
+    imageUrl: p?.imageUrl ?? ""
+  }));
+}
+
 function updateProduct(fieldId, index, key, value) {
   const field = fields.find(f => f.id === fieldId);
   field.products[index][key] = value;
@@ -382,6 +396,8 @@ function updateProduct(fieldId, index, key, value) {
 
 async function removeProduct(fieldId, index) {
   const field = fields.find(f => f.id === fieldId);
+  if (!field || !field.products[index]) return;
+  
   const product = field.products[index];
   
   // delete image from storage
@@ -532,7 +548,13 @@ async function initBuilder() {
     if (formDoc.fields && Array.isArray(formDoc.fields)) {
       fields = formDoc.fields.map(f => {
         try {
-          return JSON.parse(f);
+          const field = JSON.parse(f);
+
+          if (field.type === "product") {
+            normalizeProducts(field);
+           }
+
+          return field;
         } catch {
           return null;
         }
