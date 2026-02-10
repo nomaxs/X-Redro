@@ -119,7 +119,6 @@ async function buySubscription(days) {
       btn.innerText = "Subscribe";
     }
     console.error(err);
-    alert(err);
     showToast("Unable to start payment", "error");
   }
 }
