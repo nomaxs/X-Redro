@@ -19,6 +19,7 @@ async function confirmVerification() {
     window.location.href = "dashboard.html";
 
   } catch (err) {
+    alert(err);
     alert("Verification failed or expired");
   }
 }
