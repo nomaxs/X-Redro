@@ -209,6 +209,7 @@ async function resendVerification() {
 
   try {
     btn.disabled = true;
+    btn.classList.add("hidden");
 
     await account.createVerification(
       `${location.origin}/X-Redro/verify.html`
@@ -220,6 +221,7 @@ async function resendVerification() {
 
   } catch (err) {
     btn.disabled = false;
+    btn.classList.remove("hidden");
     showToast(err.message || "Failed to resend email", "error");
   }
 }
@@ -227,9 +229,10 @@ async function resendVerification() {
 function startVerifyCountdown(btn, countdownEl) {
   verifyRemaining = VERIFY_COOLDOWN;
 
-  btn.classList.add("hidden");
   countdownEl.classList.remove("hidden");
   countdownEl.innerText = `Resend available in ${verifyRemaining}s`;
+
+  if (verifyTimer) clearInterval(verifyTimer);
 
   verifyTimer = setInterval(() => {
     verifyRemaining--;
@@ -246,6 +249,21 @@ function startVerifyCountdown(btn, countdownEl) {
     }
   }, 1000);
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const resendBtn = document.getElementById("resendVerifyBtn");
+  const countdownEl = document.getElementById("resendCountdown");
+
+  // Not on verify info page → do nothing
+  if (!resendBtn || !countdownEl) return;
+
+  // Hide button initially
+  resendBtn.disabled = true;
+  resendBtn.classList.add("hidden");
+
+  // Start initial cooldown automatically
+  startVerifyCountdown(resendBtn, countdownEl);
+});
 
 /* =========================
 UNUSED / EXPERIMENTAL / FUTURE CODE
