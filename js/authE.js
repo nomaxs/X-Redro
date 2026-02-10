@@ -10,6 +10,9 @@ const DB_ID = "695c4fce0039f513dc83";
 const USERS = "695c501b001d24549b03";
 const FORMS = "form";
 const SUBS = "subscriptions";
+const VERIFY_COOLDOWN = 60; 
+let verifyTimer = null;
+let verifyRemaining = 0;
 
 /* =========================
 EXTERNAL SERVICE SETUP
@@ -198,6 +201,50 @@ function openResetModal() {
 function closeResetModal(e) {  
   if (e && e.target !== e.currentTarget) return;  
   document.getElementById("resetModal").classList.add("hidden");  
+}
+
+async function resendVerification() {
+  const btn = document.getElementById("resendVerifyBtn");
+  const countdownEl = document.getElementById("resendCountdown");
+
+  try {
+    btn.disabled = true;
+
+    await account.createVerification(
+      `${location.origin}/X-Redro/verify.html`
+    );
+
+    showToast("Verification email sent", "success");
+
+    startVerifyCountdown(btn, countdownEl);
+
+  } catch (err) {
+    btn.disabled = false;
+    showToast(err.message || "Failed to resend email", "error");
+  }
+}
+
+function startVerifyCountdown(btn, countdownEl) {
+  verifyRemaining = VERIFY_COOLDOWN;
+
+  btn.classList.add("hidden");
+  countdownEl.classList.remove("hidden");
+  countdownEl.innerText = `Resend available in ${verifyRemaining}s`;
+
+  verifyTimer = setInterval(() => {
+    verifyRemaining--;
+
+    countdownEl.innerText = `Resend available in ${verifyRemaining}s`;
+
+    if (verifyRemaining <= 0) {
+      clearInterval(verifyTimer);
+      verifyTimer = null;
+
+      countdownEl.classList.add("hidden");
+      btn.classList.remove("hidden");
+      btn.disabled = false;
+    }
+  }, 1000);
 }
 
 /* =========================
