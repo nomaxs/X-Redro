@@ -397,16 +397,19 @@ function updateProduct(fieldId, index, key, value) {
 async function removeProduct(fieldId, index) {
   const field = fields.find(f => f.id === fieldId);
   if (!field || !field.products[index]) return;
-  
+
   const product = field.products[index];
-  
-  // delete image from storage
-  if (product.imageId) {
-    await storage.deleteFile(PRODUCT_IMAGES_BUCKET, product.imageId);
-  }
-  
+
+  // 🔒 remove synchronously first
   field.products.splice(index, 1);
   renderFields();
+
+  // 🧹 cleanup async later
+  if (product.imageId) {
+    try {
+      await storage.deleteFile(PRODUCT_IMAGES_BUCKET, product.imageId);
+    } catch {}
+  }
 }
 
 /* ---------------- PREVIEW OVERLAY ---------------- */
