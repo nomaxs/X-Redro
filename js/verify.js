@@ -47,42 +47,42 @@ async function createInitialUserData(user) {
     title: "My Business Name",    
     subtitle: "Welcome to X-Redro, place your order",    
     fields: [
-      {
+      JSON.stringify({
         id: crypto.randomUUID(),
         type: "text",
         label: "Full Name",
         options: [],
         products: []
-      },
-      {
+      }),
+      JSON.stringify({
         id: crypto.randomUUID(),
         type: "text",
         label: "Phone Number",
         options: [],
         products: []
-      },
-      {
+      }),
+      JSON.stringify({
         id: crypto.randomUUID(),
         type: "textarea",
         label: "Delivery Address or Drop-Off Point",
         options: [],
         products: []
-      },
-      {
+      }),
+      JSON.stringify({
         id: crypto.randomUUID(),
         type: "text",
         label: "City / State",
         options: [],
         products: []
-      },
-      {
+      }),
+      JSON.stringify({
         id: crypto.randomUUID(),
         type: "textarea",
         label: "Additional Notes / Requests",
         options: [],
         products: []
-      },
-      {
+      }),
+      JSON.stringify({
         id: crypto.randomUUID(),
         type: "product",
         label: "Products",
@@ -90,7 +90,7 @@ async function createInitialUserData(user) {
         products: [
           { name: "Sample Product", price: "0", imageId: "", imageUrl: "" }
         ]
-      }
+      })
     ],
     isActive: true,    
     $createdAt: new Date().toISOString(),    
