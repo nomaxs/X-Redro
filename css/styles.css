@@ -96,7 +96,7 @@ body {
       rgba(156,255,0,0.1),
       rgba(0,0,0,0.05)
     ),
-    url("assets/deliveryMan.jpg");
+    url("../assets/deliveryMan.jpg");
 
   background-size: cover;
   background-position: center;
